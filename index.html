@@ -1,0 +1,2183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hearthbound Heroes</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=Nunito:wght@400;600;700;800&display=swap');
+
+:root {
+  --cream: #fdf6e3;
+  --parchment: #f0e6c8;
+  --warm: #e8d5a3;
+  --brown: #8b6914;
+  --darkbrown: #5c4510;
+  --bark: #3d2b0d;
+  --forest: #4a7c59;
+  --moss: #6b9e5e;
+  --sage: #a8c89a;
+  --sky: #87ceeb;
+  --dusk: #c4a882;
+  --ember: #e07840;
+  --rose: #d4606a;
+  --gold: #d4a017;
+  --lavender: #9b7ec8;
+  --text: #3d2b0d;
+  --shadow: rgba(61,43,13,0.15);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: var(--cream);
+  color: var(--text);
+  font-family: 'Nunito', sans-serif;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  user-select: none;
+}
+
+.screen { display:none; flex-direction:column; height:100vh; }
+.screen.active { display:flex; }
+
+/* ══════════════════════════════════
+   CLASS SELECT
+══════════════════════════════════ */
+#classSelect {
+  align-items:center;
+  justify-content:center;
+  gap:20px;
+  background: radial-gradient(ellipse at 50% 0%, #c8e6c9 0%, #fdf6e3 60%);
+  position:relative;
+  overflow:hidden;
+}
+
+#classSelect::before {
+  content:'';
+  position:absolute;
+  bottom:0; left:0; right:0; height:120px;
+  background: linear-gradient(to top, #6b9e5e44, transparent);
+}
+
+.cs-title {
+  font-family: 'Lora', serif;
+  font-size: 2.8rem;
+  font-weight: 700;
+  color: var(--darkbrown);
+  letter-spacing: 2px;
+  text-shadow: 2px 3px 0 var(--warm);
+}
+
+.cs-sub {
+  font-size: 0.9rem;
+  color: var(--brown);
+  letter-spacing: 3px;
+  font-weight: 600;
+}
+
+.class-cards {
+  display:flex;
+  gap:20px;
+  margin-top:8px;
+  z-index:1;
+}
+
+.class-card {
+  width:175px;
+  background: var(--parchment);
+  border: 3px solid var(--warm);
+  border-radius: 16px;
+  padding: 22px 16px 18px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:10px;
+  cursor:pointer;
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+  box-shadow: 4px 6px 0 var(--shadow), 0 0 0 1px var(--warm);
+  position:relative;
+  overflow:hidden;
+}
+
+.class-card::before {
+  content:'';
+  position:absolute;
+  top:0; left:0; right:0; height:4px;
+  border-radius:12px 12px 0 0;
+}
+
+.class-card.tank::before { background: #5b8dd9; }
+.class-card.mage::before { background: #9b7ec8; }
+.class-card.buster::before { background: #d4606a; }
+
+.class-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 4px 12px 0 var(--shadow), 0 0 0 1px var(--warm);
+}
+
+.class-card.tank:hover { border-color: #5b8dd9; }
+.class-card.mage:hover { border-color: #9b7ec8; }
+.class-card.buster:hover { border-color: #d4606a; }
+
+.class-icon-wrap {
+  width:72px; height:72px;
+  background: var(--cream);
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border: 2px solid var(--warm);
+}
+
+.class-card h3 {
+  font-family: 'Lora', serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-align:center;
+}
+
+.tank h3 { color: #3a6db5; }
+.mage h3 { color: #7a5eaa; }
+.buster h3 { color: #b03040; }
+
+.class-stats-bars { width:100%; display:flex; flex-direction:column; gap:5px; }
+.cs-bar-row { display:flex; justify-content:space-between; align-items:center; font-size:0.65rem; font-weight:700; color:var(--brown); }
+.cs-bar-bg { flex:1; height:5px; background:var(--warm); border-radius:3px; margin-left:6px; }
+.cs-bar-fill { height:100%; border-radius:3px; }
+
+.class-desc { font-size:0.68rem; color:var(--brown); text-align:center; line-height:1.6; font-style:italic; }
+
+/* ══════════════════════════════════
+   MANAGEMENT SCREEN
+══════════════════════════════════ */
+#managementScreen {
+  flex-direction:row;
+  background: var(--cream);
+}
+
+.mgmt-sidebar {
+  width:240px;
+  background: var(--parchment);
+  border-right: 3px solid var(--warm);
+  display:flex;
+  flex-direction:column;
+  padding:14px;
+  gap:10px;
+  overflow-y:auto;
+}
+
+.mgmt-main {
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  padding:14px;
+  gap:10px;
+  overflow-y:auto;
+}
+
+.mgmt-right {
+  width:220px;
+  background: var(--parchment);
+  border-left: 3px solid var(--warm);
+  padding:14px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  overflow-y:auto;
+}
+
+.panel-box {
+  background: var(--cream);
+  border: 2px solid var(--warm);
+  border-radius:10px;
+  padding:10px;
+}
+
+.panel-title {
+  font-family: 'Lora', serif;
+  font-size:0.75rem;
+  font-weight:700;
+  color:var(--darkbrown);
+  letter-spacing:2px;
+  border-bottom: 2px solid var(--warm);
+  padding-bottom:5px;
+  margin-bottom:8px;
+  text-transform:uppercase;
+}
+
+.hero-list { display:flex; flex-direction:column; gap:6px; }
+.hero-entry {
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:6px;
+  background:var(--parchment);
+  border:2px solid var(--warm);
+  border-radius:8px;
+  cursor:pointer;
+  transition:border-color 0.2s;
+}
+.hero-entry:hover { border-color:var(--brown); }
+.hero-entry.selected { border-color:var(--gold); background:#fdf0c0; }
+.hero-entry-icon { font-size:1.4rem; }
+.hero-entry-name { font-size:0.72rem; font-weight:700; color:var(--darkbrown); }
+.hero-entry-cls { font-size:0.62rem; color:var(--brown); }
+
+.stat-panel { display:flex; flex-direction:column; gap:5px; }
+.stat-line {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-size:0.7rem;
+  font-weight:600;
+}
+.stat-line .sv { color:var(--darkbrown); font-weight:800; }
+.hp-bar-bg { background:var(--warm); border-radius:3px; height:6px; }
+.hp-bar-fill { height:100%; background:var(--forest); border-radius:3px; transition:width 0.3s; }
+
+/* Skill system */
+.skill-slots-grid { display:flex; flex-direction:column; gap:6px; }
+
+.skill-slot {
+  background:var(--parchment);
+  border:2px dashed var(--warm);
+  border-radius:8px;
+  padding:8px;
+  cursor:pointer;
+  transition:border-color 0.2s, background 0.2s;
+  font-size:0.68rem;
+}
+.skill-slot.filled { border-style:solid; border-color:var(--brown); }
+.skill-slot.legendary { border-color:var(--gold); background:#fdf0c022; }
+.skill-slot:hover { border-color:var(--darkbrown); }
+.skill-slot .sk-name { font-weight:800; color:var(--darkbrown); margin-bottom:2px; }
+.skill-slot .sk-desc { color:var(--brown); font-size:0.6rem; line-height:1.4; }
+.skill-slot.empty-slot { color:var(--dusk); text-align:center; font-style:italic; font-size:0.7rem; }
+.skill-slot.legendary .sk-name { color:var(--gold); }
+
+.skill-pool-grid { display:flex; flex-direction:column; gap:4px; max-height:200px; overflow-y:auto; }
+.skill-pool-item {
+  padding:5px 8px;
+  background:var(--parchment);
+  border:2px solid var(--warm);
+  border-radius:6px;
+  cursor:pointer;
+  transition:border-color 0.15s, background 0.15s;
+  font-size:0.65rem;
+}
+.skill-pool-item:hover { border-color:var(--brown); background:var(--warm); }
+.skill-pool-item.legendary-pool { border-color:var(--gold); }
+.skill-pool-item .sp-name { font-weight:800; color:var(--darkbrown); }
+.skill-pool-item .sp-cls { font-size:0.58rem; color:var(--brown); }
+.skill-pool-item .sp-leg { color:var(--gold); font-size:0.58rem; font-weight:800; }
+
+/* Equipment */
+.equip-slots {
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:5px;
+}
+.equip-slot {
+  padding:6px;
+  background:var(--parchment);
+  border:2px solid var(--warm);
+  border-radius:7px;
+  text-align:center;
+  cursor:pointer;
+  transition:border-color 0.15s;
+  font-size:0.62rem;
+}
+.equip-slot:hover { border-color:var(--brown); }
+.equip-slot.has-item { border-color:var(--forest); }
+.equip-slot .es-icon { font-size:1.2rem; }
+.equip-slot .es-name { color:var(--darkbrown); font-weight:700; font-size:0.6rem; }
+.equip-slot .es-stat { color:var(--brown); font-size:0.58rem; }
+
+.inv-grid {
+  display:grid;
+  grid-template-columns:repeat(6,1fr);
+  gap:4px;
+}
+.inv-item {
+  aspect-ratio:1;
+  background:var(--parchment);
+  border:2px solid var(--warm);
+  border-radius:6px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:1.0rem;
+  cursor:pointer;
+  transition:border-color 0.15s, transform 0.1s;
+  position:relative;
+}
+.inv-item:hover { border-color:var(--brown); transform:scale(1.08); }
+.inv-item.common { border-color:#b0a080; }
+.inv-item.rare { border-color:#4080c0; }
+.inv-item.epic { border-color:#8040c0; }
+.inv-item.legendary-item { border-color:var(--gold); box-shadow:0 0 6px #d4a01744; }
+.inv-item.equipped-inv { background:#e8f5e8; border-color:var(--forest); }
+.inv-item.empty-inv { cursor:default; background:var(--warm); opacity:0.4; }
+.item-tip {
+  position:absolute;
+  bottom:calc(100% + 4px);
+  left:50%; transform:translateX(-50%);
+  background:var(--bark);
+  color:var(--cream);
+  padding:5px 8px;
+  border-radius:6px;
+  font-size:0.6rem;
+  white-space:nowrap;
+  pointer-events:none;
+  display:none;
+  z-index:99;
+  line-height:1.5;
+}
+.inv-item:hover .item-tip { display:block; }
+
+/* Party / Unit unlock */
+.party-slots { display:flex; flex-direction:column; gap:6px; }
+.party-slot {
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:7px;
+  border:2px solid var(--warm);
+  border-radius:8px;
+  background:var(--parchment);
+  cursor:pointer;
+}
+.party-slot.locked { opacity:0.5; cursor:not-allowed; }
+.party-slot.active { border-color:var(--forest); background:#e8f5e8; }
+.ps-num { font-size:0.65rem; font-weight:800; color:var(--brown); width:16px; }
+.ps-icon { font-size:1.2rem; }
+.ps-info { flex:1; }
+.ps-name { font-size:0.68rem; font-weight:700; color:var(--darkbrown); }
+.ps-detail { font-size:0.6rem; color:var(--brown); }
+
+/* Mission panel */
+.mission-box {
+  background: linear-gradient(135deg, #e8f0d8, var(--parchment));
+  border:2px solid var(--forest);
+  border-radius:10px;
+  padding:12px;
+}
+.mission-title {
+  font-family:'Lora',serif;
+  font-size:0.85rem;
+  font-weight:700;
+  color:var(--forest);
+  margin-bottom:4px;
+}
+.mission-detail { font-size:0.68rem; color:var(--brown); line-height:1.6; }
+
+.enemy-chip {
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:5px 8px;
+  background:var(--parchment);
+  border:2px solid #e8b0a0;
+  border-radius:7px;
+  font-size:0.65rem;
+  margin-bottom:4px;
+}
+.ec-icon { font-size:1rem; }
+.ec-name { color:var(--rose); font-weight:700; }
+.ec-stat { color:var(--brown); font-size:0.58rem; }
+
+.btn-cozy {
+  background: linear-gradient(135deg, var(--forest), #3d6e4a);
+  color:var(--cream);
+  border:none;
+  font-family:'Nunito',sans-serif;
+  font-size:0.8rem;
+  font-weight:800;
+  letter-spacing:1px;
+  padding:12px;
+  cursor:pointer;
+  border-radius:10px;
+  transition:transform 0.1s, box-shadow 0.2s, filter 0.2s;
+  box-shadow:0 4px 0 #2a4a30;
+  margin-top:auto;
+}
+.btn-cozy:hover { filter:brightness(1.1); transform:translateY(-1px); box-shadow:0 5px 0 #2a4a30; }
+.btn-cozy:active { transform:translateY(2px); box-shadow:0 2px 0 #2a4a30; }
+
+.btn-secondary-cozy {
+  background:transparent;
+  color:var(--brown);
+  border:2px solid var(--warm);
+  font-family:'Nunito',sans-serif;
+  font-size:0.72rem;
+  font-weight:700;
+  padding:7px;
+  cursor:pointer;
+  border-radius:8px;
+  transition:border-color 0.2s, color 0.2s;
+}
+.btn-secondary-cozy:hover { border-color:var(--brown); color:var(--darkbrown); }
+
+.save-btns { display:flex; flex-direction:column; gap:5px; }
+.save-slot {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:7px 10px;
+  background:var(--parchment);
+  border:2px solid var(--warm);
+  border-radius:7px;
+  cursor:pointer;
+  font-size:0.68rem;
+  transition:border-color 0.15s;
+}
+.save-slot:hover { border-color:var(--brown); }
+.save-slot-name { font-weight:700; color:var(--darkbrown); }
+.save-slot-info { color:var(--brown); font-size:0.6rem; }
+
+/* ══════════════════════════════════
+   BATTLE SCREEN
+══════════════════════════════════ */
+#battleScreen { background:var(--sky); position:relative; }
+
+#battleContainer {
+  flex:1;
+  position:relative;
+  overflow:hidden;
+}
+
+#battleCanvas { width:100%; display:block; }
+
+.battle-hud {
+  height:90px;
+  background: var(--parchment);
+  border-top: 3px solid var(--warm);
+  display:flex;
+  align-items:center;
+  padding:0 16px;
+  gap:14px;
+  flex-wrap:wrap;
+}
+
+.hud-unit {
+  display:flex;
+  flex-direction:column;
+  gap:3px;
+  min-width:110px;
+}
+.hud-unit-name {
+  font-family:'Lora',serif;
+  font-size:0.65rem;
+  font-weight:700;
+  color:var(--darkbrown);
+}
+.hud-hp-bg { background:var(--warm); border-radius:3px; height:7px; width:100px; }
+.hud-hp-bar { height:100%; background:var(--forest); border-radius:3px; transition:width 0.3s; }
+.hud-hp-txt { font-size:0.58rem; color:var(--brown); }
+
+.hud-skills-wrap { display:flex; gap:6px; flex:1; }
+.hud-skill-btn {
+  background:var(--parchment);
+  border:2px solid var(--warm);
+  border-radius:7px;
+  padding:3px 7px;
+  font-size:0.58rem;
+  font-weight:700;
+  color:var(--brown);
+  min-width:65px;
+  text-align:center;
+}
+.hud-skill-btn.active { border-color:var(--gold); color:var(--darkbrown); background:#fdf0c0; }
+.hud-skill-btn.leg { border-color:var(--gold); color:var(--gold); }
+
+.hud-stage {
+  font-family:'Lora',serif;
+  font-size:0.78rem;
+  font-weight:700;
+  color:var(--darkbrown);
+  margin-left:auto;
+  text-align:right;
+}
+.hud-stage-sub { font-size:0.6rem; color:var(--brown); }
+
+.battle-log {
+  position:absolute;
+  top:8px; right:8px;
+  width:210px;
+  background:#fdf6e3cc;
+  border:2px solid var(--warm);
+  border-radius:8px;
+  padding:7px;
+  font-size:0.6rem;
+  max-height:130px;
+  overflow-y:auto;
+  pointer-events:none;
+}
+.log-entry { color:var(--brown); margin-bottom:2px; font-weight:600; }
+.log-entry.hit { color:var(--rose); }
+.log-entry.heal { color:var(--forest); }
+.log-entry.skill { color:var(--gold); }
+.log-entry.boss { color:var(--ember); font-weight:800; }
+
+.stage-banner {
+  position:absolute;
+  top:50%; left:50%;
+  transform:translate(-50%,-50%);
+  background:var(--parchment);
+  border:3px solid var(--brown);
+  border-radius:12px;
+  padding:16px 30px;
+  font-family:'Lora',serif;
+  font-size:1.4rem;
+  font-weight:700;
+  color:var(--darkbrown);
+  text-align:center;
+  pointer-events:none;
+  z-index:10;
+  box-shadow:0 6px 20px var(--shadow);
+  opacity:0;
+  transition:opacity 0.4s;
+}
+.stage-banner.show { opacity:1; }
+
+/* ══════════════════════════════════
+   RESULT SCREEN
+══════════════════════════════════ */
+#resultScreen {
+  align-items:center;
+  justify-content:center;
+  gap:18px;
+  background: radial-gradient(ellipse at 50% 40%, #e8f5d0 0%, var(--cream) 70%);
+}
+
+#resultTitle {
+  font-family:'Lora',serif;
+  font-size:2.4rem;
+  font-weight:700;
+  letter-spacing:4px;
+  text-shadow:2px 3px 0 var(--warm);
+}
+
+.result-loot { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; max-width:340px; }
+.result-btn-row { display:flex; gap:12px; margin-top:8px; }
+
+/* scrollbar style */
+::-webkit-scrollbar { width:6px; }
+::-webkit-scrollbar-track { background:var(--warm); border-radius:3px; }
+::-webkit-scrollbar-thumb { background:var(--brown); border-radius:3px; }
+
+.tabs-row { display:flex; gap:5px; margin-bottom:8px; flex-wrap:wrap; }
+.tab-btn {
+  padding:5px 10px;
+  font-size:0.65rem;
+  font-weight:700;
+  background:var(--parchment);
+  border:2px solid var(--warm);
+  border-radius:7px 7px 0 0;
+  cursor:pointer;
+  color:var(--brown);
+  transition:background 0.15s, color 0.15s;
+}
+.tab-btn.active { background:var(--cream); border-bottom:2px solid var(--cream); color:var(--darkbrown); }
+
+.tab-content { display:none; }
+.tab-content.active { display:block; }
+
+.tooltip-modal {
+  position:fixed;
+  background:var(--bark);
+  color:var(--cream);
+  padding:10px 14px;
+  border-radius:10px;
+  font-size:0.68rem;
+  line-height:1.6;
+  max-width:200px;
+  pointer-events:none;
+  z-index:200;
+  display:none;
+}
+</style>
+</head>
+<body>
+
+<!-- CLASS SELECT -->
+<div id="classSelect" class="screen active">
+  <div class="cs-title">🌿 Hearthbound Heroes</div>
+  <div class="cs-sub">Choose Your Class</div>
+  <div class="class-cards">
+
+    <div class="class-card tank" onclick="selectClass('tank')">
+      <div class="class-icon-wrap">
+        <canvas width="60" height="60" id="icon_tank"></canvas>
+      </div>
+      <h3>⚔️ Guardian</h3>
+      <div class="class-stats-bars">
+        <div class="cs-bar-row">HP<div class="cs-bar-bg"><div class="cs-bar-fill" style="width:85%;background:#5b8dd9"></div></div></div>
+        <div class="cs-bar-row">ATK<div class="cs-bar-bg"><div class="cs-bar-fill" style="width:60%;background:#d4606a"></div></div></div>
+        <div class="cs-bar-row">DEF<div class="cs-bar-bg"><div class="cs-bar-fill" style="width:100%;background:#4a7c59"></div></div></div>
+      </div>
+      <div class="class-desc">Marches forward, absorbs blows. Shields allies with a kind heart and heavy armor.</div>
+    </div>
+
+    <div class="class-card mage" onclick="selectClass('mage')">
+      <div class="class-icon-wrap">
+        <canvas width="60" height="60" id="icon_mage"></canvas>
+      </div>
+      <h3>🔮 Spellweaver</h3>
+      <div class="class-stats-bars">
+        <div class="cs-bar-row">HP<div class="cs-bar-bg"><div class="cs-bar-fill" style="width:45%;background:#5b8dd9"></div></div></div>
+        <div class="cs-bar-row">ATK<div class="cs-bar-bg"><div class="cs-bar-fill" style="width:100%;background:#d4606a"></div></div></div>
+        <div class="cs-bar-row">DEF<div class="cs-bar-bg"><div class="cs-bar-fill" style="width:20%;background:#4a7c59"></div></div></div>
+      </div>
+      <div class="class-desc">Retreats to safety and hurls spells. Gentle soul with devastating arcane power.</div>
+    </div>
+
+    <div class="class-card buster" onclick="selectClass('buster')">
+      <div class="class-icon-wrap">
+        <canvas width="60" height="60" id="icon_buster"></canvas>
+      </div>
+      <h3>🗡️ Ironbreaker</h3>
+      <div class="class-stats-bars">
+        <div class="cs-bar-row">HP<div class="cs-bar-bg"><div class="cs-bar-fill" style="width:75%;background:#5b8dd9"></div></div></div>
+        <div class="cs-bar-row">ATK<div class="cs-bar-bg"><div class="cs-bar-fill" style="width:90%;background:#d4606a"></div></div></div>
+        <div class="cs-bar-row">DEF<div class="cs-bar-bg"><div class="cs-bar-fill" style="width:40%;background:#4a7c59"></div></div></div>
+      </div>
+      <div class="class-desc">Leaps and slams with a colossal blade. Wild, fierce, and surprisingly cheerful.</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- MANAGEMENT SCREEN -->
+<div id="managementScreen" class="screen">
+
+  <div class="mgmt-sidebar">
+    <div class="panel-title">🏡 Party</div>
+    <div class="party-slots" id="partySlotsList"></div>
+    <div class="panel-title" style="margin-top:8px">📊 Selected Stats</div>
+    <div class="stat-panel" id="mgmtStats"></div>
+    <div class="hp-bar-bg" style="margin-top:4px"><div class="hp-bar-fill" id="mgmtHpBar" style="width:100%"></div></div>
+    <div style="font-size:0.6rem;color:var(--brown);margin-top:2px" id="mgmtHpText"></div>
+    <div class="panel-title" style="margin-top:8px">💾 Save Slots</div>
+    <div class="save-btns" id="saveSlotsDiv"></div>
+  </div>
+
+  <div class="mgmt-main">
+    <div class="tabs-row">
+      <button class="tab-btn active" onclick="switchTab('skills')">🌟 Skills</button>
+      <button class="tab-btn" onclick="switchTab('equip')">🎒 Equipment</button>
+      <button class="tab-btn" onclick="switchTab('codex')">📖 Codex</button>
+    </div>
+
+    <!-- SKILLS TAB -->
+    <div id="tab-skills" class="tab-content active">
+      <div class="panel-box" style="margin-bottom:8px">
+        <div class="panel-title">⚡ Equipped Skills — <span id="equippedHeroName" style="color:var(--brown);font-weight:400"></span></div>
+        <div style="font-size:0.65rem;color:var(--brown);margin-bottom:6px">3 basic + 1 legendary slot</div>
+        <div class="skill-slots-grid" id="equippedSkillsGrid"></div>
+      </div>
+      <div class="panel-box">
+        <div class="panel-title">🎒 Skill Collection <span id="skillCountBadge" style="font-size:0.65rem;color:var(--brown);font-weight:400"></span></div>
+        <div class="skill-pool-grid" id="skillPoolGrid"></div>
+      </div>
+    </div>
+
+    <!-- EQUIP TAB -->
+    <div id="tab-equip" class="tab-content">
+      <div class="panel-box" style="margin-bottom:8px">
+        <div class="panel-title">🛡️ Gear Slots — <span id="gearHeroName" style="font-size:0.65rem;color:var(--brown);font-weight:400"></span></div>
+        <div class="equip-slots" id="gearSlots"></div>
+      </div>
+      <div class="panel-box">
+        <div class="panel-title">📦 Full Inventory <span id="invCountBadge" style="font-size:0.65rem;color:var(--brown);font-weight:400"></span></div>
+        <div class="inv-grid" id="fullInvGrid"></div>
+      </div>
+    </div>
+
+    <!-- CODEX TAB -->
+    <div id="tab-codex" class="tab-content">
+      <div class="panel-box">
+        <div class="panel-title">📖 Heroes Codex</div>
+        <div id="codexContent" style="font-size:0.68rem;color:var(--brown);line-height:1.8"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="mgmt-right">
+    <div class="panel-title">🗺️ Next Campaign</div>
+    <div class="mission-box" id="missionBox"></div>
+    <div class="panel-title" style="margin-top:6px">👹 Enemy Preview</div>
+    <div id="enemyPreviewList"></div>
+    <button class="btn-cozy" onclick="launchCampaign()" id="btnLaunch">⚔️ Deploy Party!</button>
+    <button class="btn-secondary-cozy" onclick="goToClassSelect()">← New Adventure</button>
+  </div>
+
+</div>
+
+<!-- BATTLE SCREEN -->
+<div id="battleScreen" class="screen">
+  <div id="battleContainer">
+    <canvas id="battleCanvas"></canvas>
+    <div class="battle-log" id="battleLog"></div>
+    <div class="stage-banner" id="stageBanner"></div>
+  </div>
+  <div class="battle-hud" id="battleHud">
+    <div id="hudUnits"></div>
+    <div class="hud-skills-wrap" id="hudSkills"></div>
+    <div class="hud-stage">
+      <div id="hudStageText"></div>
+      <div class="hud-stage-sub" id="hudStageSub"></div>
+    </div>
+  </div>
+</div>
+
+<!-- RESULT SCREEN -->
+<div id="resultScreen" class="screen">
+  <div id="resultTitle"></div>
+  <div id="resultMsg" style="font-size:0.9rem;color:var(--brown);font-family:'Lora',serif;font-style:italic"></div>
+  <div style="font-size:0.75rem;color:var(--brown);font-weight:700">✨ Loot Gathered</div>
+  <div class="result-loot" id="resultLoot"></div>
+  <div class="result-btn-row" id="resultBtns"></div>
+</div>
+
+<div class="tooltip-modal" id="tooltipModal"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+// GAME DATA — CLASSES
+// ═══════════════════════════════════════════════════════
+const CLASS_DEFS = {
+  tank: {
+    name:'Guardian', color:'#5b8dd9', emoji:'🛡️',
+    hp:160, atk:22, def:16, spd:1.8,
+    behavior:'tank',
+    baseSkills:[
+      {id:'shield_bash',name:'Shield Bash',desc:'Stun for 1.5s, 1.3x dmg',cd:4,dmgMult:1.3,effect:'stun',legendary:false},
+      {id:'taunt',name:'Iron Guard',desc:'Halve incoming dmg for 3s',cd:7,dmgMult:0,effect:'defend',legendary:false},
+      {id:'rally',name:'Rally',desc:'Heal 20% max HP',cd:10,dmgMult:0,effect:'heal',legendary:false},
+    ],
+    draw(ctx,x,y,flip,anim=0){
+      ctx.save();
+      if(flip){ctx.translate(x+36,y);ctx.scale(-1,1);x=0;} else{ctx.translate(x,y);}
+      const bob = Math.sin(anim*2)*1.5;
+      // legs
+      ctx.fillStyle='#2a4a80';
+      ctx.fillRect(8,36+bob,10,14);
+      ctx.fillRect(20,36+bob,10,14);
+      // boot
+      ctx.fillStyle='#1a2a50';
+      ctx.fillRect(6,46+bob,13,5);
+      ctx.fillRect(18,46+bob,13,5);
+      // body armor
+      ctx.fillStyle='#3a5a90';
+      ctx.fillRect(6,16+bob,24,22);
+      // pauldron
+      ctx.fillStyle='#5b8dd9';
+      ctx.fillRect(2,16+bob,8,8);
+      ctx.fillRect(26,16+bob,8,8);
+      // chest emblem
+      ctx.fillStyle='#7ab0f0';
+      ctx.fillRect(14,20+bob,8,6);
+      // shield
+      ctx.fillStyle='#1a3060';ctx.strokeStyle='#5b8dd9';ctx.lineWidth=2;
+      ctx.beginPath();ctx.moveTo(-4,12+bob);ctx.lineTo(6,10+bob);ctx.lineTo(6,34+bob);ctx.lineTo(-4,28+bob);ctx.closePath();
+      ctx.fill();ctx.stroke();
+      ctx.fillStyle='#5b8dd9';ctx.fillRect(-2,18+bob,6,2);
+      // sword
+      ctx.fillStyle='#7ab0f0';ctx.fillRect(30,8+bob,4,30);
+      ctx.fillStyle='#5b8dd9';ctx.fillRect(26,18+bob,12,3);
+      // head / helmet
+      ctx.fillStyle='#2a4a80';ctx.fillRect(9,4+bob,18,14);
+      ctx.fillStyle='#5b8dd9';ctx.fillRect(9,4+bob,18,4);
+      ctx.fillStyle='#7ab0f022';ctx.fillRect(12,8+bob,12,8);
+      ctx.restore();
+    }
+  },
+  mage: {
+    name:'Spellweaver', color:'#9b7ec8', emoji:'🔮',
+    hp:80, atk:42, def:5, spd:1.6,
+    behavior:'mage',
+    baseSkills:[
+      {id:'fireball',name:'Fireball',desc:'2.2x atk burst',cd:3,dmgMult:2.2,effect:'projectile',legendary:false},
+      {id:'nova',name:'Arcane Nova',desc:'AoE all enemies 1.6x',cd:7,dmgMult:1.6,effect:'aoe',legendary:false},
+      {id:'blink',name:'Blink',desc:'Dodge + 1.4x counter',cd:5,dmgMult:1.4,effect:'dodge',legendary:false},
+    ],
+    draw(ctx,x,y,flip,anim=0){
+      ctx.save();
+      if(flip){ctx.translate(x+36,y);ctx.scale(-1,1);x=0;} else{ctx.translate(x,y);}
+      const bob = Math.sin(anim*1.8)*1.8;
+      // robe tail
+      ctx.fillStyle='#1a0a30';
+      ctx.beginPath();ctx.moveTo(6,38+bob);ctx.lineTo(12,38+bob);ctx.lineTo(8,52+bob);ctx.closePath();ctx.fill();
+      ctx.beginPath();ctx.moveTo(24,38+bob);ctx.lineTo(30,38+bob);ctx.lineTo(26,52+bob);ctx.closePath();ctx.fill();
+      // robe
+      ctx.fillStyle='#2a0a40';ctx.fillRect(6,16+bob,24,24);
+      // rune trim
+      ctx.strokeStyle='#9b7ec8';ctx.lineWidth=1.5;
+      ctx.strokeRect(7,17+bob,22,22);
+      // staff
+      ctx.fillStyle='#6030a0';ctx.fillRect(29,4+bob,3,42);
+      // orb
+      ctx.save();
+      ctx.shadowColor='#c090ff';ctx.shadowBlur=10;
+      ctx.strokeStyle='#b080f0';ctx.lineWidth=2;
+      ctx.beginPath();ctx.arc(30.5,7+bob,7,0,Math.PI*2);ctx.stroke();
+      ctx.fillStyle='#9b7ec844';ctx.fill();
+      ctx.restore();
+      ctx.fillStyle='#d0b0ff';ctx.beginPath();ctx.arc(28,5+bob,2,0,Math.PI*2);ctx.fill();
+      // head
+      ctx.fillStyle='#1a0a30';ctx.fillRect(8,4+bob,18,14);
+      // hat
+      ctx.fillStyle='#2a0a40';
+      ctx.beginPath();ctx.moveTo(6,8+bob);ctx.lineTo(17,0+bob);ctx.lineTo(28,8+bob);ctx.closePath();ctx.fill();
+      ctx.fillRect(5,8+bob,26,3);
+      ctx.fillStyle='#9b7ec8';ctx.fillRect(5,10+bob,26,1.5);
+      ctx.restore();
+    }
+  },
+  buster: {
+    name:'Ironbreaker', color:'#d4606a', emoji:'⚔️',
+    hp:130, atk:36, def:10, spd:1.3,
+    behavior:'buster',
+    baseSkills:[
+      {id:'cleave',name:'Cleave',desc:'1.9x wide arc damage',cd:4,dmgMult:1.9,effect:'cleave',legendary:false},
+      {id:'execute',name:'Execute',desc:'3.5x if target HP < 30%',cd:8,dmgMult:3.5,effect:'execute',legendary:false},
+      {id:'warcry',name:'War Cry',desc:'+60% ATK for 4s',cd:6,dmgMult:0,effect:'buff',legendary:false},
+    ],
+    draw(ctx,x,y,flip,anim=0){
+      ctx.save();
+      if(flip){ctx.translate(x+36,y);ctx.scale(-1,1);x=0;} else{ctx.translate(x,y);}
+      const bob = Math.sin(anim*1.5)*1.5;
+      // legs
+      ctx.fillStyle='#1a0808';
+      ctx.fillRect(6,36+bob,12,14);
+      ctx.fillRect(20,36+bob,12,14);
+      ctx.fillStyle='#300808';
+      ctx.fillRect(4,46+bob,15,5);
+      ctx.fillRect(19,46+bob,15,5);
+      // body
+      ctx.fillStyle='#2a1010';ctx.fillRect(5,16+bob,26,22);
+      ctx.fillStyle='#d4606a';
+      ctx.fillRect(5,16+bob,26,3);
+      ctx.fillRect(5,24+bob,3,10);
+      ctx.fillRect(28,24+bob,3,10);
+      // huge greatsword on back
+      const swingAng = Math.sin(anim*3)*0.3;
+      ctx.save();ctx.translate(28+bob,20+bob);ctx.rotate(swingAng);
+      ctx.fillStyle='#3a1010';ctx.strokeStyle='#e05070';ctx.lineWidth=2;
+      ctx.beginPath();ctx.moveTo(4,-16);ctx.lineTo(10,-16);ctx.lineTo(8,30);ctx.lineTo(6,30);ctx.closePath();
+      ctx.fill();ctx.stroke();
+      ctx.strokeStyle='#ff9090';ctx.lineWidth=1;
+      ctx.beginPath();ctx.moveTo(8,-14);ctx.lineTo(7,28);ctx.stroke();
+      // guard
+      ctx.fillStyle='#d4606a';ctx.fillRect(1,26,12,4);
+      ctx.restore();
+      // head
+      ctx.fillStyle='#2a1010';ctx.fillRect(7,4+bob,22,14);
+      ctx.fillStyle='#d4606a';ctx.fillRect(7,4+bob,22,3);
+      // visor slit
+      ctx.fillStyle='#ff9090';ctx.fillRect(9,10+bob,5,2);
+      ctx.restore();
+    }
+  }
+};
+
+// ═══════════════════════════════════════════════════════
+// SKILL POOL — 100 skills per class
+// ═══════════════════════════════════════════════════════
+function generateSkillPool(){
+  const skills=[];
+  const effects=['stun','defend','heal','projectile','aoe','dodge','cleave','execute','buff','poison'];
+  const classes=['tank','mage','buster'];
+  const adj=['Iron','Storm','Arcane','Wild','Blessed','Ancient','Shadow','Flame','Frost','Thunder'];
+  const nouns=['Strike','Bash','Wave','Surge','Slash','Guard','Pulse','Fury','Echo','Blast'];
+  let sid=1000;
+  for(const cls of classes){
+    for(let i=0;i<30;i++){
+      const eff=effects[Math.floor(Math.random()*8)];
+      const nm=adj[i%10]+' '+nouns[Math.floor(i/10)%10];
+      skills.push({
+        id:'gen_'+sid++, name:nm, cls,
+        desc:`${eff==='heal'?'Restore HP':eff==='aoe'?'AoE burst':eff==='buff'?'+ATK buff':'Deal damage'} — ${eff}`,
+        cd:2+Math.floor(Math.random()*8), dmgMult:0.8+Math.random()*2,
+        effect:eff, legendary:false
+      });
+    }
+    // 3 legendary per class
+    for(let i=0;i<3;i++){
+      skills.push({
+        id:'leg_'+sid++,
+        name:['Celestial Wrath','Eternal Flame','Void Rend','Soul Shatter','Heaven\'s Edge','Judgment Strike'][i%6],
+        cls, legendary:true,
+        desc:`LEGENDARY: ${['Massive AoE explosion 4x','Erase a target, ignores DEF','Heal all + deal AoE 2x'][i%3]}`,
+        cd:15,dmgMult:4,
+        effect:['aoe','execute','aoe'][i%3]
+      });
+    }
+  }
+  return skills;
+}
+
+const ALL_SKILLS = generateSkillPool();
+
+// ═══════════════════════════════════════════════════════
+// LOOT TABLE — extensive
+// ═══════════════════════════════════════════════════════
+const LOOT_TABLE = [
+  // common
+  {emoji:'⚔️',name:'Rusty Blade',rarity:'common',stats:{atk:4},desc:'Worn but reliable'},
+  {emoji:'🛡️',name:'Oak Shield',rarity:'common',stats:{def:4},desc:'Sturdy wood'},
+  {emoji:'💍',name:'Vigor Band',rarity:'common',stats:{hp:20},desc:'A simple ring'},
+  {emoji:'👞',name:'Leather Boots',rarity:'common',stats:{spd:0.1},desc:'Light footwork'},
+  {emoji:'🎩',name:'Wool Cap',rarity:'common',stats:{hp:12},desc:'Keeps you warm'},
+  {emoji:'🧤',name:'Cloth Gloves',rarity:'common',stats:{atk:3},desc:'Basic grip'},
+  {emoji:'📿',name:'Copper Beads',rarity:'common',stats:{def:3},desc:'Old trinket'},
+  {emoji:'🪨',name:'Stone Amulet',rarity:'common',stats:{hp:15},desc:'Heavy but protective'},
+  // rare
+  {emoji:'🗡️',name:'Moonsilver Blade',rarity:'rare',stats:{atk:10},desc:'Gleams at night'},
+  {emoji:'🔵',name:'Crystal Buckler',rarity:'rare',stats:{def:8},desc:'Reflects spells'},
+  {emoji:'💜',name:'Amethyst Pendant',rarity:'rare',stats:{atk:9,hp:20},desc:'Dual enchanted'},
+  {emoji:'🌙',name:'Moonboots',rarity:'rare',stats:{spd:0.25},desc:'Fleet-footed'},
+  {emoji:'🧢',name:'Ranger Hood',rarity:'rare',stats:{def:6,hp:15},desc:'Camouflage blend'},
+  {emoji:'🥊',name:'Iron Gauntlets',rarity:'rare',stats:{atk:7,def:4},desc:'Reinforced knuckles'},
+  {emoji:'🌿',name:'Druidic Torc',rarity:'rare',stats:{hp:40},desc:'Forest magic'},
+  {emoji:'🎯',name:'Falcon Bow',rarity:'rare',stats:{atk:12},desc:'Precise and swift'},
+  // epic
+  {emoji:'🔥',name:'Inferno Edge',rarity:'epic',stats:{atk:20},desc:'Burns on impact'},
+  {emoji:'❄️',name:'Frostguard',rarity:'epic',stats:{def:16},desc:'Saps enemy strength'},
+  {emoji:'⚡',name:'Thunder Ring',rarity:'epic',stats:{atk:15,spd:0.2},desc:'Crackling power'},
+  {emoji:'🌀',name:'Void Shard',rarity:'epic',stats:{def:14,hp:30},desc:'Bends reality'},
+  {emoji:'👑',name:'War Crown',rarity:'epic',stats:{hp:60},desc:'Commands respect'},
+  {emoji:'🐉',name:'Dragon Scale',rarity:'epic',stats:{def:18,hp:25},desc:'Near indestructible'},
+  {emoji:'🔮',name:'Arcane Orb',rarity:'epic',stats:{atk:22},desc:'Pure spell focus'},
+  {emoji:'💎',name:'Gemstone Heart',rarity:'epic',stats:{hp:70,atk:10},desc:'Life force crystal'},
+  // legendary
+  {emoji:'🌟',name:'Starfall Blade',rarity:'legendary',stats:{atk:35,spd:0.3},desc:'Forged from meteor'},
+  {emoji:'🏆',name:'Champion\'s Crown',rarity:'legendary',stats:{hp:100,def:20},desc:'Worn by the greatest'},
+  {emoji:'⚜️',name:'Golden Aegis',rarity:'legendary',stats:{def:30,hp:50},desc:'Blessed by Ancients'},
+  {emoji:'🌈',name:'Prismatic Rod',rarity:'legendary',stats:{atk:30,hp:40},desc:'All elements combined'},
+];
+
+const GEAR_SLOTS = ['weapon','offhand','helm','chest','legs','boots','ring1','ring2'];
+const GEAR_SLOT_NAMES = {weapon:'⚔️ Weapon',offhand:'🛡️ Off-Hand',helm:'🪖 Helm',chest:'🧥 Chest',legs:'👖 Legs',boots:'👢 Boots',ring1:'💍 Ring 1',ring2:'💍 Ring 2'};
+
+// ═══════════════════════════════════════════════════════
+// ENEMIES
+// ═══════════════════════════════════════════════════════
+const ENEMY_TYPES = [
+  {name:'Bramble Imp',color:'#c04040',emoji:'👺',hp:35,atk:10,def:2,spd:2.0,
+   draw(ctx,x,y,anim){
+     ctx.save();ctx.translate(x,y);
+     const bob=Math.sin(anim*3)*2;
+     ctx.fillStyle='#802020';ctx.fillRect(6,18+bob,20,18);
+     ctx.fillRect(9,10+bob,14,12);
+     ctx.fillStyle='#c04040';ctx.fillRect(4,20+bob,4,10);ctx.fillRect(24,20+bob,4,10);
+     ctx.fillRect(8,36+bob,8,8);ctx.fillRect(18,36+bob,8,8);
+     // eyes
+     ctx.fillStyle='#ffff00';ctx.fillRect(11,13+bob,3,3);ctx.fillRect(18,13+bob,3,3);
+     ctx.restore();
+   }
+  },
+  {name:'Mossy Troll',color:'#508040',emoji:'🧌',hp:70,atk:16,def:8,spd:1.2,
+   draw(ctx,x,y,anim){
+     ctx.save();ctx.translate(x,y);
+     const bob=Math.sin(anim*1.5)*1.5;
+     ctx.fillStyle='#2a5020';ctx.fillRect(2,10+bob,32,30);
+     ctx.fillRect(6,2+bob,24,14);
+     ctx.fillStyle='#508040';ctx.fillRect(0,14+bob,6,16);ctx.fillRect(30,14+bob,6,16);
+     ctx.fillRect(6,40+bob,12,12);ctx.fillRect(20,40+bob,12,12);
+     ctx.fillStyle='#80c060';ctx.fillRect(6,4+bob,6,3);ctx.fillRect(12,2+bob,4,3);ctx.fillRect(22,4+bob,6,3);
+     ctx.fillStyle='#ffcc00';ctx.fillRect(10,8+bob,4,4);ctx.fillRect(22,8+bob,4,4);
+     ctx.restore();
+   }
+  },
+  {name:'Frost Witch',color:'#60a0d0',emoji:'🧙',hp:50,atk:24,def:4,spd:1.8,
+   draw(ctx,x,y,anim){
+     ctx.save();ctx.translate(x,y);
+     const bob=Math.sin(anim*2)*2;
+     ctx.fillStyle='#1a3060';ctx.fillRect(6,16+bob,24,26);
+     ctx.beginPath();ctx.moveTo(6,42+bob);ctx.lineTo(10,42+bob);ctx.lineTo(6,52+bob);ctx.closePath();ctx.fill();
+     ctx.beginPath();ctx.moveTo(30,42+bob);ctx.lineTo(26,42+bob);ctx.lineTo(30,52+bob);ctx.closePath();ctx.fill();
+     ctx.fillStyle='#1a3060';ctx.fillRect(8,4+bob,20,14);
+     ctx.fillStyle='#2a4080';
+     ctx.beginPath();ctx.moveTo(6,8+bob);ctx.lineTo(18,0+bob);ctx.lineTo(30,8+bob);ctx.closePath();ctx.fill();
+     ctx.fillRect(5,8+bob,26,3);
+     ctx.fillStyle='#80d0f0';ctx.fillRect(5,10+bob,26,1.5);
+     ctx.strokeStyle='#60a0d0';ctx.lineWidth=2;
+     ctx.beginPath();ctx.arc(34,8+bob,6,0,Math.PI*2);ctx.stroke();
+     ctx.fillStyle='#60a0d044';ctx.fill();
+     ctx.restore();
+   }
+  },
+  {name:'Stone Golem',color:'#806040',emoji:'🗿',hp:120,atk:20,def:18,spd:0.8,
+   draw(ctx,x,y,anim){
+     ctx.save();ctx.translate(x,y);
+     const bob=Math.sin(anim*1)*1;
+     ctx.fillStyle='#504030';ctx.fillRect(2,10+bob,32,30);
+     ctx.fillStyle='#706050';ctx.fillRect(4,8+bob,28,26);
+     ctx.fillStyle='#504030';ctx.fillRect(5,2+bob,26,14);
+     ctx.fillRect(0,12+bob,8,20);ctx.fillRect(28,12+bob,8,20);
+     ctx.fillRect(6,40+bob,12,14);ctx.fillRect(18,40+bob,12,14);
+     ctx.fillStyle='#ff6020';ctx.fillRect(10,6+bob,5,5);ctx.fillRect(21,6+bob,5,5);
+     ctx.fillStyle='#806040';ctx.fillRect(5,14+bob,2,6);ctx.fillRect(29,14+bob,2,6);
+     ctx.restore();
+   }
+  },
+  {name:'Ember Drake',color:'#d04020',emoji:'🐲',hp:90,atk:28,def:10,spd:1.6,
+   draw(ctx,x,y,anim){
+     ctx.save();ctx.translate(x,y);
+     const bob=Math.sin(anim*2.5)*2;
+     // tail
+     ctx.fillStyle='#901010';
+     ctx.beginPath();ctx.moveTo(6,36+bob);ctx.quadraticCurveTo(-10,40+bob,-6,50+bob);ctx.lineTo(-2,50+bob);ctx.quadraticCurveTo(-6,40+bob,10,36+bob);ctx.closePath();ctx.fill();
+     // body
+     ctx.fillStyle='#b02010';ctx.fillRect(6,14+bob,28,26);
+     // wings
+     ctx.fillStyle='#801010';
+     ctx.beginPath();ctx.moveTo(8,16+bob);ctx.lineTo(-6,6+bob);ctx.lineTo(4,24+bob);ctx.closePath();ctx.fill();
+     ctx.beginPath();ctx.moveTo(28,16+bob);ctx.lineTo(42,6+bob);ctx.lineTo(32,24+bob);ctx.closePath();ctx.fill();
+     // head
+     ctx.fillStyle='#d04020';ctx.fillRect(8,2+bob,22,16);
+     // snout
+     ctx.fillRect(28,6+bob,8,8);
+     // eyes
+     ctx.fillStyle='#ffe000';ctx.fillRect(12,6+bob,4,4);ctx.fillRect(22,6+bob,4,4);
+     ctx.restore();
+   }
+  },
+];
+
+function createBossEnemy(level){
+  const scale=1+(level-1)*0.25;
+  return {
+    name:'🔥 INFERNO LORD',
+    color:'#ff4020',emoji:'👿',
+    hp:Math.floor(400*scale), maxHp:Math.floor(400*scale),
+    atk:Math.floor(35*scale), def:Math.floor(15*scale), spd:1.4,
+    isBoss:true, dead:false, x:0, y:0,
+    attackCooldown:1+Math.random(), stunTimer:0,
+    animT:0, id:Math.random(),
+    draw(ctx,x,y,anim){
+      ctx.save();ctx.translate(x,y);
+      const bob=Math.sin(anim*1.5)*3;
+      // glow
+      ctx.save();ctx.shadowColor='#ff4020';ctx.shadowBlur=20;
+      // massive body
+      ctx.fillStyle='#1a0008';ctx.fillRect(0,4+bob,50,40);
+      ctx.fillStyle='#600010';ctx.fillRect(3,6+bob,44,36);
+      // arms
+      ctx.fillStyle='#1a0008';ctx.fillRect(-8,10+bob,12,22);ctx.fillRect(46,10+bob,12,22);
+      ctx.fillStyle='#c02020';ctx.fillRect(-6,12+bob,4,8);ctx.fillRect(52,12+bob,4,8);
+      // head
+      ctx.fillStyle='#300008';ctx.fillRect(8,0+bob,34,18);
+      // horns
+      ctx.fillStyle='#c04020';
+      ctx.beginPath();ctx.moveTo(12,2+bob);ctx.lineTo(8,-10+bob);ctx.lineTo(18,2+bob);ctx.closePath();ctx.fill();
+      ctx.beginPath();ctx.moveTo(38,2+bob);ctx.lineTo(42,-10+bob);ctx.lineTo(32,2+bob);ctx.closePath();ctx.fill();
+      // crown
+      ctx.fillStyle='#d4a017';ctx.fillRect(8,-2+bob,34,5);
+      ctx.fillRect(12,-8+bob,4,6);ctx.fillRect(23,-8+bob,4,6);ctx.fillRect(34,-8+bob,4,6);
+      // eyes
+      ctx.restore();
+      ctx.save();ctx.shadowColor='#ff6020';ctx.shadowBlur=8;
+      ctx.fillStyle='#ff6020';ctx.fillRect(14,4+bob,6,6);ctx.fillRect(30,4+bob,6,6);
+      ctx.restore();
+      // legs
+      ctx.fillStyle='#1a0008';ctx.fillRect(8,44+bob,16,14);ctx.fillRect(26,44+bob,16,14);
+      ctx.fillStyle='#600010';ctx.fillRect(5,54+bob,20,5);ctx.fillRect(25,54+bob,20,5);
+      ctx.restore();
+    }
+  };
+}
+
+// ═══════════════════════════════════════════════════════
+// GAME STATE
+// ═══════════════════════════════════════════════════════
+let game = {
+  classId: null,
+  level: 1,
+  stageInCampaign: 0, // 0-9, 10 stages per campaign
+  campaignNumber: 1,
+  party: [],       // array of hero objects
+  selectedHeroIdx: 0,
+  inventory: [],   // global inventory
+  skillPool: [],   // earned skills
+  enemies: [],
+  particles: [],
+  floatingTexts: [],
+  projectiles: [],
+  parallax: {layers:[],offset:0},
+  animId: null,
+  battleRunning: false,
+  logEntries: [],
+  currentStageEnemies: [],
+  stagesCleared: 0,
+  campaignStages: [],  // pre-generated 10 stages
+};
+
+function makeHero(classId){
+  const cls = CLASS_DEFS[classId];
+  return {
+    classId, name:cls.name, emoji:cls.emoji,
+    hp:cls.hp, maxHp:cls.hp,
+    atk:cls.atk, def:cls.def, spd:cls.spd,
+    baseAtk:cls.atk, baseDef:cls.def, baseSpd:cls.spd, baseMaxHp:cls.hp,
+    x:0, y:0, vx:0, vy:0, targetX:0, targetY:0,
+    attackCooldown:1, stunTimer:0,
+    defending:false, dodging:false, buffTimer:0, poisonTimer:0,
+    animT:0, jumpAnim:0, dead:false,
+    equippedSkills:[null,null,null], legendarySkill:null,
+    gearSlots: {weapon:null,offhand:null,helm:null,chest:null,legs:null,boots:null,ring1:null,ring2:null},
+    skillCooldowns:{},
+  };
+}
+
+// ═══════════════════════════════════════════════════════
+// SCREENS
+// ═══════════════════════════════════════════════════════
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function goToClassSelect(){
+  if(game.animId){ cancelAnimationFrame(game.animId); game.animId=null; }
+  game.battleRunning=false;
+  drawClassIcons();
+  showScreen('classSelect');
+}
+
+function drawClassIcons(){
+  for(const [cid,cls] of Object.entries(CLASS_DEFS)){
+    const cv=document.getElementById('icon_'+cid);
+    if(!cv) continue;
+    const ctx=cv.getContext('2d');
+    ctx.clearRect(0,0,60,60);
+    cls.draw(ctx,10,5,false,0);
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+// CLASS SELECT
+// ═══════════════════════════════════════════════════════
+function selectClass(classId){
+  game.classId = classId;
+  game.level = 1;
+  game.campaignNumber = 1;
+  game.stageInCampaign = 0;
+  game.skillPool = [];
+  game.inventory = [];
+
+  const hero = makeHero(classId);
+  hero.equippedSkills[0] = CLASS_DEFS[classId].baseSkills[0];
+  hero.equippedSkills[1] = CLASS_DEFS[classId].baseSkills[1];
+  game.party = [hero];
+
+  // starter loot
+  for(let i=0;i<3;i++){
+    const item = {...LOOT_TABLE[Math.floor(Math.random()*8)], equipped:false, id:Date.now()+i};
+    game.inventory.push(item);
+  }
+  // starter skills
+  for(const sk of CLASS_DEFS[classId].baseSkills){
+    if(!game.skillPool.find(s=>s.id===sk.id)) game.skillPool.push({...sk});
+  }
+
+  buildManagementScreen();
+  showScreen('managementScreen');
+}
+
+// ═══════════════════════════════════════════════════════
+// MANAGEMENT SCREEN
+// ═══════════════════════════════════════════════════════
+let activeTab='skills';
+function switchTab(tab){
+  activeTab=tab;
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('tab-'+tab).classList.add('active');
+  buildManagementScreen();
+}
+
+function buildManagementScreen(){
+  const hero = game.party[game.selectedHeroIdx];
+  if(!hero) return;
+  recalcHeroStats(hero);
+
+  // PARTY SLOTS
+  const psl = document.getElementById('partySlotsList');
+  psl.innerHTML='';
+  const maxParty = 1 + Math.floor(game.level/10);
+  for(let i=0;i<Math.min(10,maxParty);i++){
+    const h=game.party[i];
+    const div=document.createElement('div');
+    div.className='party-slot'+(h?' active':'');
+    if(i===game.selectedHeroIdx && h) div.style.borderColor='var(--gold)';
+    if(!h){ div.className='party-slot locked'; div.innerHTML=`<span class="ps-num">${i+1}</span><span class="ps-icon">🔒</span><div class="ps-info"><div class="ps-name">Locked</div><div class="ps-detail">Lv ${(i)*10} needed</div></div>`; }
+    else {
+      div.innerHTML=`<span class="ps-num">${i+1}</span><span class="ps-icon">${h.emoji}</span><div class="ps-info"><div class="ps-name">${h.name}</div><div class="ps-detail">HP ${h.hp}/${h.maxHp} | ATK ${h.atk}</div></div>`;
+      div.onclick=()=>{ game.selectedHeroIdx=i; buildManagementScreen(); };
+    }
+    psl.appendChild(div);
+  }
+
+  // STATS PANEL
+  const h=hero;
+  document.getElementById('mgmtStats').innerHTML=`
+    <div class="stat-line"><span>⚔️ ATK</span><span class="sv">${h.atk}</span></div>
+    <div class="stat-line"><span>🛡️ DEF</span><span class="sv">${h.def}</span></div>
+    <div class="stat-line"><span>💨 SPD</span><span class="sv">${h.spd.toFixed(2)}</span></div>
+  `;
+  document.getElementById('mgmtHpBar').style.width=(h.hp/h.maxHp*100)+'%';
+  document.getElementById('mgmtHpText').textContent=`HP ${h.hp}/${h.maxHp}`;
+
+  // SAVE SLOTS
+  const ssd=document.getElementById('saveSlotsDiv');
+  ssd.innerHTML='';
+  for(let i=0;i<3;i++){
+    const saved=getSave(i);
+    const div=document.createElement('div');
+    div.className='save-slot';
+    div.innerHTML=`<div><div class="save-slot-name">Slot ${i+1}</div><div class="save-slot-info">${saved?`Lv${saved.level} · ${saved.date}`:'— Empty —'}</div></div><div style="display:flex;gap:5px">${saved?'<button class="btn-secondary-cozy" style="padding:3px 7px;font-size:0.6rem" onclick="loadGame('+i+')">Load</button>':''}<button class="btn-secondary-cozy" style="padding:3px 7px;font-size:0.6rem" onclick="saveGame('+i+')">Save</button></div>`;
+    ssd.appendChild(div);
+  }
+
+  // TABS
+  if(activeTab==='skills') buildSkillsTab(h);
+  if(activeTab==='equip') buildEquipTab(h);
+  if(activeTab==='codex') buildCodexTab();
+
+  // MISSION BOX
+  const mb=document.getElementById('missionBox');
+  const isBossLevel=(game.stageInCampaign===9);
+  mb.innerHTML=`<div class="mission-title">${isBossLevel?'⚠️ BOSS ENCOUNTER':'🌿 Adventure Stage'}</div>
+    <div class="mission-detail">Campaign ${game.campaignNumber} · Stage ${game.stageInCampaign+1}/10<br>
+    Level ${game.level} · ${isBossLevel?'<b style="color:var(--rose)">Boss awaits!</b>':'Varied enemies ahead'}<br>
+    Threat: <b>${game.level<5?'Cozy':'game.level<10'?'Tense':game.level<20?'Fierce':'Legendary'}</b></div>`;
+
+  // ENEMY PREVIEW
+  const epl=document.getElementById('enemyPreviewList');
+  epl.innerHTML='';
+  const preview=generateStageEnemies(game.stageInCampaign,game.level);
+  preview.slice(0,4).forEach(e=>{
+    const d=document.createElement('div');
+    d.className='enemy-chip';
+    d.innerHTML=`<span class="ec-icon">${e.emoji||'👹'}</span><div><div class="ec-name">${e.name}</div><div class="ec-stat">HP:${e.hp} ATK:${e.atk} DEF:${e.def}</div></div>`;
+    epl.appendChild(d);
+  });
+  if(preview.length>4){
+    const more=document.createElement('div');
+    more.style.cssText='font-size:0.6rem;color:var(--brown);text-align:center;padding:3px';
+    more.textContent=`+${preview.length-4} more foes`;
+    epl.appendChild(more);
+  }
+}
+
+function buildSkillsTab(hero){
+  document.getElementById('equippedHeroName').textContent=hero.name;
+  const grid=document.getElementById('equippedSkillsGrid');
+  grid.innerHTML='';
+
+  // 3 basic slots
+  for(let i=0;i<3;i++){
+    const sk=hero.equippedSkills[i];
+    const div=document.createElement('div');
+    div.className='skill-slot'+(sk?' filled':'');
+    div.innerHTML=sk?`<div class="sk-name">${sk.name}</div><div class="sk-desc">${sk.desc} · CD:${sk.cd}s</div>`:`<div class="empty-slot">[ Basic Slot ${i+1} — Click skill below ]</div>`;
+    if(sk){ div.onclick=()=>{ hero.equippedSkills[i]=null; buildManagementScreen(); }; }
+    grid.appendChild(div);
+  }
+  // legendary slot
+  const lsk=hero.legendarySkill;
+  const ldiv=document.createElement('div');
+  ldiv.className='skill-slot'+(lsk?' filled legendary':'  legendary');
+  ldiv.innerHTML=lsk?`<div class="sk-name">⭐ ${lsk.name}</div><div class="sk-desc">${lsk.desc} · CD:${lsk.cd}s</div>`:`<div class="empty-slot">⭐ [ Legendary Slot — Drop from battles ]</div>`;
+  if(lsk){ ldiv.onclick=()=>{ hero.legendarySkill=null; buildManagementScreen(); }; }
+  grid.appendChild(ldiv);
+
+  // SKILL POOL
+  const pool=document.getElementById('skillPoolGrid');
+  pool.innerHTML='';
+  document.getElementById('skillCountBadge').textContent=`(${game.skillPool.length}/${ALL_SKILLS.length})`;
+  if(game.skillPool.length===0){
+    pool.innerHTML='<div style="color:var(--brown);font-size:0.68rem;font-style:italic;padding:8px">Win battles to earn skills!</div>';
+    return;
+  }
+  game.skillPool.forEach(sk=>{
+    const div=document.createElement('div');
+    div.className='skill-pool-item'+(sk.legendary?' legendary-pool':'');
+    div.innerHTML=`<div class="sp-name">${sk.legendary?'⭐ ':''}<b>${sk.name}</b> ${sk.legendary?'<span class="sp-leg">LEGENDARY</span>':''}</div><div class="sp-cls">${sk.effect.toUpperCase()} · CD:${sk.cd}s · Mult:${sk.dmgMult.toFixed(1)}x</div>`;
+    div.onclick=()=>{
+      if(sk.legendary){
+        hero.legendarySkill=sk;
+      } else {
+        const slot=hero.equippedSkills.findIndex(s=>!s);
+        if(slot!==-1) hero.equippedSkills[slot]=sk;
+        else hero.equippedSkills[2]=sk;
+      }
+      buildManagementScreen();
+    };
+    pool.appendChild(div);
+  });
+}
+
+function buildEquipTab(hero){
+  document.getElementById('gearHeroName').textContent=hero.name;
+  const gs=document.getElementById('gearSlots');
+  gs.innerHTML='';
+  for(const slot of GEAR_SLOTS){
+    const item=hero.gearSlots[slot];
+    const div=document.createElement('div');
+    div.className='equip-slot'+(item?' has-item':'');
+    if(item){
+      div.innerHTML=`<div class="es-icon">${item.emoji}</div><div class="es-name">${item.name}</div><div class="es-stat">${Object.entries(item.stats).map(([k,v])=>'+'+v+' '+k.toUpperCase()).join(' ')}</div>`;
+      div.onclick=()=>{ unequipGear(hero,slot); buildManagementScreen(); };
+    } else {
+      div.innerHTML=`<div style="color:var(--dusk);font-size:0.7rem">${GEAR_SLOT_NAMES[slot]}<br><span style="font-size:0.58rem;font-style:italic">empty</span></div>`;
+    }
+    gs.appendChild(div);
+  }
+
+  const invGrid=document.getElementById('fullInvGrid');
+  invGrid.innerHTML='';
+  document.getElementById('invCountBadge').textContent=`(${game.inventory.length} items)`;
+  game.inventory.forEach((item,idx)=>{
+    const isEquipped=Object.values(hero.gearSlots).includes(item)||
+      game.party.some(h=>Object.values(h.gearSlots).includes(item));
+    const div=document.createElement('div');
+    div.className=`inv-item ${item.rarity}${isEquipped?' equipped-inv':''}`;
+    div.innerHTML=`${item.emoji}<div class="item-tip">${item.name}<br>${item.rarity.toUpperCase()}<br>${Object.entries(item.stats).map(([k,v])=>'+'+v+' '+k).join(' | ')}<br><i>${item.desc}</i><br>${isEquipped?'[Equipped - click to unequip]':'[Click to equip]'}</div>`;
+    div.onclick=()=>{
+      if(isEquipped){
+        for(const slot of GEAR_SLOTS){
+          if(hero.gearSlots[slot]===item){ unequipGear(hero,slot); break; }
+        }
+      } else {
+        // find best slot
+        for(const slot of GEAR_SLOTS){
+          if(!hero.gearSlots[slot]){ equipGear(hero,slot,item,idx); break; }
+        }
+      }
+      buildManagementScreen();
+    };
+    invGrid.appendChild(div);
+  });
+}
+
+function equipGear(hero,slot,item){
+  hero.gearSlots[slot]=item;
+  recalcHeroStats(hero);
+}
+
+function unequipGear(hero,slot){
+  hero.gearSlots[slot]=null;
+  recalcHeroStats(hero);
+}
+
+function recalcHeroStats(hero){
+  const cls=CLASS_DEFS[hero.classId];
+  hero.atk=cls.atk; hero.def=cls.def; hero.spd=cls.spd;
+  const hpBonus=Object.values(hero.gearSlots).filter(Boolean)
+    .reduce((s,it)=>{
+      if(it.stats.atk) hero.atk+=it.stats.atk;
+      if(it.stats.def) hero.def+=it.stats.def;
+      if(it.stats.spd) hero.spd+=it.stats.spd;
+      return s+(it.stats.hp||0);
+    },0);
+  hero.maxHp=cls.hp+hpBonus;
+  hero.hp=Math.min(hero.hp,hero.maxHp);
+}
+
+function buildCodexTab(){
+  const el=document.getElementById('codexContent');
+  let html='<b>Classes Unlocked:</b><br>';
+  const unlockLevels={tank:'Start',mage:'Start',buster:'Start'};
+  for(const [k,cls] of Object.entries(CLASS_DEFS)){
+    html+=`${cls.emoji} <b>${cls.name}</b> — ${unlockLevels[k]}<br>`;
+  }
+  html+=`<br><b>Campaign Progress:</b><br>`;
+  html+=`Campaign ${game.campaignNumber} · Level ${game.level}<br>`;
+  html+=`Next party slot: Lv ${Math.ceil(game.party.length/1)*10}<br>`;
+  html+=`<br><b>Skills Collected:</b> ${game.skillPool.length}<br>`;
+  html+=`<b>Inventory Items:</b> ${game.inventory.length}<br>`;
+  el.innerHTML=html;
+}
+
+// ═══════════════════════════════════════════════════════
+// SAVE SYSTEM
+// ═══════════════════════════════════════════════════════
+function saveGame(slot){
+  const data={
+    level:game.level, campaignNumber:game.campaignNumber,
+    stageInCampaign:game.stageInCampaign,
+    party:game.party, inventory:game.inventory, skillPool:game.skillPool,
+    selectedHeroIdx:game.selectedHeroIdx,
+    date:new Date().toLocaleDateString()
+  };
+  localStorage.setItem('hbh_save_'+slot, JSON.stringify(data));
+  buildManagementScreen();
+  showToast('💾 Game saved to slot '+(slot+1)+'!');
+}
+
+function loadGame(slot){
+  const raw=localStorage.getItem('hbh_save_'+slot);
+  if(!raw) return;
+  const data=JSON.parse(raw);
+  game.level=data.level;
+  game.campaignNumber=data.campaignNumber;
+  game.stageInCampaign=data.stageInCampaign||0;
+  game.party=data.party;
+  game.inventory=data.inventory;
+  game.skillPool=data.skillPool;
+  game.selectedHeroIdx=data.selectedHeroIdx||0;
+  game.classId=game.party[0]?.classId;
+  buildManagementScreen();
+  showToast('📂 Loaded slot '+(slot+1)+'!');
+}
+
+function getSave(slot){
+  const raw=localStorage.getItem('hbh_save_'+slot);
+  return raw?JSON.parse(raw):null;
+}
+
+function showToast(msg){
+  const t=document.createElement('div');
+  t.style.cssText=`position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--bark);color:var(--cream);padding:10px 18px;border-radius:10px;font-size:0.78rem;font-weight:700;z-index:999;pointer-events:none`;
+  t.textContent=msg;
+  document.body.appendChild(t);
+  setTimeout(()=>t.remove(),2000);
+}
+
+// ═══════════════════════════════════════════════════════
+// ENEMY GENERATION
+// ═══════════════════════════════════════════════════════
+function generateStageEnemies(stage,level){
+  const isBoss=(stage===9);
+  if(isBoss) return [createBossEnemy(level)];
+  const count=3+Math.floor(stage*0.8)+Math.floor(level*0.3);
+  const list=[];
+  for(let i=0;i<count;i++){
+    const tier=Math.min(Math.floor(level/3),ENEMY_TYPES.length-1);
+    const typeIdx=Math.floor(Math.random()*(tier+1));
+    const base=ENEMY_TYPES[typeIdx];
+    const scale=1+(level-1)*0.18+(stage*0.05);
+    list.push({
+      ...base,
+      hp:Math.floor(base.hp*scale), maxHp:Math.floor(base.hp*scale),
+      atk:Math.floor(base.atk*scale), def:Math.floor(base.def+level*0.5),
+      dead:false, x:0, y:0, vx:0, vy:0, targetX:0, targetY:0,
+      attackCooldown:0.8+Math.random()*1.2, stunTimer:0, animT:0,
+      id:Math.random(), isBoss:false,
+      emoji:base.emoji,
+    });
+  }
+  return list;
+}
+
+// ═══════════════════════════════════════════════════════
+// LAUNCH CAMPAIGN
+// ═══════════════════════════════════════════════════════
+function launchCampaign(){
+  // Restore HP partially
+  game.party.forEach(h=>{ if(!h.dead) h.hp=Math.min(h.maxHp, h.hp+Math.floor(h.maxHp*0.4)); h.dead=false; });
+  startNextStage();
+}
+
+function startNextStage(){
+  game.enemies=generateStageEnemies(game.stageInCampaign, game.level);
+  game.particles=[];
+  game.floatingTexts=[];
+  game.projectiles=[];
+  game.logEntries=[];
+
+  // Reset hero battle state
+  game.party.forEach(h=>{
+    h.attackCooldown=1+Math.random();
+    h.stunTimer=0; h.defending=false; h.dodging=false; h.buffTimer=0; h.poisonTimer=0;
+    h.skillCooldowns={};
+    h.animT=0; h.jumpAnim=0;
+    // Set start positions based on behavior
+    const canvas=document.getElementById('battleCanvas');
+    const W=canvas.width||600; const H=canvas.height||300;
+    const GROUND=H*0.72;
+    if(CLASS_DEFS[h.classId].behavior==='mage'){
+      h.x=60; h.y=GROUND-52; h.targetX=60;
+    } else if(CLASS_DEFS[h.classId].behavior==='tank'){
+      h.x=100; h.y=GROUND-52; h.targetX=100;
+    } else {
+      h.x=130; h.y=GROUND-52; h.targetX=130;
+    }
+  });
+
+  buildBattleHUD();
+  showScreen('battleScreen');
+  setupCanvas();
+  initParallax();
+  showStageBanner();
+
+  game.battleRunning=true;
+  let last=performance.now();
+  function loop(now){
+    const dt=Math.min((now-last)/1000,0.05);
+    last=now;
+    update(dt);
+    render();
+    if(game.battleRunning) game.animId=requestAnimationFrame(loop);
+  }
+  game.animId=requestAnimationFrame(loop);
+}
+
+function showStageBanner(){
+  const banner=document.getElementById('stageBanner');
+  const isBoss=game.stageInCampaign===9;
+  banner.innerHTML=isBoss?'⚠️ BOSS STAGE ⚠️':`Stage ${game.stageInCampaign+1} / 10`;
+  if(isBoss) banner.style.color='var(--rose)';
+  else banner.style.color='var(--darkbrown)';
+  banner.classList.add('show');
+  setTimeout(()=>banner.classList.remove('show'),2000);
+}
+
+function setupCanvas(){
+  const cont=document.getElementById('battleContainer');
+  const cv=document.getElementById('battleCanvas');
+  cv.width=cont.clientWidth; cv.height=cont.clientHeight;
+}
+
+function initParallax(){
+  const cv=document.getElementById('battleCanvas');
+  const W=cv.width, H=cv.height;
+  game.parallax.offset=0;
+  game.parallax.layers=[
+    {speed:0.08, elements:Array.from({length:6},()=>({x:Math.random()*W*2, y:H*0.05+Math.random()*H*0.3, w:40+Math.random()*80, h:60+Math.random()*120, color:'#c8e6c988'}))},
+    {speed:0.18, elements:Array.from({length:10},()=>({x:Math.random()*W*2, y:H*0.1+Math.random()*H*0.4, w:15+Math.random()*40, h:40+Math.random()*80, color:'#6b9e5e66'}))},
+    {speed:0.35, elements:Array.from({length:14},()=>({x:Math.random()*W*2, y:H*0.4+Math.random()*H*0.25, w:8+Math.random()*20, h:20+Math.random()*40, color:'#4a7c5944'}))},
+  ];
+}
+
+// ═══════════════════════════════════════════════════════
+// HUD
+// ═══════════════════════════════════════════════════════
+function buildBattleHUD(){
+  const hudUnits=document.getElementById('hudUnits');
+  hudUnits.innerHTML='';
+  hudUnits.style.display='flex';
+  hudUnits.style.gap='12px';
+  game.party.forEach((h,i)=>{
+    const div=document.createElement('div');
+    div.className='hud-unit';
+    div.id='hud_unit_'+i;
+    div.innerHTML=`<div class="hud-unit-name">${h.emoji} ${h.name}</div>
+      <div class="hud-hp-bg"><div class="hud-hp-bar" id="hud_hp_${i}" style="width:100%"></div></div>
+      <div class="hud-hp-txt" id="hud_hptxt_${i}">${h.hp}/${h.maxHp}</div>`;
+    hudUnits.appendChild(div);
+  });
+  updateHudHP();
+  document.getElementById('hudStageText').textContent=
+    game.stageInCampaign===9?'⚠️ BOSS STAGE':`Stage ${game.stageInCampaign+1}/10`;
+  document.getElementById('hudStageSub').textContent=`Campaign ${game.campaignNumber} · Lv${game.level}`;
+
+  const hudSkills=document.getElementById('hudSkills');
+  hudSkills.innerHTML='';
+  const hero=game.party[0];
+  if(!hero) return;
+  [...hero.equippedSkills.filter(Boolean),hero.legendarySkill].filter(Boolean).forEach(sk=>{
+    const div=document.createElement('div');
+    div.className='hud-skill-btn'+(sk.legendary?' leg':'');
+    div.id='hudsk_'+sk.id;
+    div.textContent=sk.name;
+    hudSkills.appendChild(div);
+  });
+}
+
+function updateHudHP(){
+  game.party.forEach((h,i)=>{
+    const bar=document.getElementById('hud_hp_'+i);
+    const txt=document.getElementById('hud_hptxt_'+i);
+    if(!bar||!txt) return;
+    const pct=Math.max(0,h.hp/h.maxHp*100);
+    bar.style.width=pct+'%';
+    bar.style.background=pct>50?'var(--forest)':pct>25?'var(--gold)':'var(--rose)';
+    txt.textContent=`${Math.max(0,h.hp)}/${h.maxHp}`;
+  });
+}
+
+function addLog(msg,type=''){
+  game.logEntries.unshift({msg,type});
+  if(game.logEntries.length>10) game.logEntries.pop();
+  const log=document.getElementById('battleLog');
+  if(log) log.innerHTML=game.logEntries.map(e=>`<div class="log-entry ${e.type}">${e.msg}</div>`).join('');
+}
+
+// ═══════════════════════════════════════════════════════
+// UPDATE
+// ═══════════════════════════════════════════════════════
+function update(dt){
+  const cv=document.getElementById('battleCanvas');
+  const W=cv.width, H=cv.height;
+  const GROUND=H*0.72;
+  game.parallax.offset+=dt*40;
+
+  const aliveHeroes=game.party.filter(h=>!h.dead);
+  const aliveEnemies=game.enemies.filter(e=>!e.dead);
+
+  // HERO BEHAVIOR & MOVEMENT
+  game.party.forEach(h=>{
+    if(h.dead) return;
+    h.animT+=dt;
+    if(h.buffTimer>0) h.buffTimer-=dt;
+    if(h.stunTimer>0){h.stunTimer-=dt;return;}
+    if(h.poisonTimer>0){
+      h.poisonTimer-=dt;
+      if(h.poisonTimer<=0){ h.poisonDmg=0; }
+      else { h.hp-=dt*3; h.hp=Math.max(1,h.hp); }
+    }
+
+    const behavior=CLASS_DEFS[h.classId].behavior;
+    if(aliveEnemies.length>0){
+      if(behavior==='tank'){
+        // Move towards frontmost enemy, stop at melee range
+        const frontEnemy=aliveEnemies.reduce((a,b)=>a.x<b.x?a:b);
+        h.targetX=frontEnemy.x-50;
+        h.targetX=Math.max(60,Math.min(W*0.35,h.targetX));
+      } else if(behavior==='mage'){
+        // Always run to back
+        h.targetX=Math.min(80,W*0.1);
+        // if enemy too close, flee
+        const nearest=aliveEnemies.reduce((a,b)=>Math.abs(a.x-h.x)<Math.abs(b.x-h.x)?a:b);
+        if(nearest.x<h.x+80) h.targetX=Math.max(20,h.x-60);
+      } else if(behavior==='buster'){
+        // Jump towards enemy if cooldown ready, then back
+        const target=aliveEnemies[0];
+        if(h.attackCooldown<=0){
+          h.targetX=target.x-40;
+        } else {
+          h.targetX=Math.min(160,W*0.2);
+        }
+      }
+    }
+    // Lerp position
+    const spd=120+h.spd*20;
+    const dx=h.targetX-h.x;
+    if(Math.abs(dx)>2) h.x+=dx*dt*3;
+    h.y=GROUND-52;
+
+    // HERO ATTACKS
+    if(h.attackCooldown>0){h.attackCooldown-=dt;return;}
+    if(aliveEnemies.length===0) return;
+
+    let target=aliveEnemies[0];
+    if(behavior==='mage'){
+      // target lowest hp
+      target=aliveEnemies.reduce((a,b)=>a.hp<b.hp?a:b);
+    }
+
+    // Try skills
+    let usedSkill=false;
+    const allSkills=[...h.equippedSkills.filter(Boolean),h.legendarySkill].filter(Boolean);
+    for(const sk of allSkills){
+      if((h.skillCooldowns[sk.id]||0)<=0){
+        h.skillCooldowns[sk.id]=sk.cd;
+        useSkill(h,sk,target,aliveEnemies);
+        usedSkill=true;
+        break;
+      }
+    }
+    if(!usedSkill){
+      const buffMult=h.buffTimer>0?1.6:1;
+      const dmg=Math.max(1,Math.floor(h.atk*buffMult-target.def+Math.floor(Math.random()*6)));
+      target.hp-=dmg;
+      addLog(`${h.emoji} hits ${target.name} for ${dmg}`,'hit');
+      spawnDmgText(target.x+18,target.y,dmg,'#c04040');
+      spawnParticles(target.x+18,target.y+20,3,'#d4606a');
+      if(target.hp<=0){target.dead=true;addLog(`${target.name} defeated!`,'skill');spawnParticles(target.x+18,target.y+20,10,'#d4a017');}
+    }
+    h.attackCooldown=1/h.spd;
+    // update skill CDs
+    for(const sk of allSkills){
+      if(h.skillCooldowns[sk.id]>0) h.skillCooldowns[sk.id]-=0; // already ticked above
+    }
+  });
+
+  // Tick skill cooldowns
+  game.party.forEach(h=>{
+    const allSkills=[...h.equippedSkills.filter(Boolean),h.legendarySkill].filter(Boolean);
+    allSkills.forEach(sk=>{
+      if((h.skillCooldowns[sk.id]||0)>0) h.skillCooldowns[sk.id]-=dt;
+      const el=document.getElementById('hudsk_'+sk.id);
+      if(el){
+        const cd=h.skillCooldowns[sk.id]||0;
+        el.className='hud-skill-btn'+(sk.legendary?' leg':'')+(cd<=0?' active':'');
+        el.textContent=cd>0?`${sk.name} ${cd.toFixed(1)}`:sk.name;
+      }
+    });
+  });
+
+  // ENEMY BEHAVIOR & MOVEMENT
+  game.enemies.forEach(e=>{
+    if(e.dead) return;
+    e.animT+=dt;
+    if(e.stunTimer>0){e.stunTimer-=dt;return;}
+
+    if(aliveHeroes.length===0) return;
+    // find closest hero
+    const heroTarget=aliveHeroes.reduce((a,b)=>Math.abs(a.x-e.x)<Math.abs(b.x-e.x)?a:b);
+    e.targetX=heroTarget.x+50;
+    const ex=e.targetX-e.x;
+    if(Math.abs(ex)>3) e.x+=ex*dt*2;
+    e.y=GROUND-52;
+
+    if(e.attackCooldown>0){e.attackCooldown-=dt;return;}
+    // attack nearest hero
+    const dmg=Math.max(1,e.atk-heroTarget.def+Math.floor(Math.random()*5));
+    if(heroTarget.dodging){
+      addLog(`${heroTarget.emoji} dodged!`,'skill');
+      heroTarget.dodging=false;
+    } else {
+      const finalDmg=heroTarget.defending?Math.floor(dmg*0.5):dmg;
+      heroTarget.hp-=finalDmg;
+      addLog(`${e.name} hits ${heroTarget.emoji} for ${finalDmg}`,'hit');
+      spawnDmgText(heroTarget.x+18,heroTarget.y,finalDmg,'#d0404a');
+      spawnParticles(heroTarget.x+18,heroTarget.y+20,2,'#d4606a');
+      updateHudHP();
+      if(heroTarget.hp<=0){ heroTarget.dead=true; heroTarget.hp=0; addLog(`${heroTarget.emoji} ${heroTarget.name} fell!`,'boss'); }
+    }
+    e.attackCooldown=1/e.spd;
+  });
+
+  // Update projectiles
+  game.projectiles.forEach(p=>{
+    p.x+=p.vx*dt*200; p.y+=p.vy*dt*60;
+    p.life-=dt;
+    if(p.life<=0 && p.target && !p.target.dead){
+      p.target.hp-=p.dmg;
+      spawnParticles(p.target.x+18,p.target.y+10,8,p.color);
+      spawnDmgText(p.target.x+18,p.target.y,p.dmg,'#9b7ec8');
+      if(p.target.hp<=0){p.target.dead=true;spawnParticles(p.target.x+18,p.target.y+20,12,'#d4a017');}
+    }
+  });
+  game.projectiles=game.projectiles.filter(p=>p.life>0);
+
+  // Particles & floats
+  game.particles.forEach(p=>{ p.x+=p.vx*dt*60; p.y+=p.vy*dt*60; p.vy+=0.5*dt*60; p.life-=dt; p.alpha=p.life/p.maxLife; });
+  game.particles=game.particles.filter(p=>p.life>0);
+  game.floatingTexts.forEach(t=>{ t.y-=dt*45; t.life-=dt; t.alpha=t.life/t.maxLife; });
+  game.floatingTexts=game.floatingTexts.filter(t=>t.life>0);
+
+  // Win/Lose check
+  const allEnemiesDead=game.enemies.every(e=>e.dead);
+  if(allEnemiesDead){ endStage(true); return; }
+  const allHeroesDead=game.party.every(h=>h.dead);
+  if(allHeroesDead){ endStage(false); return; }
+}
+
+function useSkill(hero,sk,target,aliveEnemies){
+  const buffMult=hero.buffTimer>0?1.6:1;
+  const atk=hero.atk*buffMult;
+
+  if(sk.effect==='stun'){
+    const dmg=Math.max(1,Math.floor(atk*sk.dmgMult)-target.def);
+    target.hp-=dmg; target.stunTimer=2;
+    addLog(`✨ ${sk.name}! ${target.name} stunned! (${dmg})`,'skill');
+    spawnDmgText(target.x+18,target.y-8,dmg,'#d4a017');
+    spawnParticles(target.x+18,target.y+10,8,'#d4a017');
+    if(target.hp<=0){target.dead=true;spawnParticles(target.x+18,target.y+20,12,'#d4a017');}
+  } else if(sk.effect==='defend'){
+    hero.defending=true;
+    addLog(`🛡️ ${sk.name}! DMG halved!`,'skill');
+    setTimeout(()=>{hero.defending=false;},3000);
+    spawnParticles(hero.x+18,hero.y+10,6,'#5b8dd9');
+  } else if(sk.effect==='heal'){
+    const heal=Math.floor(hero.maxHp*0.25);
+    hero.hp=Math.min(hero.maxHp,hero.hp+heal);
+    addLog(`💚 ${sk.name}! Healed ${heal} HP`,'heal');
+    spawnDmgText(hero.x+18,hero.y-8,heal,'#4a7c59');
+    spawnParticles(hero.x+18,hero.y+10,6,'#4a7c59');
+    updateHudHP();
+  } else if(sk.effect==='projectile'){
+    const dmg=Math.max(1,Math.floor(atk*sk.dmgMult)-target.def);
+    addLog(`🔮 ${sk.name}! Projectile! (${dmg})`,'skill');
+    game.projectiles.push({
+      x:hero.x+20, y:hero.y+20,
+      vx:(target.x-hero.x)/Math.abs(target.x-hero.x)*1.2, vy:-0.3,
+      life:0.6, target, dmg, color:'#9b7ec8'
+    });
+  } else if(sk.effect==='aoe'){
+    aliveEnemies.forEach(e=>{
+      const dmg=Math.max(1,Math.floor(atk*sk.dmgMult)-e.def);
+      e.hp-=dmg;
+      spawnDmgText(e.x+18,e.y-8,dmg,'#9b7ec8');
+      spawnParticles(e.x+18,e.y+10,6,'#9b7ec8');
+      if(e.hp<=0){e.dead=true;spawnParticles(e.x+18,e.y+20,10,'#d4a017');}
+    });
+    addLog(`💥 ${sk.name}! AoE blast!`,'skill');
+  } else if(sk.effect==='dodge'){
+    hero.dodging=true;
+    const dmg=Math.max(1,Math.floor(atk*sk.dmgMult)-target.def);
+    target.hp-=dmg;
+    addLog(`💨 ${sk.name}! Blink counter! (${dmg})`,'skill');
+    spawnDmgText(target.x+18,target.y-8,dmg,'#9b7ec8');
+    if(target.hp<=0){target.dead=true;spawnParticles(target.x+18,target.y+20,10,'#d4a017');}
+  } else if(sk.effect==='cleave'){
+    const dmg=Math.max(1,Math.floor(atk*sk.dmgMult)-target.def);
+    target.hp-=dmg;
+    // buster jump animation
+    hero.jumpAnim=0.5;
+    addLog(`⚔️ ${sk.name}! Cleave! (${dmg})`,'skill');
+    spawnDmgText(target.x+18,target.y-8,dmg,'#d4606a');
+    spawnParticles(target.x+18,target.y+10,10,'#d4606a');
+    if(target.hp<=0){target.dead=true;spawnParticles(target.x+18,target.y+20,12,'#d4a017');}
+  } else if(sk.effect==='execute'){
+    const lowHp=target.hp/target.maxHp<0.3;
+    const mult=lowHp?sk.dmgMult:1.2;
+    const dmg=Math.max(1,Math.floor(atk*mult)-target.def);
+    target.hp-=dmg;
+    hero.jumpAnim=0.4;
+    addLog(lowHp?`💀 ${sk.name}! EXECUTE! (${dmg})`:`⚔️ ${sk.name}! (${dmg})`,'skill');
+    spawnDmgText(target.x+18,target.y-8,dmg,lowHp?'#ff3030':'#d4606a');
+    spawnParticles(target.x+18,target.y+10,lowHp?14:5,'#d4606a');
+    if(target.hp<=0){target.dead=true;spawnParticles(target.x+18,target.y+20,14,'#d4a017');}
+  } else if(sk.effect==='buff'){
+    hero.buffTimer=4;
+    addLog(`🔥 ${sk.name}! ATK +60% for 4s`,'skill');
+    spawnParticles(hero.x+18,hero.y+10,8,'#e07840');
+    hero.attackCooldown=1/hero.spd;
+  } else if(sk.effect==='poison'){
+    target.poisonTimer=5; target.poisonDmg=3;
+    addLog(`☠️ ${sk.name}! Poisoned!`,'skill');
+    spawnParticles(target.x+18,target.y+10,6,'#50a050');
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════════════════════
+function render(){
+  const cv=document.getElementById('battleCanvas');
+  const ctx=cv.getContext('2d');
+  const W=cv.width, H=cv.height;
+  const GROUND=H*0.72;
+  ctx.clearRect(0,0,W,H);
+
+  // Sky gradient — cozy warm dusk
+  const isBoss=game.stageInCampaign===9;
+  const sky=ctx.createLinearGradient(0,0,0,GROUND);
+  if(isBoss){
+    sky.addColorStop(0,'#1a0a1e');
+    sky.addColorStop(0.5,'#3a1020');
+    sky.addColorStop(1,'#c46040');
+  } else {
+    sky.addColorStop(0,'#87ceeb');
+    sky.addColorStop(0.4,'#b8dff8');
+    sky.addColorStop(0.7,'#ffd580');
+    sky.addColorStop(1,'#f0a060');
+  }
+  ctx.fillStyle=sky;ctx.fillRect(0,0,W,GROUND);
+
+  // Sun / Moon
+  if(isBoss){
+    ctx.save();ctx.shadowColor='#ff4020';ctx.shadowBlur=30;
+    ctx.fillStyle='#ff4020';
+    ctx.beginPath();ctx.arc(W*0.8,GROUND*0.25,22,0,Math.PI*2);ctx.fill();
+    ctx.restore();
+  } else {
+    ctx.save();ctx.shadowColor='#ffe090';ctx.shadowBlur=30;
+    ctx.fillStyle='#ffe080';
+    ctx.beginPath();ctx.arc(W*0.78,GROUND*0.18,26,0,Math.PI*2);ctx.fill();
+    ctx.restore();
+    // sun rays
+    ctx.save();ctx.strokeStyle='#ffe08040';ctx.lineWidth=2;
+    for(let i=0;i<8;i++){
+      const a=i*Math.PI/4+game.parallax.offset*0.002;
+      ctx.beginPath();ctx.moveTo(W*0.78+Math.cos(a)*28,GROUND*0.18+Math.sin(a)*28);
+      ctx.lineTo(W*0.78+Math.cos(a)*42,GROUND*0.18+Math.sin(a)*42);ctx.stroke();
+    }
+    ctx.restore();
+    // clouds
+    for(let i=0;i<4;i++){
+      const cx2=((i*200+game.parallax.offset*5)%(W+200))-100;
+      const cy2=GROUND*0.15+i*35;
+      ctx.fillStyle='#ffffff88';
+      ctx.beginPath();ctx.arc(cx2,cy2,20,0,Math.PI*2);
+      ctx.arc(cx2+22,cy2-6,16,0,Math.PI*2);
+      ctx.arc(cx2+40,cy2,14,0,Math.PI*2);ctx.fill();
+    }
+  }
+
+  // Parallax hills / trees
+  game.parallax.layers.forEach((layer,li)=>{
+    layer.elements.forEach(el=>{
+      const ex=((el.x-game.parallax.offset*layer.speed)%(W*2)+W*2)%(W*2)-100;
+      if(li===0){
+        // rolling hills
+        ctx.fillStyle=isBoss?'#2a1020':el.color;
+        ctx.beginPath();ctx.ellipse(ex+el.w/2,el.y+el.h,el.w,el.h*0.6,0,0,Math.PI*2);ctx.fill();
+      } else {
+        // trees
+        ctx.fillStyle=isBoss?'#3a0818':el.color;
+        ctx.fillRect(ex+el.w/2-2,el.y,4,el.h);
+        ctx.beginPath();ctx.arc(ex+el.w/2,el.y,el.w/2,0,Math.PI*2);ctx.fill();
+      }
+    });
+  });
+
+  // Ground
+  const grd=ctx.createLinearGradient(0,GROUND,0,H);
+  if(isBoss){
+    grd.addColorStop(0,'#3a1020');grd.addColorStop(1,'#1a0810');
+  } else {
+    grd.addColorStop(0,'#6b9e5e');grd.addColorStop(0.1,'#5a8a4e');grd.addColorStop(1,'#3d6e3a');
+  }
+  ctx.fillStyle=grd;ctx.fillRect(0,GROUND,W,H-GROUND);
+
+  // Ground line
+  ctx.fillStyle=isBoss?'#8a2030':'#4a7c59';
+  ctx.fillRect(0,GROUND,W,3);
+
+  // Grass tufts
+  if(!isBoss){
+    for(let i=0;i<16;i++){
+      const gx=((i*130+game.parallax.offset*0.6)%(W+80))-40;
+      ctx.fillStyle='#7aaa60';
+      ctx.fillRect(gx,GROUND-4,3,8);
+      ctx.fillRect(gx+5,GROUND-3,3,6);
+      ctx.fillRect(gx+10,GROUND-5,2,7);
+    }
+  }
+
+  // Draw heroes
+  game.party.forEach(h=>{
+    if(h.dead){
+      // fallen
+      ctx.save();ctx.globalAlpha=0.3;
+      const cls=CLASS_DEFS[h.classId];
+      cls.draw(ctx,h.x,h.y,false,h.animT);
+      ctx.restore();
+      return;
+    }
+    // jump offset for buster
+    const jumpY=h.jumpAnim>0?Math.sin(h.jumpAnim*Math.PI)*-30:0;
+    if(h.jumpAnim>0) h.jumpAnim=Math.max(0,h.jumpAnim-0.04);
+
+    // Auras
+    if(h.buffTimer>0){
+      ctx.save();ctx.globalAlpha=0.25;ctx.fillStyle='#e07840';
+      ctx.beginPath();ctx.ellipse(h.x+18,h.y+46,20,7,0,0,Math.PI*2);ctx.fill();
+      ctx.restore();
+    }
+    if(h.defending){
+      ctx.save();ctx.globalAlpha=0.18;ctx.fillStyle='#5b8dd9';
+      ctx.beginPath();ctx.arc(h.x+18,h.y+24+jumpY,28,0,Math.PI*2);ctx.fill();
+      ctx.restore();
+    }
+    if(h.poisonTimer>0){
+      ctx.save();ctx.globalAlpha=0.2;ctx.fillStyle='#50c050';
+      ctx.beginPath();ctx.arc(h.x+18,h.y+24,22,0,Math.PI*2);ctx.fill();
+      ctx.restore();
+    }
+
+    // draw hero
+    CLASS_DEFS[h.classId].draw(ctx,h.x,h.y+jumpY,false,h.animT);
+
+    // HP bar under hero
+    drawHpBar(ctx,h.x,h.y+52,36,5,h.hp/h.maxHp,h.hp/h.maxHp>0.5?'#4a7c59':h.hp/h.maxHp>0.25?'#d4a017':'#d4606a','#00000033');
+  });
+
+  // Draw enemies
+  game.enemies.forEach(e=>{
+    if(e.dead) return;
+    const size=e.isBoss?1.4:1;
+    ctx.save();
+    ctx.translate(e.x,0);
+    ctx.scale(-1,1);
+    const drawX=0;
+    e.draw(ctx,drawX,e.y,e.animT);
+    ctx.restore();
+
+    // HP bar
+    const bw=e.isBoss?56:38;
+    drawHpBar(ctx,e.x-(bw/2)+9,e.y-12,bw,5,e.hp/e.maxHp,e.hp/e.maxHp>0.5?'#c04040':e.hp/e.maxHp>0.25?'#c08020':'#e02020','#00000033');
+    if(e.isBoss){
+      ctx.font='bold 10px Nunito';ctx.fillStyle='#ff4020';ctx.textAlign='center';
+      ctx.fillText(e.name,e.x+18,e.y-16);
+      ctx.textAlign='left';
+    }
+    if(e.stunTimer>0){ ctx.fillStyle='#d4a017';ctx.font='12px serif';ctx.fillText('⭐',e.x+10,e.y-16); }
+    if(e.poisonTimer>0){ ctx.fillStyle='#50c050';ctx.font='10px serif';ctx.fillText('☠',e.x+22,e.y-16); }
+  });
+
+  // Projectiles
+  game.projectiles.forEach(p=>{
+    ctx.save();ctx.shadowColor=p.color;ctx.shadowBlur=8;
+    ctx.fillStyle=p.color;
+    ctx.beginPath();ctx.arc(p.x,p.y,5,0,Math.PI*2);ctx.fill();
+    ctx.restore();
+  });
+
+  // Particles
+  game.particles.forEach(p=>{
+    ctx.save();ctx.globalAlpha=p.alpha;ctx.fillStyle=p.color;
+    ctx.beginPath();ctx.arc(p.x,p.y,p.size,0,Math.PI*2);ctx.fill();
+    ctx.restore();
+  });
+
+  // Floating texts
+  ctx.font='bold 14px Nunito';
+  game.floatingTexts.forEach(t=>{
+    ctx.save();ctx.globalAlpha=t.alpha;ctx.fillStyle=t.color;
+    ctx.fillText(t.text,t.x,t.y);ctx.restore();
+  });
+
+  // Warm vignette overlay
+  const vig=ctx.createRadialGradient(W/2,H/2,H*0.3,W/2,H/2,H*0.9);
+  vig.addColorStop(0,'transparent');
+  vig.addColorStop(1,'rgba(61,43,13,0.15)');
+  ctx.fillStyle=vig;ctx.fillRect(0,0,W,H);
+}
+
+function drawHpBar(ctx,x,y,w,h,pct,fill,bg){
+  ctx.fillStyle=bg;ctx.beginPath();ctx.roundRect(x,y,w,h,2);ctx.fill();
+  ctx.fillStyle=fill;ctx.beginPath();ctx.roundRect(x,y,w*Math.max(0,pct),h,2);ctx.fill();
+}
+
+function spawnParticles(x,y,n,color){
+  for(let i=0;i<n;i++){
+    game.particles.push({x,y,vx:(Math.random()-0.5)*5,vy:-Math.random()*4-1,life:0.5+Math.random()*0.4,maxLife:0.9,color,alpha:1,size:2+Math.random()*3});
+  }
+}
+function spawnDmgText(x,y,val,color){
+  game.floatingTexts.push({x,y,text:'-'+val,color,life:1,maxLife:1,alpha:1});
+}
+
+// ═══════════════════════════════════════════════════════
+// END STAGE / RESULT
+// ═══════════════════════════════════════════════════════
+function endStage(won){
+  game.battleRunning=false;
+  cancelAnimationFrame(game.animId);
+
+  const titleEl=document.getElementById('resultTitle');
+  const msgEl=document.getElementById('resultMsg');
+  const lootDiv=document.getElementById('resultLoot');
+  const btnsDiv=document.getElementById('resultBtns');
+
+  if(won){
+    const isBoss=game.stageInCampaign===9;
+    titleEl.textContent=isBoss?'🎉 Boss Slain!':'✨ Victory!';
+    titleEl.style.color=isBoss?'var(--ember)':'var(--forest)';
+    msgEl.textContent=`Campaign ${game.campaignNumber} · Stage ${game.stageInCampaign+1} cleared!`;
+
+    // Loot drops
+    const drops=[];
+    const dropCount=1+Math.floor(Math.random()*2)+(isBoss?2:0);
+    for(let i=0;i<dropCount;i++){
+      const rng=Math.random();
+      let pool=isBoss?LOOT_TABLE.filter(l=>l.rarity==='legendary'||l.rarity==='epic')
+               :rng<0.05?LOOT_TABLE.filter(l=>l.rarity==='legendary')
+               :rng<0.15?LOOT_TABLE.filter(l=>l.rarity==='epic')
+               :rng<0.35?LOOT_TABLE.filter(l=>l.rarity==='rare')
+               :LOOT_TABLE.filter(l=>l.rarity==='common');
+      if(pool.length===0) pool=LOOT_TABLE.filter(l=>l.rarity==='common');
+      const item={...pool[Math.floor(Math.random()*pool.length)],equipped:false,id:Date.now()+i+Math.random()};
+      drops.push(item);
+      game.inventory.push(item);
+    }
+    lootDiv.innerHTML=drops.map(d=>`<div class="inv-item ${d.rarity}" style="width:52px;height:52px;font-size:1.4rem;position:relative">${d.emoji}<div class="item-tip">${d.name}<br>${d.rarity.toUpperCase()}<br>${Object.entries(d.stats).map(([k,v])=>'+'+v+' '+k).join(' ')}</div></div>`).join('');
+
+    // Skill drops
+    const skillRng=Math.random();
+    const skillPool_drop=skillRng<0.1?ALL_SKILLS.filter(s=>s.legendary):ALL_SKILLS.filter(s=>!s.legendary&&s.cls===game.classId);
+    const droppedSkill=skillPool_drop[Math.floor(Math.random()*skillPool_drop.length)];
+    if(droppedSkill && !game.skillPool.find(s=>s.id===droppedSkill.id)){
+      game.skillPool.push({...droppedSkill});
+      const sk=document.createElement('div');
+      sk.style.cssText='font-size:0.72rem;color:var(--gold);font-weight:700';
+      sk.textContent=`⚡ New skill: ${droppedSkill.name}${droppedSkill.legendary?' (LEGENDARY)':''}`;
+      lootDiv.appendChild(sk);
+    }
+
+    // Advance stage
+    game.stageInCampaign++;
+    game.level++;
+
+    // Check for new party member
+    if(game.level%10===0 && game.party.length<10){
+      const classKeys=Object.keys(CLASS_DEFS);
+      const newClass=classKeys[Math.floor(Math.random()*classKeys.length)];
+      const newHero=makeHero(newClass);
+      newHero.equippedSkills[0]=CLASS_DEFS[newClass].baseSkills[0];
+      game.party.push(newHero);
+      const badge=document.createElement('div');
+      badge.style.cssText='font-size:0.8rem;color:var(--forest);font-weight:800;margin-top:4px';
+      badge.textContent=`🎊 New hero joined: ${CLASS_DEFS[newClass].name}!`;
+      lootDiv.appendChild(badge);
+    }
+
+    btnsDiv.innerHTML='';
+    if(game.stageInCampaign<10){
+      const btnNext=document.createElement('button');
+      btnNext.className='btn-cozy';
+      btnNext.textContent=game.stageInCampaign===9?'⚠️ Face the Boss':'▶ Next Stage';
+      btnNext.onclick=()=>{ startNextStage(); };
+      btnsDiv.appendChild(btnNext);
+    } else {
+      // Campaign complete!
+      titleEl.textContent='🏆 Campaign Complete!';
+      game.stageInCampaign=0;
+      game.campaignNumber++;
+      const btnCamp=document.createElement('button');
+      btnCamp.className='btn-cozy';
+      btnCamp.textContent='🗺 New Campaign';
+      btnCamp.onclick=()=>{ buildManagementScreen(); showScreen('managementScreen'); };
+      btnsDiv.appendChild(btnCamp);
+    }
+
+    const btnMgmt=document.createElement('button');
+    btnMgmt.className='btn-secondary-cozy';
+    btnMgmt.textContent='📋 Management';
+    btnMgmt.onclick=()=>{ buildManagementScreen(); showScreen('managementScreen'); };
+    btnsDiv.appendChild(btnMgmt);
+
+  } else {
+    titleEl.textContent='💔 Defeated...';
+    titleEl.style.color='var(--rose)';
+    msgEl.textContent='Your party has fallen. Rest and try again.';
+    lootDiv.innerHTML='<div style="color:var(--brown);font-size:0.75rem;font-style:italic">No loot gathered this time...</div>';
+
+    btnsDiv.innerHTML='';
+    const btnRetry=document.createElement('button');
+    btnRetry.className='btn-cozy';
+    btnRetry.textContent='🔄 Retry Stage';
+    btnRetry.onclick=()=>{
+      game.party.forEach(h=>{h.hp=h.maxHp;h.dead=false;});
+      buildManagementScreen(); showScreen('managementScreen');
+    };
+    const btnNew=document.createElement('button');
+    btnNew.className='btn-secondary-cozy';
+    btnNew.textContent='← New Adventure';
+    btnNew.onclick=()=>goToClassSelect();
+    btnsDiv.appendChild(btnRetry);
+    btnsDiv.appendChild(btnNew);
+  }
+
+  showScreen('resultScreen');
+}
+
+// ═══════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════
+window.addEventListener('load',()=>{
+  drawClassIcons();
+});
+
+window.addEventListener('resize',()=>{
+  if(game.battleRunning) setupCanvas();
+});
+</script>
+</body>
+</html>
