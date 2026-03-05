@@ -276,6 +276,65 @@ body {
 .skill-pool-item .sp-leg { color:var(--gold); font-size:0.58rem; font-weight:800; }
 
 /* Equipment */
+
+.speed-strip {
+  display:flex; align-items:center; gap:4px; padding:4px 6px;
+  background:rgba(0,0,0,0.18); border-radius:8px; flex-shrink:0;
+}
+.speed-strip span { font-size:0.62rem; color:var(--dusk); white-space:nowrap; }
+.spd-btn {
+  font-size:0.6rem; font-weight:800; padding:2px 6px; border-radius:5px;
+  background:rgba(0,0,0,0.3); border:1px solid var(--brown); color:var(--dusk);
+  cursor:pointer; transition:all 0.15s; white-space:nowrap;
+}
+.spd-btn.active { background:var(--forest); border-color:var(--gold); color:#fff; }
+.spd-btn:hover:not(.active) { background:rgba(255,255,255,0.1); }
+
+
+/* ── Item Equip Popup ─────────────────────────────── */
+#itemPopupOverlay {
+  display:none; position:fixed; inset:0; background:rgba(0,0,0,0.55);
+  z-index:9000; align-items:center; justify-content:center;
+}
+#itemPopupOverlay.open { display:flex; }
+#itemPopup {
+  background:var(--parchment); border:2px solid var(--brown);
+  border-radius:12px; padding:14px; width:min(92vw,400px);
+  max-height:80vh; display:flex; flex-direction:column; gap:8px;
+  box-shadow:0 8px 32px rgba(0,0,0,0.5);
+}
+#itemPopupTitle {
+  font-size:0.85rem; font-weight:800; color:var(--darkbrown);
+  text-align:center; border-bottom:1px solid var(--brown); padding-bottom:6px;
+}
+#itemPopupList {
+  overflow-y:auto; flex:1; display:flex; flex-direction:column; gap:6px;
+  padding-right:4px;
+}
+.popup-item-row {
+  display:flex; align-items:center; gap:8px; padding:6px 8px;
+  border-radius:8px; border:1px solid var(--brown); cursor:pointer;
+  background:rgba(255,255,255,0.3); transition:all 0.15s;
+}
+.popup-item-row:hover { background:rgba(255,255,255,0.6); border-color:var(--forest); }
+.popup-item-row.equipped-on-slot { border-color:var(--gold); background:rgba(212,160,23,0.15); }
+.popup-item-row.on-other-hero { opacity:0.4; cursor:not-allowed; }
+.popup-item-emoji { font-size:1.5rem; flex-shrink:0; }
+.popup-item-info { flex:1; min-width:0; }
+.popup-item-name { font-size:0.72rem; font-weight:700; color:var(--darkbrown); }
+.popup-item-stats { font-size:0.62rem; color:var(--brown); }
+.popup-item-rarity { font-size:0.58rem; font-weight:800; text-transform:uppercase; }
+.popup-item-rarity.common  { color:#888; }
+.popup-item-rarity.rare    { color:#4488ff; }
+.popup-item-rarity.epic    { color:#a020f0; }
+.popup-item-rarity.legendary { color:var(--gold); }
+.popup-item-action { font-size:0.65rem; font-weight:700; flex-shrink:0; }
+.popup-no-items { text-align:center; color:var(--dusk); font-size:0.72rem; padding:20px; }
+#itemPopupClose {
+  align-self:center; padding:5px 20px; font-size:0.75rem; font-weight:700;
+  background:var(--brown); color:#fff; border:none; border-radius:8px; cursor:pointer;
+}
+
 .equip-slots {
   display:grid;
   grid-template-columns:repeat(2,1fr);
@@ -288,7 +347,7 @@ body {
   border-radius:7px;
   text-align:center;
   cursor:pointer;
-  transition:border-color 0.15s;
+  transition:border-color 0.15px;
   font-size:0.62rem;
 }
 .equip-slot:hover { border-color:var(--brown); }
@@ -600,6 +659,149 @@ body {
   z-index:200;
   display:none;
 }
+
+/* Gold display */
+.gold-badge {
+  display:inline-flex;
+  align-items:center;
+  gap:4px;
+  background: linear-gradient(135deg,#fdf0c0,#f5d060);
+  border:2px solid var(--gold);
+  border-radius:20px;
+  padding:4px 10px;
+  font-size:0.78rem;
+  font-weight:800;
+  color:var(--darkbrown);
+}
+
+/* Camp screen */
+#campScreen {
+  align-items:center;
+  justify-content:flex-start;
+  padding:20px;
+  gap:16px;
+  background: radial-gradient(ellipse at 50% 20%, #2d4a2a 0%, #1a2e18 50%, #0d1a0c 100%);
+  overflow-y:auto;
+}
+
+.camp-title {
+  font-family:'Lora',serif;
+  font-size:2rem;
+  font-weight:700;
+  color:#c8e6a0;
+  text-shadow:0 0 20px #4a7c5966;
+  letter-spacing:2px;
+}
+
+.camp-subtitle { font-size:0.8rem; color:#8ab870; font-style:italic; }
+
+.camp-grid {
+  display:flex;
+  gap:16px;
+  flex-wrap:wrap;
+  justify-content:center;
+  width:100%;
+  max-width:900px;
+}
+
+.camp-card {
+  background: rgba(253,246,227,0.08);
+  border:2px solid rgba(168,200,154,0.3);
+  border-radius:14px;
+  padding:18px;
+  min-width:200px;
+  flex:1;
+  max-width:260px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  align-items:center;
+  text-align:center;
+}
+
+.camp-card h3 {
+  font-family:'Lora',serif;
+  font-size:1rem;
+  color:#c8e6a0;
+  font-weight:700;
+}
+
+.camp-card p { font-size:0.7rem; color:#8ab870; line-height:1.6; }
+
+.btn-camp {
+  background: linear-gradient(135deg,#4a7c59,#2d5a38);
+  color:#fdf6e3;
+  border:2px solid #6b9e5e;
+  border-radius:10px;
+  padding:9px 16px;
+  font-family:'Nunito',sans-serif;
+  font-size:0.75rem;
+  font-weight:800;
+  cursor:pointer;
+  transition:filter 0.15s, transform 0.1s;
+  width:100%;
+}
+.btn-camp:hover { filter:brightness(1.2); transform:translateY(-1px); }
+.btn-camp:disabled { opacity:0.4; cursor:not-allowed; filter:none; transform:none; }
+.btn-camp.used { background:linear-gradient(135deg,#3d4a30,#2a3020); border-color:#5a6a40; }
+
+/* Trader shop */
+.trader-header {
+  font-family:'Lora',serif;
+  font-size:1.1rem;
+  color:#ffe080;
+  font-weight:700;
+  margin-bottom:8px;
+  text-align:center;
+}
+.trader-items {
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  justify-content:center;
+}
+.trader-item {
+  background:rgba(253,246,227,0.1);
+  border:2px solid rgba(212,160,23,0.4);
+  border-radius:10px;
+  padding:12px;
+  min-width:130px;
+  max-width:150px;
+  text-align:center;
+  cursor:pointer;
+  transition:border-color 0.15s, transform 0.1s;
+}
+.trader-item:hover { border-color:#d4a017; transform:translateY(-2px); }
+.trader-item.ti-rare { border-color:#4080c066; }
+.trader-item.ti-epic { border-color:#8040c066; }
+.trader-item.ti-legendary { border-color:#d4a01788; box-shadow:0 0 10px #d4a01722; }
+.trader-item.ti-mythic { border-color:#ff60ff88; box-shadow:0 0 14px #ff60ff22; }
+.trader-item .ti-icon { font-size:1.8rem; }
+.trader-item .ti-name { font-size:0.68rem; font-weight:800; color:#ffe0a0; margin-top:4px; }
+.trader-item .ti-rarity { font-size:0.58rem; font-weight:700; margin-top:2px; }
+.trader-item .ti-stats { font-size:0.6rem; color:#a0c080; margin-top:4px; line-height:1.4; }
+.trader-item .ti-price { font-size:0.72rem; font-weight:800; color:#ffd060; margin-top:6px; }
+.trader-item.ti-mythic .ti-name { color:#ff90ff; }
+.trader-item.ti-legendary .ti-name { color:#ffd060; }
+
+.camp-party-status {
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  justify-content:center;
+}
+.camp-hero-card {
+  background:rgba(253,246,227,0.06);
+  border:2px solid rgba(168,200,154,0.25);
+  border-radius:10px;
+  padding:10px 14px;
+  min-width:120px;
+  text-align:center;
+}
+.camp-hero-name { font-size:0.72rem; font-weight:800; color:#c8e6a0; }
+.camp-hero-hp { font-size:0.65rem; color:#8ab870; margin-top:3px; }
+.camp-hp-bg { background:rgba(255,255,255,0.1); border-radius:3px; height:5px; margin-top:4px; }
+.camp-hp-fill { height:100%; border-radius:3px; background:#4a7c59; }
 </style>
 </head>
 <body>
@@ -607,48 +809,115 @@ body {
 <!-- CLASS SELECT -->
 <div id="classSelect" class="screen active">
   <div class="cs-title">🌿 Hearthbound Heroes</div>
-  <div class="cs-sub">Choose Your Class</div>
-  <div class="class-cards">
+  <div class="cs-sub" id="csSub">Choose Your Class</div>
 
+  <div id="loadSavesPanel" style="display:none;flex-direction:column;align-items:center;gap:6px;z-index:1">
+    <div style="font-size:0.72rem;font-weight:800;color:var(--darkbrown);letter-spacing:1px">📂 SAVED ADVENTURES</div>
+    <div id="loadSavesList" style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center"></div>
+    <div style="font-size:0.6rem;color:var(--brown);font-style:italic">— or start a fresh adventure below —</div>
+  </div>
+
+  <div class="class-cards" style="flex-wrap:wrap;justify-content:center;gap:12px">
     <div class="class-card tank" onclick="selectClass('tank')">
-      <div class="class-icon-wrap">
-        <canvas width="60" height="60" id="icon_tank"></canvas>
-      </div>
-      <h3>⚔️ Guardian</h3>
+      <div class="class-icon-wrap"><canvas width="60" height="60" id="icon_tank"></canvas></div>
+      <h3>🛡️ Guardian</h3>
       <div class="class-stats-bars">
         <div class="cs-bar-row">HP<div class="cs-bar-bg"><div class="cs-bar-fill" style="width:85%;background:#5b8dd9"></div></div></div>
         <div class="cs-bar-row">ATK<div class="cs-bar-bg"><div class="cs-bar-fill" style="width:60%;background:#d4606a"></div></div></div>
         <div class="cs-bar-row">DEF<div class="cs-bar-bg"><div class="cs-bar-fill" style="width:100%;background:#4a7c59"></div></div></div>
       </div>
-      <div class="class-desc">Marches forward, absorbs blows. Shields allies with a kind heart and heavy armor.</div>
+      <div class="class-desc">Marches forward, absorbs blows. Shields allies with kind heart and heavy armor.</div>
     </div>
-
     <div class="class-card mage" onclick="selectClass('mage')">
-      <div class="class-icon-wrap">
-        <canvas width="60" height="60" id="icon_mage"></canvas>
-      </div>
+      <div class="class-icon-wrap"><canvas width="60" height="60" id="icon_mage"></canvas></div>
       <h3>🔮 Spellweaver</h3>
       <div class="class-stats-bars">
         <div class="cs-bar-row">HP<div class="cs-bar-bg"><div class="cs-bar-fill" style="width:45%;background:#5b8dd9"></div></div></div>
-        <div class="cs-bar-row">ATK<div class="cs-bar-bg"><div class="cs-bar-fill" style="width:100%;background:#d4606a"></div></div></div>
-        <div class="cs-bar-row">DEF<div class="cs-bar-bg"><div class="cs-bar-fill" style="width:20%;background:#4a7c59"></div></div></div>
+        <div class="cs-bar-row">ATK<div class="cs-bar-bg"><div class="cs-bar-fill" style="width:95%;background:#d4606a"></div></div></div>
+        <div class="cs-bar-row">DEF<div class="cs-bar-bg"><div class="cs-bar-fill" style="width:25%;background:#4a7c59"></div></div></div>
       </div>
-      <div class="class-desc">Retreats to safety and hurls spells. Gentle soul with devastating arcane power.</div>
+      <div class="class-desc">Stays back, rains destruction. Fragile but devastatingly powerful.</div>
     </div>
-
     <div class="class-card buster" onclick="selectClass('buster')">
-      <div class="class-icon-wrap">
-        <canvas width="60" height="60" id="icon_buster"></canvas>
-      </div>
+      <div class="class-icon-wrap"><canvas width="60" height="60" id="icon_buster"></canvas></div>
       <h3>🗡️ Ironbreaker</h3>
       <div class="class-stats-bars">
         <div class="cs-bar-row">HP<div class="cs-bar-bg"><div class="cs-bar-fill" style="width:75%;background:#5b8dd9"></div></div></div>
         <div class="cs-bar-row">ATK<div class="cs-bar-bg"><div class="cs-bar-fill" style="width:90%;background:#d4606a"></div></div></div>
         <div class="cs-bar-row">DEF<div class="cs-bar-bg"><div class="cs-bar-fill" style="width:40%;background:#4a7c59"></div></div></div>
       </div>
-      <div class="class-desc">Leaps and slams with a colossal blade. Wild, fierce, and surprisingly cheerful.</div>
+      <div class="class-desc">Leaps and slams with a colossal blade. Wild, fierce, surprisingly cheerful.</div>
     </div>
-
+    <div class="class-card" style="border-color:#d4a01766" onclick="selectClass('cleric')">
+      <div class="class-icon-wrap"><canvas width="60" height="60" id="icon_cleric"></canvas></div>
+      <h3>⚕️ Cleric</h3>
+      <div class="class-stats-bars">
+        <div class="cs-bar-row">HP<div class="cs-bar-bg"><div class="cs-bar-fill" style="width:60%;background:#5b8dd9"></div></div></div>
+        <div class="cs-bar-row">ATK<div class="cs-bar-bg"><div class="cs-bar-fill" style="width:50%;background:#d4a017"></div></div></div>
+        <div class="cs-bar-row">SUP<div class="cs-bar-bg"><div class="cs-bar-fill" style="width:100%;background:#ffe080"></div></div></div>
+      </div>
+      <div class="class-desc">Holy healer and crowd controller. Keeps allies alive, smites evil with radiant light.</div>
+    </div>
+    <div class="class-card" style="border-color:#60208066" onclick="selectClass('necromancer')">
+      <div class="class-icon-wrap"><canvas width="60" height="60" id="icon_necromancer"></canvas></div>
+      <h3>💀 Necromancer</h3>
+      <div class="class-stats-bars">
+        <div class="cs-bar-row">HP<div class="cs-bar-bg"><div class="cs-bar-fill" style="width:40%;background:#5b8dd9"></div></div></div>
+        <div class="cs-bar-row">ATK<div class="cs-bar-bg"><div class="cs-bar-fill" style="width:80%;background:#a040c0"></div></div></div>
+        <div class="cs-bar-row">SUM<div class="cs-bar-bg"><div class="cs-bar-fill" style="width:100%;background:#602080"></div></div></div>
+      </div>
+      <div class="class-desc">Raises the dead to fight for you. Drains life, poisons enemies, commands undead minions.</div>
+    </div>
+    <div class="class-card" style="border-color:#2a602066" onclick="selectClass('dragonknight')">
+      <div class="class-icon-wrap"><canvas width="60" height="60" id="icon_dragonknight"></canvas></div>
+      <h3>🐲 Dragon Knight</h3>
+      <div class="class-stats-bars">
+        <div class="cs-bar-row">HP<div class="cs-bar-bg"><div class="cs-bar-fill" style="width:100%;background:#5b8dd9"></div></div></div>
+        <div class="cs-bar-row">ATK<div class="cs-bar-bg"><div class="cs-bar-fill" style="width:75%;background:#d4606a"></div></div></div>
+        <div class="cs-bar-row">DEF<div class="cs-bar-bg"><div class="cs-bar-fill" style="width:90%;background:#4a7c59"></div></div></div>
+      </div>
+      <div class="class-desc">Nigh-unkillable dragon warrior. Breathes fire, cleaves all enemies, tanks everything.</div>
+    </div>
+    <div class="class-card" style="border-color:#4a7a3066" onclick="selectClass('ranger')">
+      <div class="class-icon-wrap"><canvas width="60" height="60" id="icon_ranger"></canvas></div>
+      <h3>🏹 Ranger</h3>
+      <div class="class-stats-bars">
+        <div class="cs-bar-row">HP<div class="cs-bar-bg"><div class="cs-bar-fill" style="width:55%;background:#5b8dd9"></div></div></div>
+        <div class="cs-bar-row">ATK<div class="cs-bar-bg"><div class="cs-bar-fill" style="width:88%;background:#d4606a"></div></div></div>
+        <div class="cs-bar-row">SPD<div class="cs-bar-bg"><div class="cs-bar-fill" style="width:85%;background:#60c060"></div></div></div>
+      </div>
+      <div class="class-desc">Swift archer who rains arrows from afar. Eagle-eyed, deadly precise, hunts from the shadows.</div>
+    </div>
+    <div class="class-card" style="border-color:#c0703066" onclick="selectClass('brawler')">
+      <div class="class-icon-wrap"><canvas width="60" height="60" id="icon_brawler"></canvas></div>
+      <h3>🥊 Brawler</h3>
+      <div class="class-stats-bars">
+        <div class="cs-bar-row">HP<div class="cs-bar-bg"><div class="cs-bar-fill" style="width:80%;background:#5b8dd9"></div></div></div>
+        <div class="cs-bar-row">ATK<div class="cs-bar-bg"><div class="cs-bar-fill" style="width:82%;background:#d4606a"></div></div></div>
+        <div class="cs-bar-row">DEF<div class="cs-bar-bg"><div class="cs-bar-fill" style="width:55%;background:#4a7c59"></div></div></div>
+      </div>
+      <div class="class-desc">Bare-knuckle brawler who hits fast and hits hard. Iron skin, haymakers, and pure aggression.</div>
+    </div>
+    <div class="class-card" style="border-color:#20a08066" onclick="selectClass('alchemist')">
+      <div class="class-icon-wrap"><canvas width="60" height="60" id="icon_alchemist"></canvas></div>
+      <h3>⚗️ Alchemist</h3>
+      <div class="class-stats-bars">
+        <div class="cs-bar-row">HP<div class="cs-bar-bg"><div class="cs-bar-fill" style="width:50%;background:#5b8dd9"></div></div></div>
+        <div class="cs-bar-row">ATK<div class="cs-bar-bg"><div class="cs-bar-fill" style="width:72%;background:#d4606a"></div></div></div>
+        <div class="cs-bar-row">SUP<div class="cs-bar-bg"><div class="cs-bar-fill" style="width:90%;background:#20c090"></div></div></div>
+      </div>
+      <div class="class-desc">Mad scientist hurling flasks of acid, healing brews, and explosives. Equal parts healer and bomber.</div>
+    </div>
+    <div class="class-card" style="border-color:#4060c066" onclick="selectClass('wanderer')">
+      <div class="class-icon-wrap"><canvas width="60" height="60" id="icon_wanderer"></canvas></div>
+      <h3>⚡ Wanderer</h3>
+      <div class="class-stats-bars">
+        <div class="cs-bar-row">HP<div class="cs-bar-bg"><div class="cs-bar-fill" style="width:45%;background:#5b8dd9"></div></div></div>
+        <div class="cs-bar-row">ATK<div class="cs-bar-bg"><div class="cs-bar-fill" style="width:100%;background:#4060c0"></div></div></div>
+        <div class="cs-bar-row">SPD<div class="cs-bar-bg"><div class="cs-bar-fill" style="width:100%;background:#60a0ff"></div></div></div>
+      </div>
+      <div class="class-desc">Agile samurai who teleports behind foes. Ultra-fast, high dodge, energy blade slashes.</div>
+    </div>
   </div>
 </div>
 
@@ -709,11 +978,15 @@ body {
   </div>
 
   <div class="mgmt-right">
-    <div class="panel-title">🗺️ Next Campaign</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+      <div class="panel-title" style="margin:0">🗺️ Next Campaign</div>
+      <div class="gold-badge">💰 <span id="mgmtGold">0</span></div>
+    </div>
     <div class="mission-box" id="missionBox"></div>
     <div class="panel-title" style="margin-top:6px">👹 Enemy Preview</div>
     <div id="enemyPreviewList"></div>
     <button class="btn-cozy" onclick="launchCampaign()" id="btnLaunch">⚔️ Deploy Party!</button>
+    <button class="btn-cozy" onclick="openCamp()" id="btnCamp" style="background:linear-gradient(135deg,#5a4a2a,#3d2d10);box-shadow:0 4px 0 #2a1a08;margin-top:4px">🏕️ Make Camp</button>
     <button class="btn-secondary-cozy" onclick="goToClassSelect()">← New Adventure</button>
   </div>
 
@@ -722,7 +995,7 @@ body {
 <!-- BATTLE SCREEN -->
 <div id="battleScreen" class="screen">
   <div id="battleContainer">
-    <canvas id="battleCanvas"></canvas>
+        <canvas id="battleCanvas"></canvas>
     <div class="battle-log" id="battleLog"></div>
     <div class="stage-banner" id="stageBanner"></div>
   </div>
@@ -732,6 +1005,16 @@ body {
     <div class="hud-stage">
       <div id="hudStageText"></div>
       <div class="hud-stage-sub" id="hudStageSub"></div>
+    </div>
+    <div class="hud-speed-bar" id="hudSpeedBar">
+      <span style="font-size:0.65rem;color:#a08060;font-weight:700;letter-spacing:1px">⏱ SPEED</span>
+      <div class="speed-btns" id="speedBtns">
+        <button class="spd-btn" data-v="0.3" title="0.3x — Very Slow">×⅓</button>
+        <button class="spd-btn" data-v="0.5" title="0.5x — Slow" style="background:#a06040;color:#fff">×½</button>
+        <button class="spd-btn" data-v="0.7" title="0.7x — Relaxed">×⅔</button>
+        <button class="spd-btn active-spd" data-v="1" title="1x — Normal">×1</button>
+        <button class="spd-btn" data-v="2" title="2x — Fast">×2</button>
+      </div>
     </div>
   </div>
 </div>
@@ -747,7 +1030,241 @@ body {
 
 <div class="tooltip-modal" id="tooltipModal"></div>
 
+<!-- ITEM SELECT MODAL -->
+<div id="itemSelectModal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.75);align-items:center;justify-content:center">
+  <div id="itemSelectBox" style="background:linear-gradient(160deg,#2a1a0a,#1a0e04);border:2px solid #8b6340;border-radius:14px;padding:18px 20px;min-width:320px;max-width:520px;max-height:78vh;overflow-y:auto;box-shadow:0 8px 40px #0008;position:relative">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+      <div id="itemModalTitle" style="color:#d4a017;font-weight:800;font-size:1rem"></div>
+      <button onclick="closeItemModal()" style="background:none;border:none;color:#c8a87a;font-size:1.2rem;cursor:pointer;padding:2px 8px">✕</button>
+    </div>
+    <div id="itemModalEmpty" style="display:none;color:#a08060;font-size:0.8rem;text-align:center;padding:20px">No items available for this slot</div>
+    <div id="itemModalGrid" style="display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-start"></div>
+  </div>
+</div>
+
+
+<!-- CAMP SCREEN -->
+<div id="campScreen" class="screen">
+  <div class="camp-title">🏕️ Campfire Rest</div>
+  <div class="camp-subtitle" id="campSubtitle">The party settles in for the night...</div>
+
+  <!-- Party HP status -->
+  <div class="camp-party-status" id="campPartyStatus"></div>
+
+  <div class="camp-grid">
+    <!-- Rest -->
+    <div class="camp-card">
+      <div style="font-size:2.5rem">🔥</div>
+      <h3>Rest by the Fire</h3>
+      <p>Your heroes sleep soundly and recover a portion of their health. A warm meal and good rest goes a long way.</p>
+      <div id="campRestInfo" style="font-size:0.68rem;color:#a0d080;font-weight:700"></div>
+      <button class="btn-camp" id="btnCampRest" onclick="doCampRest()">Rest (Restore 60% HP)</button>
+    </div>
+
+    <!-- Level up info -->
+    <div class="camp-card">
+      <div style="font-size:2.5rem">⭐</div>
+      <h3>Hero Progress</h3>
+      <div id="campLevelInfo" style="font-size:0.68rem;color:#a0d080;line-height:1.8;text-align:left;width:100%"></div>
+    </div>
+
+    <!-- Trader -->
+    <div class="camp-card" style="max-width:400px;min-width:280px">
+      <div style="font-size:2.5rem" id="campTraderIcon">🧙</div>
+      <h3 id="campTraderTitle">Wandering Trader</h3>
+      <p id="campTraderDesc">A mysterious merchant appears from the shadows of the trees...</p>
+      <div class="trader-items" id="traderItems"></div>
+      <div style="margin-top:6px;font-size:0.68rem;color:#8ab870;font-style:italic" id="traderNoStock"></div>
+      <div class="gold-badge" style="background:linear-gradient(135deg,#2a3a10,#1a2808);border-color:#6b9e40;color:#a0d060;margin-top:4px">
+        💰 <span id="campGoldDisplay">0</span> Gold
+      </div>
+    </div>
+  </div>
+
+  <button class="btn-cozy" onclick="leaveCamp()" style="min-width:200px;margin-top:8px">⚔️ Continue Adventure</button>
+</div>
+
 <script>
+// ═══════════════════════════════════════════════════════
+// DRAW HELPERS — NEW CLASSES
+// ═══════════════════════════════════════════════════════
+function drawRanger(ctx,x,y,flip,anim=0){
+  ctx.save();
+  if(flip){ctx.translate(x+36,y);ctx.scale(-1,1);x=0;}else{ctx.translate(x,y);}
+  const bob=Math.sin(anim*2.2)*1.8;
+  // legs
+  ctx.fillStyle='#2a3a10';ctx.fillRect(7,36+bob,10,14);ctx.fillRect(19,36+bob,10,14);
+  ctx.fillStyle='#3a5020';ctx.fillRect(5,46+bob,13,5);ctx.fillRect(18,46+bob,13,5);
+  // body — green leather
+  ctx.fillStyle='#3a5020';ctx.fillRect(6,16+bob,24,22);
+  ctx.fillStyle='#4a6030';ctx.fillRect(6,16+bob,24,3);
+  // quiver on back
+  ctx.fillStyle='#5a3010';ctx.fillRect(28,12+bob,5,20);
+  ctx.fillStyle='#c0a030';
+  for(let i=0;i<3;i++) ctx.fillRect(29,14+bob+i*5,3,2);
+  // bow
+  ctx.strokeStyle='#8a5020';ctx.lineWidth=3;
+  ctx.beginPath();ctx.arc(-4,20+bob,18,-.8,.8);ctx.stroke();
+  ctx.strokeStyle='#e0d080';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(-4,4+bob);ctx.lineTo(-4,36+bob);ctx.stroke();
+  // head
+  ctx.fillStyle='#f0d8a0';ctx.fillRect(9,4+bob,18,14);
+  ctx.fillStyle='#3a5020';ctx.fillRect(7,4+bob,22,4);
+  ctx.fillStyle='#2a3a10';ctx.beginPath();ctx.moveTo(6,6+bob);ctx.lineTo(18,0+bob);ctx.lineTo(30,6+bob);ctx.closePath();ctx.fill();
+  ctx.fillStyle='#1a1a10';ctx.fillRect(12,10+bob,3,2);ctx.fillRect(21,10+bob,3,2);
+  ctx.restore();
+}
+function drawBrawler(ctx,x,y,flip,anim=0){
+  ctx.save();
+  if(flip){ctx.translate(x+36,y);ctx.scale(-1,1);x=0;}else{ctx.translate(x,y);}
+  const bob=Math.sin(anim*1.8)*1.5;
+  const punch=Math.abs(Math.sin(anim*3))*4;
+  // legs — wide stance
+  ctx.fillStyle='#3a2010';ctx.fillRect(4,36+bob,13,14);ctx.fillRect(19,36+bob,13,14);
+  ctx.fillStyle='#200a00';ctx.fillRect(2,46+bob,16,5);ctx.fillRect(18,46+bob,16,5);
+  // body — bare chest + wraps
+  ctx.fillStyle='#c08050';ctx.fillRect(6,14+bob,24,24);
+  ctx.fillStyle='#e09060';ctx.fillRect(8,14+bob,20,3);
+  // bandages
+  ctx.strokeStyle='#e0d0c0';ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(6,22+bob);ctx.lineTo(30,22+bob);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(6,28+bob);ctx.lineTo(30,28+bob);ctx.stroke();
+  // fists
+  ctx.fillStyle='#e0d0a0';
+  ctx.fillRect(-4+punch,22+bob,10,8);  // left fist punching
+  ctx.fillRect(30,22+bob,10,8);
+  // head
+  ctx.fillStyle='#c08050';ctx.fillRect(9,2+bob,18,14);
+  ctx.fillStyle='#a06030';ctx.fillRect(7,2+bob,22,5);
+  ctx.fillStyle='#1a0a00';ctx.fillRect(11,8+bob,4,3);ctx.fillRect(21,8+bob,4,3);
+  // scar
+  ctx.strokeStyle='#802010';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(16,5+bob);ctx.lineTo(20,9+bob);ctx.stroke();
+  ctx.restore();
+}
+function drawAlchemist(ctx,x,y,flip,anim=0){
+  ctx.save();
+  if(flip){ctx.translate(x+36,y);ctx.scale(-1,1);x=0;}else{ctx.translate(x,y);}
+  const bob=Math.sin(anim*1.7)*1.6;
+  const bubble=Math.abs(Math.sin(anim*2));
+  // legs
+  ctx.fillStyle='#302820';ctx.fillRect(7,36+bob,10,14);ctx.fillRect(19,36+bob,10,14);
+  ctx.fillStyle='#e0d060';ctx.fillRect(5,46+bob,13,5);ctx.fillRect(18,46+bob,13,5);
+  // coat — yellow/teal
+  ctx.fillStyle='#204840';ctx.fillRect(5,14+bob,26,24);
+  ctx.fillStyle='#e0d060';ctx.fillRect(5,14+bob,26,3);ctx.fillRect(5,24+bob,5,12);ctx.fillRect(26,24+bob,5,12);
+  // flask in hand
+  ctx.fillStyle='#60d0a0';ctx.fillRect(30,20+bob,6,12);
+  ctx.fillStyle='#40b080';ctx.fillRect(31,18+bob,4,4);
+  ctx.save();ctx.globalAlpha=0.6+bubble*0.4;ctx.fillStyle='#a0f0d0';
+  ctx.beginPath();ctx.arc(33,17+bob-bubble*3,2+bubble,0,Math.PI*2);ctx.fill();ctx.restore();
+  // belt with pouches
+  ctx.fillStyle='#604020';ctx.fillRect(5,32+bob,26,4);
+  ctx.fillStyle='#804030';ctx.fillRect(8,32+bob,5,6);ctx.fillRect(16,32+bob,5,6);ctx.fillRect(24,32+bob,5,6);
+  // head with goggles
+  ctx.fillStyle='#d0b890';ctx.fillRect(9,2+bob,18,14);
+  ctx.fillStyle='#204840';ctx.fillRect(7,2+bob,22,6);
+  // goggles
+  ctx.fillStyle='#102a20';ctx.fillRect(9,6+bob,7,5);ctx.fillRect(20,6+bob,7,5);
+  ctx.strokeStyle='#60d0a0';ctx.lineWidth=1.5;
+  ctx.strokeRect(9,6+bob,7,5);ctx.strokeRect(20,6+bob,7,5);
+  ctx.fillStyle='#80f0c0';ctx.fillRect(10,7+bob,5,3);ctx.fillRect(21,7+bob,5,3);
+  ctx.restore();
+}
+
+function drawCleric(ctx,x,y,flip,anim=0){
+  ctx.save();
+  if(flip){ctx.translate(x+36,y);ctx.scale(-1,1);x=0;}else{ctx.translate(x,y);}
+  const bob=Math.sin(anim*1.6)*1.5;
+  ctx.fillStyle='#f0e8d0';ctx.fillRect(6,16+bob,24,26);
+  ctx.fillStyle='#d4a017';ctx.fillRect(6,16+bob,24,3);ctx.fillRect(6,24+bob,24,2);
+  ctx.fillStyle='#d4a017';ctx.fillRect(15,20+bob,6,2);ctx.fillRect(17,18+bob,2,6);
+  ctx.fillStyle='#c8a060';ctx.fillRect(30,4+bob,3,42);
+  ctx.save();ctx.shadowColor='#ffe080';ctx.shadowBlur=10;
+  ctx.fillStyle='#ffe080';ctx.beginPath();ctx.arc(31.5,6+bob,7,0,Math.PI*2);ctx.fill();
+  ctx.restore();
+  ctx.fillStyle='#f0e8d0';ctx.fillRect(9,4+bob,18,14);
+  ctx.fillStyle='#e8d0b0';ctx.fillRect(7,4+bob,22,5);ctx.fillRect(7,9+bob,4,9);ctx.fillRect(25,9+bob,4,9);
+  ctx.save();ctx.shadowColor='#ffe080';ctx.shadowBlur=8;
+  ctx.strokeStyle='#ffe08099';ctx.lineWidth=2;
+  ctx.beginPath();ctx.arc(18,1+bob,10,0,Math.PI*2);ctx.stroke();
+  ctx.restore();
+  ctx.restore();
+}
+function drawNecromancer(ctx,x,y,flip,anim=0){
+  ctx.save();
+  if(flip){ctx.translate(x+36,y);ctx.scale(-1,1);x=0;}else{ctx.translate(x,y);}
+  const bob=Math.sin(anim*1.4)*1.8;
+  ctx.fillStyle='#1a0a20';ctx.fillRect(6,16+bob,24,26);
+  for(let i=0;i<4;i++){ctx.fillStyle='#2a0a30';ctx.fillRect(6+i*6,40+bob,5,8+i%3*3);}
+  ctx.fillStyle='#602080';ctx.fillRect(6,16+bob,24,2);ctx.fillRect(6,26+bob,24,1);
+  ctx.fillStyle='#3a1050';ctx.fillRect(29,8+bob,3,40);
+  ctx.fillStyle='#d0d0d0';ctx.beginPath();ctx.arc(30.5,9+bob,6,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#1a0a20';ctx.fillRect(27,7+bob,3,3);ctx.fillRect(31,7+bob,3,3);ctx.fillRect(28,12+bob,5,2);
+  ctx.save();ctx.shadowColor='#80ff80';ctx.shadowBlur=6;
+  ctx.fillStyle='#80ff80';ctx.fillRect(28,8+bob,2,2);ctx.fillRect(32,8+bob,2,2);ctx.restore();
+  ctx.fillStyle='#1a0a20';ctx.fillRect(8,4+bob,20,14);
+  ctx.fillStyle='#2a0a30';
+  ctx.beginPath();ctx.moveTo(6,8+bob);ctx.lineTo(18,0+bob);ctx.lineTo(30,8+bob);ctx.closePath();ctx.fill();
+  ctx.fillRect(5,8+bob,26,3);
+  ctx.fillStyle='rgba(0,0,0,0.5)';ctx.fillRect(10,10+bob,16,6);
+  ctx.save();ctx.shadowColor='#60ff60';ctx.shadowBlur=5;
+  ctx.fillStyle='#60ff60';ctx.fillRect(12,11+bob,3,2);ctx.fillRect(21,11+bob,3,2);ctx.restore();
+  ctx.restore();
+}
+function drawDragonKnight(ctx,x,y,flip,anim=0){
+  ctx.save();
+  if(flip){ctx.translate(x+36,y);ctx.scale(-1,1);x=0;}else{ctx.translate(x,y);}
+  const bob=Math.sin(anim*1.3)*1.2;
+  ctx.fillStyle='#1a3010';ctx.fillRect(4,36+bob,14,14);ctx.fillRect(20,36+bob,14,14);
+  ctx.fillStyle='#2a5020';ctx.fillRect(2,46+bob,17,5);ctx.fillRect(19,46+bob,17,5);
+  ctx.fillStyle='#1a3010';ctx.fillRect(3,14+bob,30,24);
+  ctx.fillStyle='#2a5020';
+  for(let r=0;r<3;r++)for(let c=0;c<4;c++){ctx.beginPath();ctx.arc(6+c*8,18+r*7+bob,4,0,Math.PI,true);ctx.fill();}
+  ctx.fillStyle='#0d2008';
+  ctx.beginPath();ctx.moveTo(3,16+bob);ctx.lineTo(-12,8+bob);ctx.lineTo(-4,28+bob);ctx.closePath();ctx.fill();
+  ctx.beginPath();ctx.moveTo(33,16+bob);ctx.lineTo(48,8+bob);ctx.lineTo(40,28+bob);ctx.closePath();ctx.fill();
+  ctx.fillStyle='#3a6030';ctx.fillRect(30,2+bob,4,44);
+  ctx.save();ctx.shadowColor='#80ff60';ctx.shadowBlur=8;
+  ctx.fillStyle='#80ff60';ctx.beginPath();ctx.moveTo(30,2+bob);ctx.lineTo(34,2+bob);ctx.lineTo(32,-8+bob);ctx.closePath();ctx.fill();
+  ctx.restore();
+  ctx.fillStyle='#1a3010';ctx.fillRect(7,2+bob,22,16);
+  ctx.fillStyle='#2a5020';ctx.fillRect(5,2+bob,26,5);
+  ctx.fillStyle='#60a040';
+  ctx.beginPath();ctx.moveTo(9,3+bob);ctx.lineTo(5,-6+bob);ctx.lineTo(14,3+bob);ctx.closePath();ctx.fill();
+  ctx.beginPath();ctx.moveTo(27,3+bob);ctx.lineTo(31,-6+bob);ctx.lineTo(22,3+bob);ctx.closePath();ctx.fill();
+  ctx.save();ctx.shadowColor='#ff8020';ctx.shadowBlur=5;
+  ctx.fillStyle='#ff8020';ctx.fillRect(10,8+bob,5,2);ctx.fillRect(21,8+bob,5,2);ctx.restore();
+  ctx.restore();
+}
+function drawWanderer(ctx,x,y,flip,anim=0){
+  ctx.save();
+  if(flip){ctx.translate(x+36,y);ctx.scale(-1,1);x=0;}else{ctx.translate(x,y);}
+  const bob=Math.sin(anim*2.5)*2;
+  const sway=Math.sin(anim*2)*3;
+  ctx.fillStyle='#1a1a3a';ctx.fillRect(5,30+bob,26,18);
+  ctx.fillStyle='#2a2a50';ctx.fillRect(5,30+bob,26,3);
+  ctx.fillStyle='#1a1a3a';ctx.fillRect(6,46+bob,11,10);ctx.fillRect(19,46+bob,11,10);
+  ctx.fillStyle='#302820';ctx.fillRect(4,52+bob,14,4);ctx.fillRect(18,52+bob,14,4);
+  ctx.fillStyle='#2a2a4a';ctx.fillRect(6,14+bob,24,18);
+  ctx.fillStyle='#4a4a80';ctx.fillRect(6,14+bob,3,18);ctx.fillRect(27,14+bob,3,18);
+  ctx.fillStyle='#c04040';ctx.fillRect(6,26+bob,24,4);
+  ctx.save();ctx.translate(18+sway,20+bob);ctx.rotate(-0.3);
+  ctx.fillStyle='#c0c0c0';ctx.fillRect(-2,-20,3,36);
+  ctx.fillStyle='#d4a017';ctx.fillRect(-4,10,7,4);
+  ctx.fillStyle='#601010';ctx.fillRect(-2,14,3,10);
+  ctx.restore();
+  ctx.fillStyle='#4060c0';
+  ctx.beginPath();ctx.moveTo(28,16+bob);ctx.quadraticCurveTo(38,12+bob+sway,36,26+bob);
+  ctx.lineTo(34,26+bob);ctx.quadraticCurveTo(36,14+bob,28,18+bob);ctx.closePath();ctx.fill();
+  ctx.fillStyle='#f0d8b0';ctx.fillRect(9,3+bob,18,14);
+  ctx.fillStyle='#c0a040';ctx.beginPath();ctx.ellipse(18,4+bob,16,4,0,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#a08030';ctx.fillRect(14,4+bob,8,8);
+  ctx.fillStyle='#1a1a1a';ctx.fillRect(12,8+bob,3,2);ctx.fillRect(21,8+bob,3,2);
+  ctx.restore();
+}
+
+
 // ═══════════════════════════════════════════════════════
 // GAME DATA — CLASSES
 // ═══════════════════════════════════════════════════════
@@ -756,42 +1273,35 @@ const CLASS_DEFS = {
     name:'Guardian', color:'#5b8dd9', emoji:'🛡️',
     hp:160, atk:22, def:16, spd:1.8,
     behavior:'tank',
+    // FIX 2: Added cls field to all base skills so pool display never shows "undefined"
     baseSkills:[
-      {id:'shield_bash',name:'Shield Bash',desc:'Stun for 1.5s, 1.3x dmg',cd:4,dmgMult:1.3,effect:'stun',legendary:false},
-      {id:'taunt',name:'Iron Guard',desc:'Halve incoming dmg for 3s',cd:7,dmgMult:0,effect:'defend',legendary:false},
-      {id:'rally',name:'Rally',desc:'Heal 20% max HP',cd:10,dmgMult:0,effect:'heal',legendary:false},
+      {id:'shield_bash',name:'Shield Bash',desc:'Stun for 1.5s, 1.3x dmg',cd:4,dmgMult:1.3,effect:'stun',legendary:false,cls:'tank'},
+      {id:'taunt',name:'Iron Guard',desc:'Halve incoming dmg for 3s',cd:7,dmgMult:0,effect:'defend',legendary:false,cls:'tank'},
+      {id:'rally',name:'Rally',desc:'Heal 20% max HP',cd:10,dmgMult:0,effect:'heal',legendary:false,cls:'tank'},
     ],
     draw(ctx,x,y,flip,anim=0){
       ctx.save();
       if(flip){ctx.translate(x+36,y);ctx.scale(-1,1);x=0;} else{ctx.translate(x,y);}
       const bob = Math.sin(anim*2)*1.5;
-      // legs
       ctx.fillStyle='#2a4a80';
       ctx.fillRect(8,36+bob,10,14);
       ctx.fillRect(20,36+bob,10,14);
-      // boot
       ctx.fillStyle='#1a2a50';
       ctx.fillRect(6,46+bob,13,5);
       ctx.fillRect(18,46+bob,13,5);
-      // body armor
       ctx.fillStyle='#3a5a90';
       ctx.fillRect(6,16+bob,24,22);
-      // pauldron
       ctx.fillStyle='#5b8dd9';
       ctx.fillRect(2,16+bob,8,8);
       ctx.fillRect(26,16+bob,8,8);
-      // chest emblem
       ctx.fillStyle='#7ab0f0';
       ctx.fillRect(14,20+bob,8,6);
-      // shield
       ctx.fillStyle='#1a3060';ctx.strokeStyle='#5b8dd9';ctx.lineWidth=2;
       ctx.beginPath();ctx.moveTo(-4,12+bob);ctx.lineTo(6,10+bob);ctx.lineTo(6,34+bob);ctx.lineTo(-4,28+bob);ctx.closePath();
       ctx.fill();ctx.stroke();
       ctx.fillStyle='#5b8dd9';ctx.fillRect(-2,18+bob,6,2);
-      // sword
       ctx.fillStyle='#7ab0f0';ctx.fillRect(30,8+bob,4,30);
       ctx.fillStyle='#5b8dd9';ctx.fillRect(26,18+bob,12,3);
-      // head / helmet
       ctx.fillStyle='#2a4a80';ctx.fillRect(9,4+bob,18,14);
       ctx.fillStyle='#5b8dd9';ctx.fillRect(9,4+bob,18,4);
       ctx.fillStyle='#7ab0f022';ctx.fillRect(12,8+bob,12,8);
@@ -803,26 +1313,21 @@ const CLASS_DEFS = {
     hp:80, atk:42, def:5, spd:1.6,
     behavior:'mage',
     baseSkills:[
-      {id:'fireball',name:'Fireball',desc:'2.2x atk burst',cd:3,dmgMult:2.2,effect:'projectile',legendary:false},
-      {id:'nova',name:'Arcane Nova',desc:'AoE all enemies 1.6x',cd:7,dmgMult:1.6,effect:'aoe',legendary:false},
-      {id:'blink',name:'Blink',desc:'Dodge + 1.4x counter',cd:5,dmgMult:1.4,effect:'dodge',legendary:false},
+      {id:'fireball',name:'Fireball',desc:'2.2x atk burst',cd:3,dmgMult:2.2,effect:'projectile',legendary:false,cls:'mage'},
+      {id:'nova',name:'Arcane Nova',desc:'AoE all enemies 1.6x',cd:7,dmgMult:1.6,effect:'aoe',legendary:false,cls:'mage'},
+      {id:'blink',name:'Blink',desc:'Dodge + 1.4x counter',cd:5,dmgMult:1.4,effect:'dodge',legendary:false,cls:'mage'},
     ],
     draw(ctx,x,y,flip,anim=0){
       ctx.save();
       if(flip){ctx.translate(x+36,y);ctx.scale(-1,1);x=0;} else{ctx.translate(x,y);}
       const bob = Math.sin(anim*1.8)*1.8;
-      // robe tail
       ctx.fillStyle='#1a0a30';
       ctx.beginPath();ctx.moveTo(6,38+bob);ctx.lineTo(12,38+bob);ctx.lineTo(8,52+bob);ctx.closePath();ctx.fill();
       ctx.beginPath();ctx.moveTo(24,38+bob);ctx.lineTo(30,38+bob);ctx.lineTo(26,52+bob);ctx.closePath();ctx.fill();
-      // robe
       ctx.fillStyle='#2a0a40';ctx.fillRect(6,16+bob,24,24);
-      // rune trim
       ctx.strokeStyle='#9b7ec8';ctx.lineWidth=1.5;
       ctx.strokeRect(7,17+bob,22,22);
-      // staff
       ctx.fillStyle='#6030a0';ctx.fillRect(29,4+bob,3,42);
-      // orb
       ctx.save();
       ctx.shadowColor='#c090ff';ctx.shadowBlur=10;
       ctx.strokeStyle='#b080f0';ctx.lineWidth=2;
@@ -830,9 +1335,7 @@ const CLASS_DEFS = {
       ctx.fillStyle='#9b7ec844';ctx.fill();
       ctx.restore();
       ctx.fillStyle='#d0b0ff';ctx.beginPath();ctx.arc(28,5+bob,2,0,Math.PI*2);ctx.fill();
-      // head
       ctx.fillStyle='#1a0a30';ctx.fillRect(8,4+bob,18,14);
-      // hat
       ctx.fillStyle='#2a0a40';
       ctx.beginPath();ctx.moveTo(6,8+bob);ctx.lineTo(17,0+bob);ctx.lineTo(28,8+bob);ctx.closePath();ctx.fill();
       ctx.fillRect(5,8+bob,26,3);
@@ -845,28 +1348,25 @@ const CLASS_DEFS = {
     hp:130, atk:36, def:10, spd:1.3,
     behavior:'buster',
     baseSkills:[
-      {id:'cleave',name:'Cleave',desc:'1.9x wide arc damage',cd:4,dmgMult:1.9,effect:'cleave',legendary:false},
-      {id:'execute',name:'Execute',desc:'3.5x if target HP < 30%',cd:8,dmgMult:3.5,effect:'execute',legendary:false},
-      {id:'warcry',name:'War Cry',desc:'+60% ATK for 4s',cd:6,dmgMult:0,effect:'buff',legendary:false},
+      {id:'cleave',name:'Cleave',desc:'1.9x wide arc damage',cd:4,dmgMult:1.9,effect:'cleave',legendary:false,cls:'buster'},
+      {id:'execute',name:'Execute',desc:'3.5x if target HP < 30%',cd:8,dmgMult:3.5,effect:'execute',legendary:false,cls:'buster'},
+      {id:'warcry',name:'War Cry',desc:'+60% ATK for 4s',cd:6,dmgMult:0,effect:'buff',legendary:false,cls:'buster'},
     ],
     draw(ctx,x,y,flip,anim=0){
       ctx.save();
       if(flip){ctx.translate(x+36,y);ctx.scale(-1,1);x=0;} else{ctx.translate(x,y);}
       const bob = Math.sin(anim*1.5)*1.5;
-      // legs
       ctx.fillStyle='#1a0808';
       ctx.fillRect(6,36+bob,12,14);
       ctx.fillRect(20,36+bob,12,14);
       ctx.fillStyle='#300808';
       ctx.fillRect(4,46+bob,15,5);
       ctx.fillRect(19,46+bob,15,5);
-      // body
       ctx.fillStyle='#2a1010';ctx.fillRect(5,16+bob,26,22);
       ctx.fillStyle='#d4606a';
       ctx.fillRect(5,16+bob,26,3);
       ctx.fillRect(5,24+bob,3,10);
       ctx.fillRect(28,24+bob,3,10);
-      // huge greatsword on back
       const swingAng = Math.sin(anim*3)*0.3;
       ctx.save();ctx.translate(28+bob,20+bob);ctx.rotate(swingAng);
       ctx.fillStyle='#3a1010';ctx.strokeStyle='#e05070';ctx.lineWidth=2;
@@ -874,94 +1374,913 @@ const CLASS_DEFS = {
       ctx.fill();ctx.stroke();
       ctx.strokeStyle='#ff9090';ctx.lineWidth=1;
       ctx.beginPath();ctx.moveTo(8,-14);ctx.lineTo(7,28);ctx.stroke();
-      // guard
       ctx.fillStyle='#d4606a';ctx.fillRect(1,26,12,4);
       ctx.restore();
-      // head
       ctx.fillStyle='#2a1010';ctx.fillRect(7,4+bob,22,14);
       ctx.fillStyle='#d4606a';ctx.fillRect(7,4+bob,22,3);
-      // visor slit
       ctx.fillStyle='#ff9090';ctx.fillRect(9,10+bob,5,2);
       ctx.restore();
     }
-  }
+  },
+  cleric:{
+    name:'Cleric',color:'#d4a017',emoji:'⚕️',
+    hp:100,atk:20,def:12,spd:1.7,behavior:'mage',
+    baseSkills:[
+      {id:'holy_light',name:'Holy Light',desc:'Restore 30% HP to weakest ally',cd:5,dmgMult:0,effect:'heal_ally',legendary:false,cls:'cleric'},
+      {id:'smite_base',name:'Smite',desc:'Holy bolt 2x ATK ignoring DEF',cd:4,dmgMult:2,effect:'smite',legendary:false,cls:'cleric'},
+      {id:'barrier_base',name:'Barrier',desc:'Shield — halve dmg for 4s',cd:8,dmgMult:0,effect:'defend',legendary:false,cls:'cleric'},
+    ],
+    draw:drawCleric,
+  },
+  necromancer:{
+    name:'Necromancer',color:'#602080',emoji:'💀',
+    hp:75,atk:28,def:5,spd:1.5,behavior:'mage',
+    // FIX 3: Shorter cooldowns on summon skills so minions come out faster
+    baseSkills:[
+      {id:'raise_dead',name:'Raise Dead',desc:'Summon a skeleton (scales with level)',cd:2,dmgMult:0,effect:'summon',minionType:'skeleton',legendary:false,cls:'necromancer'},
+      {id:'summon_bat',name:'Call of Bats',desc:'Summon a fast vampire bat',cd:2,dmgMult:0,effect:'summon',minionType:'bat',legendary:false,cls:'necromancer'},
+      {id:'death_bolt',name:'Death Bolt',desc:'Necrotic bolt 2.5x ATK',cd:3,dmgMult:2.5,effect:'projectile',legendary:false,cls:'necromancer'},
+    ],
+    draw:drawNecromancer,
+  },
+  dragonknight:{
+    name:'Dragon Knight',color:'#2a6020',emoji:'🐲',
+    hp:180,atk:32,def:22,spd:1.4,behavior:'tank',
+    baseSkills:[
+      {id:'dragon_sweep',name:'Dragon Sweep',desc:'AoE cleave all enemies 1.6x',cd:5,dmgMult:1.6,effect:'aoe',legendary:false,cls:'dragonknight'},
+      {id:'dragonfire',name:'Dragonfire',desc:'Massive fireball 2.5x AoE',cd:8,dmgMult:2.5,effect:'aoe',legendary:false,cls:'dragonknight'},
+      {id:'iron_scales',name:'Iron Scales',desc:'Dragon scales — halve all dmg 5s',cd:10,dmgMult:0,effect:'defend',legendary:false,cls:'dragonknight'},
+    ],
+    draw:drawDragonKnight,
+  },
+
+  ranger:{
+    name:'Ranger',color:'#4a7a30',emoji:'🏹',
+    hp:95,atk:38,def:8,spd:2.2,behavior:'mage',
+    baseSkills:[
+      {id:'arrow_rain',name:'Arrow Rain',desc:'Volley of arrows hits all 1.8x',cd:5,dmgMult:1.8,effect:'aoe',legendary:false,cls:'ranger'},
+      {id:'piercing_shot',name:'Piercing Shot',desc:'Armor-piercing bolt 2.5x ignoring DEF',cd:4,dmgMult:2.5,effect:'smite',legendary:false,cls:'ranger'},
+      {id:'eagle_eye',name:'Eagle Eye',desc:'+70% ATK for 5s',cd:8,dmgMult:0,effect:'buff',legendary:false,cls:'ranger'},
+    ],
+    draw:drawRanger,
+  },
+  brawler:{
+    name:'Brawler',color:'#c07030',emoji:'🥊',
+    hp:140,atk:34,def:12,spd:2.0,behavior:'buster',
+    baseSkills:[
+      {id:'haymaker',name:'Haymaker',desc:'Massive punch 2.8x ATK',cd:4,dmgMult:2.8,effect:'cleave',legendary:false,cls:'brawler'},
+      {id:'combo_strike',name:'Combo Strike',desc:'3-hit combo 1.5x each',cd:3,dmgMult:1.5,effect:'cleave',legendary:false,cls:'brawler'},
+      {id:'iron_skin',name:'Iron Skin',desc:'Reduce dmg by 70% for 3s',cd:7,dmgMult:0,effect:'defend',legendary:false,cls:'brawler'},
+    ],
+    draw:drawBrawler,
+  },
+  alchemist:{
+    name:'Alchemist',color:'#20a080',emoji:'⚗️',
+    hp:85,atk:30,def:9,spd:1.9,behavior:'mage',
+    baseSkills:[
+      {id:'acid_flask',name:'Acid Flask',desc:'Corrosive AoE 1.7x + poison',cd:4,dmgMult:1.7,effect:'aoe',legendary:false,cls:'alchemist'},
+      {id:'healing_brew',name:'Healing Brew',desc:'Restore 35% HP to weakest ally',cd:6,dmgMult:0,effect:'heal_ally',legendary:false,cls:'alchemist'},
+      {id:'explosive_vial',name:'Explosive Vial',desc:'Big explosion 2.6x all enemies',cd:7,dmgMult:2.6,effect:'aoe',legendary:false,cls:'alchemist'},
+    ],
+    draw:drawAlchemist,
+  },
+  wanderer:{
+    name:'Wanderer',color:'#4060c0',emoji:'⚡',
+    hp:90,atk:36,def:8,spd:2.6,behavior:'buster',
+    baseSkills:[
+      {id:'shadow_step',name:'Shadow Step',desc:'Teleport-backstab 2.2x ignoring DEF',cd:4,dmgMult:2.2,effect:'execute',legendary:false,cls:'wanderer'},
+      {id:'blade_wave',name:'Blade Wave',desc:'Energy slash hits all 1.4x',cd:5,dmgMult:1.4,effect:'aoe',legendary:false,cls:'wanderer'},
+      {id:'phantom_dodge',name:'Phantom Dodge',desc:'100% dodge + 2x counter-attack',cd:6,dmgMult:2,effect:'dodge',legendary:false,cls:'wanderer'},
+    ],
+    draw:drawWanderer,
+  },
+  // ── NEW CLASS 8: Hexblade ───────────────────────────────────────────────
+  hexblade:{
+    name:'Hexblade',color:'#c060c0',emoji:'🌑',
+    hp:100,atk:34,def:8,spd:2.0,behavior:'mage',
+    baseSkills:[
+      {id:'hex_curse',name:'Hex Curse',desc:'Curse — reflect 30% dmg for 4s',cd:5,dmgMult:1.0,effect:'buff',legendary:false,cls:'hexblade'},
+      {id:'hex_bolt',name:'Shadow Bolt',desc:'Dark projectile 2.6x ATK',cd:3,dmgMult:2.6,effect:'projectile',legendary:false,cls:'hexblade'},
+      {id:'hex_drain',name:'Life Siphon',desc:'Drain enemy HP → self',cd:5,dmgMult:1.8,effect:'drain',legendary:false,cls:'hexblade'},
+    ],
+    draw(ctx,x,y,flip,anim=0){
+      ctx.save();
+      if(flip){ctx.translate(x+36,y);ctx.scale(-1,1);x=0;}else{ctx.translate(x,y);}
+      const bob=Math.sin(anim*2)*1.5;
+      ctx.fillStyle='#1a0030';ctx.fillRect(7,16+bob,22,24);
+      ctx.strokeStyle='#c060c0';ctx.lineWidth=1;ctx.strokeRect(7,16+bob,22,24);
+      ctx.fillStyle='#0a0018';
+      ctx.beginPath();ctx.moveTo(5,36+bob);ctx.lineTo(9,36+bob);ctx.lineTo(5,52+bob);ctx.closePath();ctx.fill();
+      ctx.beginPath();ctx.moveTo(27,36+bob);ctx.lineTo(23,36+bob);ctx.lineTo(27,52+bob);ctx.closePath();ctx.fill();
+      // staff
+      ctx.fillStyle='#30006a';ctx.fillRect(29,2+bob,3,48);
+      ctx.save();ctx.shadowColor='#c060c0';ctx.shadowBlur=12;
+      ctx.strokeStyle='#c060c0';ctx.lineWidth=2;
+      ctx.beginPath();ctx.arc(30.5,4+bob,8,0,Math.PI*2);ctx.stroke();
+      ctx.fillStyle='#c060c044';ctx.fill();ctx.restore();
+      // head
+      ctx.fillStyle='#1a0030';ctx.fillRect(8,4+bob,18,14);
+      ctx.fillStyle='#0a0018';
+      ctx.beginPath();ctx.moveTo(6,8+bob);ctx.lineTo(17,0+bob);ctx.lineTo(28,8+bob);ctx.closePath();ctx.fill();
+      ctx.fillStyle='#c060c0';ctx.fillRect(6,10+bob,26,1.5);
+      ctx.fillStyle='#ff80ff';ctx.fillRect(11,9+bob,3,3);ctx.fillRect(19,9+bob,3,3);
+      ctx.restore();
+    }
+  },
+  // ── NEW CLASS 9: Beastmaster ─────────────────────────────────────────────
+  beastmaster:{
+    name:'Beastmaster',color:'#a06820',emoji:'🐾',
+    hp:130,atk:30,def:12,spd:2.2,behavior:'buster',
+    baseSkills:[
+      {id:'beast_call',name:'Beast Call',desc:'Summon a war wolf',cd:3,dmgMult:0,effect:'summon',minionType:'wolf',legendary:false,cls:'beastmaster'},
+      {id:'wild_strike',name:'Wild Strike',desc:'Feral slash 2.0x + bleed',cd:3,dmgMult:2.0,effect:'cleave',legendary:false,cls:'beastmaster'},
+      {id:'pack_howl',name:'Pack Howl',desc:'+60% ATK buff for all',cd:8,dmgMult:0,effect:'buff',legendary:false,cls:'beastmaster'},
+    ],
+    draw(ctx,x,y,flip,anim=0){
+      ctx.save();
+      if(flip){ctx.translate(x+36,y);ctx.scale(-1,1);x=0;}else{ctx.translate(x,y);}
+      const bob=Math.sin(anim*2.2)*2;
+      // body — leather and furs
+      ctx.fillStyle='#5a3010';ctx.fillRect(5,18+bob,26,22);
+      ctx.fillStyle='#7a4820';ctx.fillRect(5,18+bob,6,12);ctx.fillRect(25,18+bob,6,12);
+      ctx.fillStyle='#3a2010';
+      ctx.fillRect(4,38+bob,12,14);ctx.fillRect(20,38+bob,12,14);
+      ctx.fillRect(2,22+bob,8,14);ctx.fillRect(26,22+bob,8,14);
+      // claw weapon
+      ctx.fillStyle='#d09040';
+      ctx.beginPath();ctx.moveTo(30,22+bob);ctx.lineTo(40,14+bob);ctx.lineTo(42,18+bob);ctx.lineTo(32,26+bob);ctx.closePath();ctx.fill();
+      ctx.beginPath();ctx.moveTo(30,26+bob);ctx.lineTo(42,20+bob);ctx.lineTo(43,24+bob);ctx.lineTo(31,30+bob);ctx.closePath();ctx.fill();
+      // head
+      ctx.fillStyle='#3a2010';ctx.fillRect(8,6+bob,20,14);
+      ctx.fillStyle='#5a3010';ctx.fillRect(6,8+bob,24,10);
+      // ears
+      ctx.fillStyle='#3a2010';
+      ctx.beginPath();ctx.moveTo(8,8+bob);ctx.lineTo(4,0+bob);ctx.lineTo(14,6+bob);ctx.closePath();ctx.fill();
+      ctx.beginPath();ctx.moveTo(28,8+bob);ctx.lineTo(32,0+bob);ctx.lineTo(22,6+bob);ctx.closePath();ctx.fill();
+      ctx.fillStyle='#ffcc80';ctx.fillRect(11,10+bob,4,4);ctx.fillRect(21,10+bob,4,4);
+      ctx.restore();
+    }
+  },
+  // ── NEW CLASS 10: Stormsage ──────────────────────────────────────────────
+  stormsage:{
+    name:'Stormsage',color:'#40a8e0',emoji:'⛈️',
+    hp:85,atk:44,def:4,spd:1.9,behavior:'mage',
+    baseSkills:[
+      {id:'storm_bolt',name:'Storm Bolt',desc:'Lightning strike 2.8x ATK',cd:3,dmgMult:2.8,effect:'projectile',legendary:false,cls:'stormsage'},
+      {id:'tempest_call',name:'Tempest',desc:'Chain lightning hits all 1.8x',cd:6,dmgMult:1.8,effect:'aoe',legendary:false,cls:'stormsage'},
+      {id:'wind_ward',name:'Wind Ward',desc:'Gale barrier — halve dmg 4s',cd:7,dmgMult:0,effect:'defend',legendary:false,cls:'stormsage'},
+    ],
+    draw(ctx,x,y,flip,anim=0){
+      ctx.save();
+      if(flip){ctx.translate(x+36,y);ctx.scale(-1,1);x=0;}else{ctx.translate(x,y);}
+      const bob=Math.sin(anim*1.9)*2;
+      ctx.fillStyle='#0a1a30';
+      ctx.beginPath();ctx.moveTo(6,38+bob);ctx.lineTo(12,38+bob);ctx.lineTo(9,52+bob);ctx.closePath();ctx.fill();
+      ctx.beginPath();ctx.moveTo(26,38+bob);ctx.lineTo(32,38+bob);ctx.lineTo(29,52+bob);ctx.closePath();ctx.fill();
+      ctx.fillStyle='#102040';ctx.fillRect(6,16+bob,26,24);
+      ctx.strokeStyle='#40a8e0';ctx.lineWidth=1.5;ctx.strokeRect(6,16+bob,26,24);
+      // lightning pattern on robe
+      ctx.strokeStyle='#80d0ff';ctx.lineWidth=1;
+      ctx.beginPath();ctx.moveTo(12,20+bob);ctx.lineTo(18,26+bob);ctx.lineTo(14,30+bob);ctx.lineTo(20,36+bob);ctx.stroke();
+      // staff
+      ctx.fillStyle='#203050';ctx.fillRect(30,2+bob,3,44);
+      ctx.save();ctx.shadowColor='#40a8e0';ctx.shadowBlur=14;
+      ctx.strokeStyle='#40a8e0';ctx.lineWidth=2;
+      ctx.beginPath();ctx.arc(31.5,5+bob,8,0,Math.PI*2);ctx.stroke();
+      ctx.fillStyle='#40a8e033';ctx.fill();ctx.restore();
+      ctx.fillStyle='#80d0ff';ctx.beginPath();ctx.arc(29,3+bob,2,0,Math.PI*2);ctx.fill();
+      // head
+      ctx.fillStyle='#0a1a30';ctx.fillRect(8,4+bob,20,14);
+      ctx.fillStyle='#102040';
+      ctx.beginPath();ctx.moveTo(6,8+bob);ctx.lineTo(18,0+bob);ctx.lineTo(30,8+bob);ctx.closePath();ctx.fill();
+      ctx.fillRect(5,8+bob,28,3);
+      ctx.fillStyle='#40a8e0';ctx.fillRect(5,10+bob,28,1.5);
+      ctx.fillStyle='#80d0ff';ctx.fillRect(11,8+bob,4,3);ctx.fillRect(21,8+bob,4,3);
+      ctx.restore();
+    }
+  },
 };
 
 // ═══════════════════════════════════════════════════════
-// SKILL POOL — 100 skills per class
+// SKILL POOL
 // ═══════════════════════════════════════════════════════
 function generateSkillPool(){
   const skills=[];
-  const effects=['stun','defend','heal','projectile','aoe','dodge','cleave','execute','buff','poison'];
-  const classes=['tank','mage','buster'];
-  const adj=['Iron','Storm','Arcane','Wild','Blessed','Ancient','Shadow','Flame','Frost','Thunder'];
-  const nouns=['Strike','Bash','Wave','Surge','Slash','Guard','Pulse','Fury','Echo','Blast'];
+  const allClasses=['tank','mage','buster','cleric','necromancer','dragonknight','wanderer','hexblade','beastmaster','stormsage'];
+
+  const namedSkills={
+    tank:[
+      ['Shield Bash','stun',1.3,4],['Iron Guard','defend',0,7],['Rally','heal',0,10],
+      ['Ground Pound','aoe',1.4,6],['War Cry','buff',0,7],['Shield Throw','projectile',1.8,4],
+      ['Counter Blow','dodge',2,5],['Fortress Stance','defend',0,10],['Retribution','cleave',2.2,5],
+      ['Unbreakable','defend',0,12],['Boulder Toss','projectile',2,5],['War Banner','buff',0,8],
+      ['Iron Slam','stun',1.8,5],['Stalwart Aura','buff',0,9],['Bulwark Charge','cleave',1.8,5],
+      ['Earthquake','aoe',1.5,7],['Parry','dodge',1.5,4],['Endure','defend',0,8],
+      ['Battle Focus','buff',0,6],['Shockwave','aoe',1.6,6],
+    ],
+    mage:[
+      ['Arcane Bolt','projectile',2.5,3],['Blizzard','aoe',1.8,6],['Fire Nova','aoe',2,7],
+      ['Blink Strike','dodge',1.8,5],['Chain Lightning','aoe',1.6,5],['Meteor','projectile',3.5,8],
+      ['Frost Bolt','stun',1.6,4],['Time Warp','buff',0,10],['Vortex','aoe',2.2,7],
+      ['Arcane Shield','defend',0,7],['Mana Surge','buff',0,6],['Glacial Prison','stun',1.4,5],
+      ['Pyroclast','projectile',2.8,5],['Mirror Image','dodge',2,6],['Force Blast','projectile',2.2,4],
+      ['Nova Burst','aoe',2.4,7],['Spell Surge','buff',0,7],['Mana Shield','defend',0,8],
+      ['Arcane Drain','drain',1.5,5],['Temporal Rift','stun',0,8],
+    ],
+    buster:[
+      ['Ground Shaker','aoe',1.8,5],['Skull Crack','stun',2,5],['Reckless Charge','cleave',2.5,6],
+      ['Berserker Rage','buff',0,7],['Death From Above','cleave',3,8],['Whirlwind','aoe',1.5,5],
+      ['Bloodlust','buff',0,6],['Spine Splitter','execute',3.5,9],['Titan Strike','cleave',2.2,6],
+      ['Savage Leap','cleave',2,5],['Execution Order','execute',4,10],['Iron Fist','stun',1.8,4],
+      ['Rampage','buff',0,7],['Cleave Storm','aoe',1.8,6],['Crusher','stun',2.2,5],
+      ['Rend','cleave',2.4,5],['Siege Slam','aoe',2,6],['Unstoppable','buff',0,8],
+      ['Final Strike','execute',3,8],['Berserk','buff',0,6],
+    ],
+    cleric:[
+      ['Holy Light','heal_ally',0,5],['Smite','smite',2,4],['Barrier','defend',0,8],
+      ['Holy Nova','aoe',1.5,6],['Purify','heal_ally',0,4],['Sacred Flame','smite',2.2,4],
+      ['Mass Heal','heal_ally',0,9],['Divine Shield','defend',0,8],['Consecrate','aoe',1.8,7],
+      ['Judgment','smite',2.8,6],['Revitalize','heal_ally',0,6],['Holy Wrath','smite',3,7],
+      ['Benediction','buff',0,8],['Sanctuary','defend',0,10],['Mending Wave','heal_ally',0,5],
+      ['Radiance','aoe',1.6,6],['Exorcism','execute',3,8],['Prayer','heal_ally',0,4],
+      ['Holy Burst','smite',2,5],['Celestial Beam','projectile',2.5,5],
+      ['Atonement','heal_ally',0,6],['Repentance','stun',1.5,5],['Absolution','heal_ally',0,7],
+      ['Faith Surge','buff',0,7],['Heavenly Strike','smite',2.5,5],['Grace','heal_ally',0,4],
+      ['Cure','heal_ally',0,3],['Bless','buff',0,6],['Pacify','stun',0,5],['Damnation','aoe',2,7],
+      ['Divine Aura','buff',0,8],['Cleanse','heal_ally',0,4],['Holy Ground','aoe',1.4,6],
+      ['Restoration','heal_ally',0,7],['Smite Evil','smite',3.2,7],['Valor','buff',0,6],
+      ['Shield of Faith','defend',0,9],['Zealotry','buff',0,7],['Renew','heal_ally',0,5],['Punishment','smite',2.3,5],
+    ],
+    necromancer:[
+      ['Raise Dead','summon',0,2,'skeleton'],['Call of Bats','summon',0,2,'bat'],
+      ['Raise Slime','summon',0,3,'slime'],['Summon Death Knight','summon',0,5,'death_knight'],
+      ['Nightmare Steed','summon',0,4,'horse'],['Call Dire Wolf','summon',0,3,'wolf'],
+      ['Death Bolt','projectile',2.5,3],['Soul Drain','drain',1.5,5],
+      ['Bone Spear','projectile',2.2,3],['Corpse Explosion','aoe',2.5,7],['Life Tap','drain',1.5,5],
+      ['Death Coil','stun',1.8,5],['Plague','poison',0,4],['Dark Pact','buff',0,6],
+      ['Soul Rend','drain',2,5],['Bone Armor','defend',0,7],['Unholy Ground','aoe',1.4,6],
+      ['Specter Summon','summon',0,6,'death_knight'],['Wither','stun',1.4,4],['Grave Chill','aoe',1.6,6],
+      ['Blood Nova','aoe',2,7],['Necrotic Aura','poison',0,5],['Bone Prison','stun',0,6],
+      ['Shadow Bolt','projectile',2.8,4],['Consume','drain',2.2,6],
+      ['Raise Legion','summon',0,7,'skeleton'],['Dark Ritual','buff',0,8],['Chill Touch','stun',1.2,3],
+      ['Entropy','aoe',1.5,5],['Enervate','stun',1.3,4],['Defile','aoe',1.8,6],
+      ['Soul Siphon','drain',1.8,5],['Pestilence','poison',0,6],['Grasp','stun',1.5,4],
+      ['Oblivion','aoe',2.2,7],['Spectral Chains','stun',1.6,5],['Death Mark','execute',3,7],
+      ['Void Drain','drain',2.4,6],['Nightmare','stun',1.8,6],['Desecrate','aoe',1.5,5],
+      ['Shroud','defend',0,6],['Cursed Ground','poison',0,5],['Bleed','poison',0,3],
+      ['Bone Volley','projectile',2,4],['Hex','stun',1.4,5],
+    ],
+    dragonknight:[
+      ['Dragon Sweep','aoe',1.6,5],['Dragonfire','aoe',2.5,8],['Iron Scales','defend',0,10],
+      ['Dragon Breath','aoe',2,5],['Scale Bash','stun',1.8,5],['Tail Sweep','aoe',1.6,5],
+      ['Inferno','aoe',2.5,7],['Dragon Roar','buff',0,7],['Fire Wave','aoe',1.8,5],
+      ['Molten Shield','defend',0,8],['Claw Strike','cleave',2.2,5],['Dragon Rush','cleave',2,5],
+      ['Blazing Scales','buff',0,7],['Ember Storm','aoe',2.2,7],['Lava Burst','projectile',3,6],
+      ['Scorched Earth','aoe',1.4,6],['Dragon Fury','buff',0,8],['Heat Wave','aoe',1.6,5],
+      ['Searing Claw','cleave',2.5,6],['Magma Slam','aoe',2.8,8],
+      ['Petrify','stun',0,7],['Conflagration','aoe',3,9],['Ancient Fire','projectile',3.5,8],
+      ['Wyrmscale','defend',0,9],['Char','aoe',1.4,4],['Blaze','aoe',1.6,5],
+      ['Volcanic','aoe',2,7],['Ignite','poison',0,4],['Firewall','aoe',1.5,6],['Eruption','aoe',2.4,7],
+      ['Flame Claw','cleave',2,5],['Scorch','aoe',1.3,4],['Incinerate','execute',3,7],
+      ['Magma Core','aoe',2.2,6],['Dragon Talon','cleave',2.3,5],['Immolate','poison',0,5],
+      ['Brimstone','projectile',2.6,5],['Sunder','cleave',2.4,6],['Pyroclasm','aoe',3,8],['Blaze Rush','cleave',1.8,4],
+    ],
+    hexblade:[
+      ['Hex Curse','buff',0,5],['Shadow Bolt','projectile',2.6,3],['Life Siphon','drain',1.8,5],
+      ['Dark Pact','buff',0,6],['Void Lash','cleave',2.2,4],['Soul Rend','drain',2,5],
+      ['Curse Wave','aoe',1.6,6],['Hex Brand','stun',1.5,5],['Spectral Slash','cleave',2.4,4],
+      ['Necrotic Bolt','projectile',2.8,4],['Wither Touch','stun',1.4,4],['Blood Curse','poison',0,5],
+      ['Shade Strike','execute',3,7],['Phantasm','dodge',2,5],['Dark Mirror','buff',0,7],
+      ['Entropic Blast','aoe',2,6],['Cursed Flames','aoe',1.8,6],['Doom Mark','execute',3.2,8],
+      ['Hex Nova','aoe',2.2,7],['Shadow Snare','stun',1.6,5],['Voidweave','defend',0,6],
+      ['Baneful Touch','drain',1.6,4],['Hex Shroud','dodge',1.8,5],['Dark Wave','aoe',1.5,5],
+      ['Soul Link','drain',2.2,6],['Eldritch Bolt','projectile',3,5],['Malediction','stun',1.8,6],
+      ['Shadow Veil','dodge',2,4],['Obliterate','execute',3.5,8],['Sorrow','aoe',1.4,5],
+      ['Wraith Form','buff',0,8],['Hexfire','aoe',2.4,7],['Darkweave','defend',0,7],
+      ['Entropy','aoe',1.5,6],['Cursed Ground','poison',0,5],['Soul Shatter','execute',2.8,7],
+      ['Midnight Strike','cleave',2.6,5],['Baleful Eye','stun',2,6],['Void Drain','drain',2.4,6],['Dark Torrent','aoe',2.8,8],
+    ],
+    beastmaster:[
+      ['Beast Call','summon',0,3,'wolf'],['Wild Strike','cleave',2.0,3],['Pack Howl','buff',0,8],
+      ['Feral Pounce','execute',2.8,5],['Rend','cleave',1.8,3],['Savage Bite','stun',2,4],
+      ['Alpha Roar','buff',0,7],['Primal Fury','cleave',2.4,5],['Stampede','aoe',1.8,6],
+      ['Claw Swipe','cleave',2.2,4],['Mark Prey','execute',3,7],['Battle Growl','buff',0,6],
+      ['Nature Bond','heal',0,8],['Frenzy','buff',0,6],['Predator Dash','cleave',2.6,5],
+      ['Wild Charge','cleave',2.0,4],['Mangle','stun',2.2,5],['Pack Tactics','buff',0,7],
+      ['Ravenous','drain',1.8,5],['Bestial Wrath','buff',0,7],['Spine Shatter','stun',2.4,6],
+      ['Dire Fang','cleave',2.8,5],['Cripple','stun',1.6,4],['Blood Frenzy','buff',0,6],
+      ["Nature's Call",'summon',0,5,'wolf'],['Totem Slam','aoe',1.6,5],['Earthshaker','aoe',1.8,6],
+      ['Intimidate','stun',0,5],['Cornered Beast','execute',3.2,7],['Ferocity','buff',0,7],
+      ['Brutalize','cleave',3,7],['Iron Hide','defend',0,7],['Pack Leader','buff',0,9],
+      ['Ambush','execute',2.6,5],['Feral Slash','cleave',2.4,4],['Raw Power','buff',0,6],
+      ["Predator's Mark",'execute',3.5,8],['Thick Hide','defend',0,8],['Savage Roar','aoe',1.4,6],['Beast Surge','buff',0,7],
+    ],
+    stormsage:[
+      ['Storm Bolt','projectile',2.8,3],['Tempest','aoe',1.8,6],['Wind Ward','defend',0,7],
+      ['Lightning Strike','projectile',2.5,3],['Chain Lightning','aoe',1.6,5],['Gale Force','aoe',1.8,6],
+      ['Thunder Clap','stun',1.6,4],['Static Field','aoe',1.4,5],['Cyclone','aoe',2,6],
+      ['Shock','stun',1.4,3],['Voltage Surge','projectile',3,5],['Storm Wall','defend',0,8],
+      ['Whirlwind','aoe',1.6,5],['Thunderhead','aoe',2.2,7],['Ball Lightning','projectile',2.6,4],
+      ['Sky Fury','aoe',2.4,7],['Arc Flash','projectile',2.8,4],['Discharge','aoe',2,6],
+      ['Maelstrom','aoe',2.6,8],['Storm Surge','buff',0,7],['Gust Blast','aoe',1.5,5],
+      ['Ionic Strike','projectile',3.2,5],['Eye of the Storm','buff',0,8],['Gale Ward','defend',0,7],
+      ['Overload','aoe',2.8,7],['Rift Storm','aoe',2.2,6],['Squall','aoe',1.4,4],
+      ['Torrent','aoe',2.4,7],['Spark','projectile',2,3],['Vortex','aoe',2.2,6],
+      ['Fulminate','projectile',3.4,6],['Shock Nova','aoe',2.6,7],['Weather Control','buff',0,9],
+      ['Hailstorm','aoe',1.8,6],['Zap','stun',1.2,3],['Raging Tempest','aoe',3,8],
+      ['Lightning Rod','stun',2,5],['Static Charge','buff',0,6],['Storm Blade','cleave',2.4,5],['Nimbus','aoe',2,6],
+    ],
+
+    ranger:[
+      ['Arrow Rain','aoe',1.8,5],['Piercing Shot','smite',2.5,4],['Eagle Eye','buff',0,8],
+      ["Hunter's Mark",'execute',3,7],['Multishot','aoe',2,5],['Snipe','projectile',3.5,8],
+      ['Barbed Arrow','poison',0,4],['Cover Fire','aoe',1.5,4],['Volley','aoe',1.6,5],
+      ['Aimed Shot','projectile',2.8,5],['Concussive Arrow','stun',1.6,4],['Explosive Arrow','aoe',2.2,6],
+      ['Rain of Death','aoe',2.5,8],['Deadeye','execute',3.5,9],['Wind Arrow','projectile',2,3],
+      ['Scatter Shot','aoe',1.4,4],['Pinpoint','projectile',3,6],['Flurry','aoe',1.8,5],
+      ['Crippling Shot','stun',1.4,4],['Shadow Arrow','execute',2.8,6],
+      ['Hail of Arrows','aoe',2.2,6],['Marked Target','execute',3.2,7],['Rapid Fire','aoe',1.6,4],
+      ['Guided Arrow','projectile',2.6,5],['Steel Rain','aoe',2,6],['Hawk Call','buff',0,7],
+      ['Double Tap','projectile',2.2,4],['Storm Arrow','aoe',2.4,6],['Beast Bond','buff',0,6],
+      ['Quiver Mastery','buff',0,5],['Tracker','execute',2.5,6],['Headshot','execute',4,10],
+      ['Arrow Storm','aoe',3,8],['Split Arrow','aoe',1.6,4],['Overdraw','projectile',3.2,7],
+      ['Ambush','execute',3,6],['Ranging Shot','projectile',2.4,5],['Pin Down','stun',1.8,5],
+      ['Forest Stride','buff',0,5],['Silencing Arrow','stun',0,6],
+    ],
+    brawler:[
+      ['Haymaker','cleave',2.8,4],['Combo Strike','cleave',1.5,3],['Iron Skin','defend',0,7],
+      ['Uppercut','stun',2,4],['Gut Punch','stun',1.8,3],['Spinning Strike','aoe',1.6,5],
+      ['Adrenaline Rush','buff',0,6],['Body Slam','aoe',2,5],['Knockout Blow','execute',3.5,8],
+      ['Rapid Jabs','cleave',1.4,3],['Power Surge','buff',0,7],['Iron Wall','defend',0,8],
+      ['Headbutt','stun',2.2,4],['Knuckle Duster','cleave',2.5,5],['Ground Pound','aoe',1.8,5],
+      ['Flex','buff',0,5],['Retaliate','dodge',2.4,5],['Bear Hug','stun',0,6],
+      ['Vicious Jab','cleave',2,4],['Relentless','buff',0,7],
+      ['Street Fighter','cleave',2.2,4],['Battering Ram','cleave',2.6,5],['Pile Driver','execute',3,7],
+      ['Rock Solid','defend',0,9],['Crowd Control','aoe',1.8,6],['Roughhousing','aoe',1.5,4],
+      ['Feral Strike','cleave',2.4,5],['War Dance','buff',0,7],['Pulverize','cleave',3,6],
+      ['Smash','aoe',2,5],['Clinch','stun',1.6,4],['Devastate','execute',3.5,8],
+      ['Last Stand','defend',0,10],['Fury Combo','cleave',1.8,4],['Wrecking Ball','aoe',2.2,6],
+      ['Stone Cold','defend',0,7],['Hammer Time','stun',2,5],['Overdrive','buff',0,8],
+      ['Crushing Blow','execute',2.8,6],['Berserk Mode','buff',0,8],
+    ],
+    alchemist:[
+      ['Acid Flask','aoe',1.7,4],['Healing Brew','heal_ally',0,6],['Explosive Vial','aoe',2.6,7],
+      ['Poison Bomb','poison',0,4],['Smoke Grenade','stun',0,5],['Transmute','buff',0,6],
+      ['Elixir of Might','buff',0,7],['Caustic Cloud','aoe',1.5,5],['Flash Powder','stun',1.4,4],
+      ['Vitality Serum','heal_ally',0,5],['Sticky Bomb','aoe',2,6],['Reagent Blast','projectile',2.4,5],
+      ['Catalyst','buff',0,6],['Venom Extract','poison',0,4],['Thunder Vial','aoe',2.2,6],
+      ["Philosopher's Stone",'buff',0,10],['Mutation Brew','buff',0,8],['Ice Flask','stun',1.6,5],
+      ['Volatile Mix','aoe',2.4,7],['Cure All','heal_ally',0,8],
+      ['Thermite Vial','aoe',2.6,7],['Nano Brew','heal_ally',0,5],['Neuro Toxin','poison',0,5],
+      ['Unstable Compound','aoe',3,8],['Rejuvenate','heal_ally',0,6],['Mana Tonic','buff',0,7],
+      ['Reactive Armor','defend',0,8],['Fire Water','projectile',2.8,6],['Concussive Brew','stun',1.8,5],
+      ['Elixir of Life','heal_ally',0,9],['Phase Potion','dodge',2,6],['Super Serum','buff',0,8],
+      ['Shrapnel Flask','aoe',1.8,5],['Petrifying Gas','stun',0,6],['Chain Reaction','aoe',2.8,8],
+      ['Tincture','heal_ally',0,4],['Experimental Mix','aoe',2.2,6],['Ferment','buff',0,5],
+      ['Overdose','execute',3.5,9],['Quintessence','buff',0,12],
+    ],
+    wanderer:[
+      ['Shadow Step','execute',2.2,4],['Blade Wave','aoe',1.4,5],['Phantom Dodge','dodge',2,6],
+      ['Quick Draw','projectile',2,3],['Flash Step','dodge',2.2,4],['Blade Dance','aoe',1.6,5],
+      ['Assassinate','execute',3,7],['Wind Slash','aoe',1.8,5],['Shadow Clone','buff',0,6],
+      ['Iaido Strike','cleave',2.5,4],['Gale Cutter','aoe',2,6],['Vanish','dodge',1.5,5],
+      ['Ki Blast','projectile',2.8,5],['Storm Step','dodge',2.5,5],['Crescent Wave','aoe',2,6],
+      ['Void Edge','cleave',2.8,6],['Thunder Slash','aoe',2.2,6],["Mind's Eye",'buff',0,6],
+      ['Dragon Ascent','cleave',3.5,8],['Spirit Blade','projectile',3,6],
+      ['Shadowmeld','dodge',1.8,5],['Phantom Thrust','execute',2.8,6],['Vortex Slash','aoe',2,5],
+      ['Tempest','aoe',1.8,6],['Silent Step','dodge',2,4],['Rift Slash','cleave',2.5,5],
+      ['Ki Strike','cleave',2.2,4],['Wind Cutter','aoe',1.6,4],['Death Mark','execute',3.5,8],['Blink','dodge',1.5,3],
+      ['Cyclone','aoe',1.9,6],['Flicker','dodge',2.2,4],['Void Pierce','execute',3,7],
+      ['Resonance','aoe',2,5],['Mirage','dodge',1.8,5],['Killing Edge','execute',2.8,6],
+      ['Flow','buff',0,5],['Afterimage','dodge',2.5,5],['Spirit Step','dodge',2,4],['Gust Slash','aoe',1.5,4],
+    ],
+  };
+
+  const adj=['Iron','Storm','Arcane','Wild','Blessed','Ancient','Shadow','Flame','Frost','Thunder',
+             'Void','Crimson','Golden','Silver','Runic','Spirit','Cursed','Holy','Dark','Blazing'];
+  const nouns=['Strike','Bash','Wave','Surge','Slash','Guard','Pulse','Fury','Echo','Blast',
+               'Step','Rend','Cleave','Wrath','Edge','Pierce','Burst','Shard','Claw','Fang'];
+
   let sid=1000;
-  for(const cls of classes){
-    for(let i=0;i<30;i++){
-      const eff=effects[Math.floor(Math.random()*8)];
-      const nm=adj[i%10]+' '+nouns[Math.floor(i/10)%10];
-      skills.push({
-        id:'gen_'+sid++, name:nm, cls,
-        desc:`${eff==='heal'?'Restore HP':eff==='aoe'?'AoE burst':eff==='buff'?'+ATK buff':'Deal damage'} — ${eff}`,
-        cd:2+Math.floor(Math.random()*8), dmgMult:0.8+Math.random()*2,
-        effect:eff, legendary:false
-      });
+  for(const cls of allClasses){
+    const named=namedSkills[cls]||[];
+    named.forEach(([name,effect,mult,cd,minionType])=>{
+      const sk={id:`${cls}_s${sid++}`,name,cls,desc:`${effect.replace(/_/g,' ')} · ${mult>0?mult+'x dmg':'support'}`,cd,dmgMult:mult,effect,legendary:false};
+      if(minionType) sk.minionType=minionType;
+      skills.push(sk);
+    });
+    const effectPool=
+      cls==='cleric'      ? ['heal_ally','smite','defend','buff','aoe','stun','projectile','heal_ally','smite'] :
+      cls==='necromancer' ? ['summon','drain','poison','aoe','projectile','stun','buff','drain','summon'] :
+      cls==='dragonknight'? ['aoe','cleave','defend','buff','stun','projectile','aoe','cleave','aoe'] :
+      cls==='wanderer'    ? ['dodge','execute','aoe','cleave','projectile','buff','dodge','execute','dodge'] :
+      cls==='ranger'      ? ['projectile','aoe','execute','stun','buff','projectile','aoe','execute','projectile'] :
+      cls==='brawler'     ? ['cleave','stun','aoe','execute','buff','cleave','defend','cleave','execute'] :
+      cls==='alchemist'   ? ['aoe','heal_ally','poison','buff','stun','projectile','aoe','heal_ally','aoe'] :
+      cls==='hexblade'    ? ['drain','projectile','aoe','stun','buff','execute','drain','aoe','stun'] :
+      cls==='beastmaster' ? ['cleave','buff','summon','execute','stun','aoe','cleave','buff','cleave'] :
+      cls==='stormsage'   ? ['projectile','aoe','stun','buff','aoe','projectile','aoe','stun','aoe'] :
+      cls==='mage'        ? ['projectile','aoe','stun','buff','dodge','defend','aoe','projectile','aoe'] :
+      cls==='buster'      ? ['cleave','stun','aoe','execute','buff','cleave','aoe','cleave','execute'] :
+      ['defend','stun','aoe','buff','dodge','cleave','projectile','defend','stun'];
+    let count=skills.filter(s=>s.cls===cls&&!s.legendary).length;
+    let pi=0;
+    while(count<100){
+      const nm=adj[sid%adj.length]+' '+nouns[(sid*3)%nouns.length];
+      const eff=effectPool[pi%effectPool.length]; pi++;
+      skills.push({id:`${cls}_p${sid++}`,name:nm,cls,desc:`${eff.replace(/_/g,' ')} · ${cls} skill`,cd:2+(sid%7),dmgMult:parseFloat((0.9+(sid%15)*0.1).toFixed(1)),effect:eff,legendary:false});
+      count++;
     }
-    // 3 legendary per class
-    for(let i=0;i<3;i++){
-      skills.push({
-        id:'leg_'+sid++,
-        name:['Celestial Wrath','Eternal Flame','Void Rend','Soul Shatter','Heaven\'s Edge','Judgment Strike'][i%6],
-        cls, legendary:true,
-        desc:`LEGENDARY: ${['Massive AoE explosion 4x','Erase a target, ignores DEF','Heal all + deal AoE 2x'][i%3]}`,
-        cd:15,dmgMult:4,
-        effect:['aoe','execute','aoe'][i%3]
-      });
-    }
+    const legData={
+      tank:[['Eternal Fortress','defend',0,15,'Become immortal 3s, reflect ALL damage'],
+            ['Juggernaut Charge','aoe',4,15,'Unstoppable charge — crush all enemies 4x'],
+            ['Indomitable Will','buff',0,15,'Endure a fatal blow and survive at 1 HP']],
+      mage:[['Celestial Nova','aoe',5,15,'Obliterating nova — hits all enemies 5x'],
+            ['Arcane Singularity','stun',4,15,'Black hole — pulls and crushes all enemies 4x'],
+            ['Temporal Collapse','aoe',4,15,'Erase time — AoE 4x + restore 40% HP all']],
+      buster:[["Heaven's Edge",'execute',5,15,'One strike — removes 80% of target HP'],
+              ['Omega Cleave','aoe',4,15,'Spinning cleave that hits all enemies 4x'],
+              ['Extinction Blow','execute',4,15,'Execute blow — triples damage on low HP']],
+      cleric:[['Divine Intervention','heal_ally',0,15,'Instantly revive ALL fallen heroes at 50% HP'],
+              ['Holy Resurrection','aoe',4,15,'Call divine wrath — 4x AoE + heal all party'],
+              ['Wrath of Heaven','smite',6,15,'Pure holy devastation — single target 6x']],
+      necromancer:[['Army of the Dead','summon',0,12,'Raise 3 powerful undead warriors at once'],
+                   ['Soul Harvest','drain',5,15,'Drain ALL enemies HP — convert to self'],
+                   ['Lich Form','buff',0,15,'Transform: double all stats for 8s + spawn 3 minions']],
+      dragonknight:[['Dragon God Breath','aoe',6,15,'Ancient inferno — scorches all enemies for 6x'],
+                    ['Ancient Conflagration','aoe',5,15,'Primordial fire engulfs everything 5x'],
+                    ['Dragon Apocalypse','aoe',4,15,'Three consecutive AoE fireballs — 4x each']],
+      hexblade:[['Void Annihilation','aoe',6,15,'Reality tears apart — obliterate all enemies 6x'],
+               ['Soul Devour','drain',5,15,'Drain ALL HP from all enemies into self'],
+               ['Hex Apocalypse','aoe',5,15,'Cascading curses detonate all enemies 5x']],
+      beastmaster:[['Beast Apocalypse','aoe',5,15,'Summon 3 wolves + stampede all enemies 5x'],
+                   ['Alpha Unleashed','buff',0,15,'Full berserk: 3x ATK for 8s, immune to stun'],
+                   ['World Predator','execute',6,15,'Single strike reduces target to 10% HP']],
+      stormsage:[['Storm of the Ages','aoe',6,15,'Ancient tempest — devastates all enemies 6x'],
+                 ['Singularity Storm','aoe',5,15,'Collapse into lightning — 5x + stun all'],
+                 ["Heaven's Wrath",'projectile',8,15,'Divine bolt — single target 8x instant']],
+      ranger:[['Godshot','execute',6,15,'One perfect arrow — kills any non-boss in one hit'],
+              ['Typhoon Arrow','aoe',5,15,'Arrow splits into storm — hits all enemies 5x'],
+              ['Hunter Lord Form','buff',0,15,'Summon eagle companion + 3x ATK for 8s']],
+      brawler:[['Titan Fist','execute',6,15,'Punch so hard it cracks the earth — 6x single'],
+               ['Unstoppable Force','aoe',5,15,'Charge through all enemies dealing 5x each'],
+               ['Primal Rage','buff',0,15,'Double ATK + SPD for 8s, immune to stun']],
+      alchemist:[['Grand Transmutation','aoe',5,15,'Turn all enemies to gold — 5x AoE damage'],
+                 ['Elixir of Immortality','heal_ally',0,15,'Revive all fallen heroes to 100% HP'],
+                 ['Catalyst Explosion','aoe',6,15,'Chain explosion engulfs battlefield — 6x all']],
+      wanderer:[['Thousand Cuts','cleave',5,15,'10 rapid strikes in 2s — total 5x dmg'],
+                ['Void Rift Slash','aoe',4,15,'Dimensional slash tears through all enemies 4x'],
+                ['Phantom Realm Walk','dodge',4,15,'Phase out 3s untouchable then 4x strike']],
+    };
+    (legData[cls]||[]).forEach(([name,effect,mult,cd,desc])=>{
+      skills.push({id:`leg_${cls}_${sid++}`,name,cls,legendary:true,desc:`LEGENDARY: ${desc}`,cd,dmgMult:mult,effect});
+    });
   }
   return skills;
 }
 
 const ALL_SKILLS = generateSkillPool();
 
+
 // ═══════════════════════════════════════════════════════
-// LOOT TABLE — extensive
+// LOOT TABLE
 // ═══════════════════════════════════════════════════════
 const LOOT_TABLE = [
-  // common
-  {emoji:'⚔️',name:'Rusty Blade',rarity:'common',stats:{atk:4},desc:'Worn but reliable'},
-  {emoji:'🛡️',name:'Oak Shield',rarity:'common',stats:{def:4},desc:'Sturdy wood'},
-  {emoji:'💍',name:'Vigor Band',rarity:'common',stats:{hp:20},desc:'A simple ring'},
-  {emoji:'👞',name:'Leather Boots',rarity:'common',stats:{spd:0.1},desc:'Light footwork'},
-  {emoji:'🎩',name:'Wool Cap',rarity:'common',stats:{hp:12},desc:'Keeps you warm'},
-  {emoji:'🧤',name:'Cloth Gloves',rarity:'common',stats:{atk:3},desc:'Basic grip'},
-  {emoji:'📿',name:'Copper Beads',rarity:'common',stats:{def:3},desc:'Old trinket'},
-  {emoji:'🪨',name:'Stone Amulet',rarity:'common',stats:{hp:15},desc:'Heavy but protective'},
-  // rare
-  {emoji:'🗡️',name:'Moonsilver Blade',rarity:'rare',stats:{atk:10},desc:'Gleams at night'},
-  {emoji:'🔵',name:'Crystal Buckler',rarity:'rare',stats:{def:8},desc:'Reflects spells'},
-  {emoji:'💜',name:'Amethyst Pendant',rarity:'rare',stats:{atk:9,hp:20},desc:'Dual enchanted'},
-  {emoji:'🌙',name:'Moonboots',rarity:'rare',stats:{spd:0.25},desc:'Fleet-footed'},
-  {emoji:'🧢',name:'Ranger Hood',rarity:'rare',stats:{def:6,hp:15},desc:'Camouflage blend'},
-  {emoji:'🥊',name:'Iron Gauntlets',rarity:'rare',stats:{atk:7,def:4},desc:'Reinforced knuckles'},
-  {emoji:'🌿',name:'Druidic Torc',rarity:'rare',stats:{hp:40},desc:'Forest magic'},
-  {emoji:'🎯',name:'Falcon Bow',rarity:'rare',stats:{atk:12},desc:'Precise and swift'},
-  // epic
-  {emoji:'🔥',name:'Inferno Edge',rarity:'epic',stats:{atk:20},desc:'Burns on impact'},
-  {emoji:'❄️',name:'Frostguard',rarity:'epic',stats:{def:16},desc:'Saps enemy strength'},
-  {emoji:'⚡',name:'Thunder Ring',rarity:'epic',stats:{atk:15,spd:0.2},desc:'Crackling power'},
-  {emoji:'🌀',name:'Void Shard',rarity:'epic',stats:{def:14,hp:30},desc:'Bends reality'},
-  {emoji:'👑',name:'War Crown',rarity:'epic',stats:{hp:60},desc:'Commands respect'},
-  {emoji:'🐉',name:'Dragon Scale',rarity:'epic',stats:{def:18,hp:25},desc:'Near indestructible'},
-  {emoji:'🔮',name:'Arcane Orb',rarity:'epic',stats:{atk:22},desc:'Pure spell focus'},
-  {emoji:'💎',name:'Gemstone Heart',rarity:'epic',stats:{hp:70,atk:10},desc:'Life force crystal'},
-  // legendary
-  {emoji:'🌟',name:'Starfall Blade',rarity:'legendary',stats:{atk:35,spd:0.3},desc:'Forged from meteor'},
-  {emoji:'🏆',name:'Champion\'s Crown',rarity:'legendary',stats:{hp:100,def:20},desc:'Worn by the greatest'},
-  {emoji:'⚜️',name:'Golden Aegis',rarity:'legendary',stats:{def:30,hp:50},desc:'Blessed by Ancients'},
-  {emoji:'🌈',name:'Prismatic Rod',rarity:'legendary',stats:{atk:30,hp:40},desc:'All elements combined'},
+  // ── WEAPONS ──────────────────────────────────────────────────────────────
+  {emoji:'⚔️',slot:'weapon',name:'Rusty Blade',rarity:'common',baseStats:{atk:[3,6]}},
+  {emoji:'⚔️',slot:'weapon',name:'Bone Sword',rarity:'common',baseStats:{atk:[4,7]}},
+  {emoji:'⚔️',slot:'weapon',name:'Iron Fang',rarity:'common',baseStats:{atk:[5,8]}},
+  {emoji:'🗡️',slot:'weapon',name:'Short Dagger',rarity:'common',baseStats:{atk:[3,5],spd:[0.05,0.1]}},
+  {emoji:'🗡️',slot:'weapon',name:'Shiv',rarity:'common',baseStats:{atk:[2,5]}},
+  {emoji:'🪃',slot:'weapon',name:'Hunting Club',rarity:'common',baseStats:{atk:[4,7],def:[1,2]}},
+  {emoji:'⚔️',slot:'weapon',name:'Cracked Axe',rarity:'common',baseStats:{atk:[5,9]}},
+  {emoji:'⚔️',slot:'weapon',name:'Worn Spear',rarity:'common',baseStats:{atk:[4,8]}},
+  {emoji:'🗡️',slot:'weapon',name:'Moonsilver Blade',rarity:'rare',baseStats:{atk:[9,13]}},
+  {emoji:'⚔️',slot:'weapon',name:'War Sword',rarity:'rare',baseStats:{atk:[10,15],def:[2,4]}},
+  {emoji:'🪃',slot:'weapon',name:'Falcon Bow',rarity:'rare',baseStats:{atk:[11,16],spd:[0.1,0.2]}},
+  {emoji:'⚔️',slot:'weapon',name:'Venomblade',rarity:'rare',baseStats:{atk:[12,17],hp:[10,20]}},
+  {emoji:'🗡️',slot:'weapon',name:'Twilight Fang',rarity:'rare',baseStats:{atk:[10,14],spd:[0.15,0.25]}},
+  {emoji:'⚔️',slot:'weapon',name:'Hammerfist Axe',rarity:'rare',baseStats:{atk:[13,18]}},
+  {emoji:'⚔️',slot:'weapon',name:'Sentinel Glaive',rarity:'rare',baseStats:{atk:[11,16],def:[3,6]}},
+  {emoji:'⚔️',slot:'weapon',name:'Storm Edge',rarity:'rare',baseStats:{atk:[12,17],hp:[5,15]}},
+  {emoji:'🔥',slot:'weapon',name:'Inferno Edge',rarity:'epic',baseStats:{atk:[18,24],hp:[10,20]}},
+  {emoji:'⚡',slot:'weapon',name:'Thunder Blade',rarity:'epic',baseStats:{atk:[16,22],spd:[0.15,0.25]}},
+  {emoji:'🌀',slot:'weapon',name:'Void Ripper',rarity:'epic',baseStats:{atk:[19,25],def:[5,10]}},
+  {emoji:'🔮',slot:'weapon',name:'Arcane Saber',rarity:'epic',baseStats:{atk:[20,26],hp:[20,35]}},
+  {emoji:'💀',slot:'weapon',name:'Soul Reaper',rarity:'epic',baseStats:{atk:[22,28],hp:[15,25]}},
+  {emoji:'🐉',slot:'weapon',name:'Dragonbone Blade',rarity:'epic',baseStats:{atk:[21,27],def:[8,14]}},
+  {emoji:'🌟',slot:'weapon',name:'Starfall Blade',rarity:'legendary',baseStats:{atk:[32,40],spd:[0.25,0.35]}},
+  {emoji:'⚔️',slot:'weapon',name:"Heaven's Edge",rarity:'legendary',baseStats:{atk:[35,45],hp:[20,30]}},
+  {emoji:'🔱',slot:'weapon',name:'Godslayer',rarity:'legendary',baseStats:{atk:[38,48],def:[10,16],spd:[0.1,0.2]}},
+
+  // ── OFF-HAND ─────────────────────────────────────────────────────────────
+  {emoji:'🛡️',slot:'offhand',name:'Oak Shield',rarity:'common',baseStats:{def:[3,6]}},
+  {emoji:'🛡️',slot:'offhand',name:'Plank Board',rarity:'common',baseStats:{def:[2,5],hp:[5,10]}},
+  {emoji:'🛡️',slot:'offhand',name:'Hide Buckler',rarity:'common',baseStats:{def:[3,6]}},
+  {emoji:'🛡️',slot:'offhand',name:'Iron Kite',rarity:'rare',baseStats:{def:[7,11],hp:[10,20]}},
+  {emoji:'🔵',slot:'offhand',name:'Crystal Buckler',rarity:'rare',baseStats:{def:[7,12]}},
+  {emoji:'🛡️',slot:'offhand',name:'Tower Shield',rarity:'rare',baseStats:{def:[10,15],hp:[15,25]}},
+  {emoji:'🛡️',slot:'offhand',name:'Runic Barrier',rarity:'rare',baseStats:{def:[8,13],atk:[2,5]}},
+  {emoji:'❄️',slot:'offhand',name:'Frostguard',rarity:'epic',baseStats:{def:[14,20],hp:[20,30]}},
+  {emoji:'🌀',slot:'offhand',name:'Void Aegis',rarity:'epic',baseStats:{def:[16,22],hp:[25,40]}},
+  {emoji:'🐉',slot:'offhand',name:'Dragon Scale Shield',rarity:'epic',baseStats:{def:[18,24],hp:[20,32]}},
+  {emoji:'⚜️',slot:'offhand',name:'Golden Aegis',rarity:'legendary',baseStats:{def:[28,36],hp:[45,60]}},
+  {emoji:'🌈',slot:'offhand',name:'Prismatic Ward',rarity:'legendary',baseStats:{def:[26,34],atk:[8,14],hp:[20,30]}},
+
+  // ── HELM ─────────────────────────────────────────────────────────────────
+  {emoji:'🎩',slot:'helm',name:'Wool Cap',rarity:'common',baseStats:{hp:[10,16]}},
+  {emoji:'🧢',slot:'helm',name:'Leather Coif',rarity:'common',baseStats:{hp:[8,14],def:[1,3]}},
+  {emoji:'🎩',slot:'helm',name:'Peddler Hat',rarity:'common',baseStats:{hp:[10,18]}},
+  {emoji:'🪖',slot:'helm',name:'Iron Helm',rarity:'rare',baseStats:{hp:[18,28],def:[4,7]}},
+  {emoji:'🧢',slot:'helm',name:'Ranger Hood',rarity:'rare',baseStats:{def:[5,9],hp:[14,22]}},
+  {emoji:'🪖',slot:'helm',name:'War Mask',rarity:'rare',baseStats:{hp:[20,30],def:[5,8]}},
+  {emoji:'🪖',slot:'helm',name:'Void Visage',rarity:'epic',baseStats:{hp:[35,50],def:[8,14]}},
+  {emoji:'👑',slot:'helm',name:'War Crown',rarity:'epic',baseStats:{hp:[50,70],atk:[5,10]}},
+  {emoji:'🪖',slot:'helm',name:'Dragon Skull Helm',rarity:'epic',baseStats:{hp:[40,55],def:[12,18]}},
+  {emoji:'👑',slot:'helm',name:"Champion's Crown",rarity:'legendary',baseStats:{hp:[90,115],def:[18,26]}},
+  {emoji:'🌟',slot:'helm',name:'Starlight Halo',rarity:'legendary',baseStats:{hp:[80,100],atk:[12,18],spd:[0.1,0.2]}},
+
+  // ── CHEST ─────────────────────────────────────────────────────────────────
+  {emoji:'🧥',slot:'chest',name:'Roughspun Tunic',rarity:'common',baseStats:{hp:[12,20],def:[1,3]}},
+  {emoji:'🧥',slot:'chest',name:'Padded Vest',rarity:'common',baseStats:{def:[3,6]}},
+  {emoji:'🧥',slot:'chest',name:'Canvas Coat',rarity:'common',baseStats:{hp:[15,22]}},
+  {emoji:'🧥',slot:'chest',name:'Studded Leather',rarity:'rare',baseStats:{def:[6,10],hp:[12,20]}},
+  {emoji:'🎽',slot:'chest',name:'Chain Hauberk',rarity:'rare',baseStats:{def:[9,14],hp:[18,28]}},
+  {emoji:'🧥',slot:'chest',name:'Brigandine',rarity:'rare',baseStats:{def:[8,13],hp:[15,24]}},
+  {emoji:'🧥',slot:'chest',name:'Arcane Robe',rarity:'rare',baseStats:{atk:[6,10],hp:[20,32]}},
+  {emoji:'🐉',slot:'chest',name:'Dragon Scale Mail',rarity:'epic',baseStats:{def:[16,22],hp:[25,38]}},
+  {emoji:'🧥',slot:'chest',name:'Void Plate',rarity:'epic',baseStats:{def:[18,24],hp:[20,32]}},
+  {emoji:'🌀',slot:'chest',name:'Rift Armor',rarity:'epic',baseStats:{def:[14,20],atk:[8,14],hp:[15,25]}},
+  {emoji:'⚜️',slot:'chest',name:'Holy Vestment',rarity:'legendary',baseStats:{def:[22,30],hp:[60,80],atk:[6,12]}},
+  {emoji:'🌟',slot:'chest',name:'Celestial Plate',rarity:'legendary',baseStats:{def:[28,36],hp:[70,90]}},
+
+  // ── LEGS ──────────────────────────────────────────────────────────────────
+  {emoji:'👖',slot:'legs',name:'Torn Trousers',rarity:'common',baseStats:{hp:[8,14]}},
+  {emoji:'👖',slot:'legs',name:'Cloth Leggings',rarity:'common',baseStats:{hp:[10,16],def:[1,2]}},
+  {emoji:'👖',slot:'legs',name:'Hide Breeches',rarity:'common',baseStats:{def:[2,5],hp:[8,12]}},
+  {emoji:'👖',slot:'legs',name:'Iron Greaves',rarity:'rare',baseStats:{def:[6,10],hp:[14,22]}},
+  {emoji:'👖',slot:'legs',name:'Runeleather Legs',rarity:'rare',baseStats:{def:[5,9],hp:[16,25]}},
+  {emoji:'👖',slot:'legs',name:'Swift Legs',rarity:'rare',baseStats:{spd:[0.1,0.2],hp:[14,22]}},
+  {emoji:'👖',slot:'legs',name:'Void Greaves',rarity:'epic',baseStats:{def:[12,18],hp:[22,34]}},
+  {emoji:'👖',slot:'legs',name:'Dragon Legguards',rarity:'epic',baseStats:{def:[14,20],hp:[28,40]}},
+  {emoji:'👖',slot:'legs',name:'Storm Striders',rarity:'epic',baseStats:{spd:[0.2,0.35],def:[8,14],hp:[15,25]}},
+  {emoji:'👖',slot:'legs',name:'Eternal Greaves',rarity:'legendary',baseStats:{def:[20,28],hp:[50,70],spd:[0.1,0.2]}},
+
+  // ── BOOTS ─────────────────────────────────────────────────────────────────
+  {emoji:'👞',slot:'boots',name:'Leather Boots',rarity:'common',baseStats:{spd:[0.05,0.1]}},
+  {emoji:'👢',slot:'boots',name:'Old Sandals',rarity:'common',baseStats:{spd:[0.05,0.08],hp:[5,10]}},
+  {emoji:'👟',slot:'boots',name:'Trail Shoes',rarity:'common',baseStats:{spd:[0.06,0.1],def:[1,2]}},
+  {emoji:'👢',slot:'boots',name:'Ironshod Boots',rarity:'rare',baseStats:{spd:[0.1,0.18],def:[4,7]}},
+  {emoji:'🌙',slot:'boots',name:'Moonboots',rarity:'rare',baseStats:{spd:[0.2,0.3],hp:[10,18]}},
+  {emoji:'👢',slot:'boots',name:'Swiftfoot Treads',rarity:'rare',baseStats:{spd:[0.18,0.28],atk:[3,6]}},
+  {emoji:'👢',slot:'boots',name:'Phantom Stride',rarity:'epic',baseStats:{spd:[0.28,0.4],atk:[5,10]}},
+  {emoji:'⚡',slot:'boots',name:'Thunder Treads',rarity:'epic',baseStats:{spd:[0.3,0.45],def:[5,9]}},
+  {emoji:'🌀',slot:'boots',name:'Void Steps',rarity:'epic',baseStats:{spd:[0.25,0.38],hp:[20,32]}},
+  {emoji:'🌟',slot:'boots',name:'Starwalker Boots',rarity:'legendary',baseStats:{spd:[0.4,0.55],atk:[8,14],hp:[20,30]}},
+
+  // ── RINGS / ACCESSORIES ───────────────────────────────────────────────────
+  {emoji:'💍',slot:'ring',name:'Vigor Band',rarity:'common',baseStats:{hp:[18,28]}},
+  {emoji:'📿',slot:'ring',name:'Copper Beads',rarity:'common',baseStats:{def:[2,5]}},
+  {emoji:'🪨',slot:'ring',name:'Stone Amulet',rarity:'common',baseStats:{hp:[12,20]}},
+  {emoji:'🧤',slot:'ring',name:'Cloth Gloves',rarity:'common',baseStats:{atk:[2,5]}},
+  {emoji:'💍',slot:'ring',name:'Battle Ring',rarity:'common',baseStats:{atk:[3,6],def:[1,3]}},
+  {emoji:'💍',slot:'ring',name:'Lucky Token',rarity:'common',baseStats:{hp:[14,22]}},
+  {emoji:'💜',slot:'ring',name:'Amethyst Pendant',rarity:'rare',baseStats:{atk:[7,12],hp:[18,28]}},
+  {emoji:'🌿',slot:'ring',name:'Druidic Torc',rarity:'rare',baseStats:{hp:[35,50]}},
+  {emoji:'💍',slot:'ring',name:'Opal Ring',rarity:'rare',baseStats:{atk:[6,10],def:[3,6]}},
+  {emoji:'📿',slot:'ring',name:'Bone Necklace',rarity:'rare',baseStats:{hp:[25,38],def:[3,6]}},
+  {emoji:'💍',slot:'ring',name:'Ember Band',rarity:'rare',baseStats:{atk:[9,14],hp:[10,18]}},
+  {emoji:'💍',slot:'ring',name:'Frost Loop',rarity:'rare',baseStats:{def:[6,10],hp:[20,30]}},
+  {emoji:'⚡',slot:'ring',name:'Thunder Ring',rarity:'epic',baseStats:{atk:[14,20],spd:[0.15,0.25]}},
+  {emoji:'💎',slot:'ring',name:'Gemstone Heart',rarity:'epic',baseStats:{hp:[60,80],atk:[8,14]}},
+  {emoji:'🌀',slot:'ring',name:'Void Shard',rarity:'epic',baseStats:{def:[12,18],hp:[28,40]}},
+  {emoji:'🌙',slot:'ring',name:'Moonstone Seal',rarity:'epic',baseStats:{atk:[12,18],hp:[25,38]}},
+  {emoji:'🔮',slot:'ring',name:'Arcane Orb',rarity:'epic',baseStats:{atk:[20,26],hp:[15,25]}},
+  {emoji:'📿',slot:'ring',name:'Soul Chain',rarity:'epic',baseStats:{hp:[50,65],def:[8,14]}},
+  {emoji:'🌈',slot:'ring',name:'Prismatic Rod',rarity:'legendary',baseStats:{atk:[26,34],hp:[35,50]}},
+  {emoji:'💍',slot:'ring',name:'Infinity Band',rarity:'legendary',baseStats:{atk:[20,28],def:[15,22],hp:[40,55]}},
+  {emoji:'🌟',slot:'ring',name:'Cosmic Jewel',rarity:'legendary',baseStats:{atk:[22,30],hp:[60,80],spd:[0.15,0.25]}},
+
+  // ── WEAPONS (extra to reach 50) ───────────────────────────────────────────
+  {emoji:'🪓',slot:'weapon',name:'Lumber Hatchet',rarity:'common',baseStats:{atk:[4,7]}},
+  {emoji:'🔨',slot:'weapon',name:'Stone Maul',rarity:'common',baseStats:{atk:[5,8],spd:[-0.05,-0.02]}},
+  {emoji:'🏹',slot:'weapon',name:'Training Bow',rarity:'common',baseStats:{atk:[3,6],spd:[0.04,0.08]}},
+  {emoji:'🪚',slot:'weapon',name:'Serrated Blade',rarity:'common',baseStats:{atk:[4,7]}},
+  {emoji:'🔱',slot:'weapon',name:'Pitchfork',rarity:'common',baseStats:{atk:[4,8]}},
+  {emoji:'⛏️',slot:'weapon',name:"Miner's Pick",rarity:'common',baseStats:{atk:[5,9]}},
+  {emoji:'🗡️',slot:'weapon',name:'Chipped Stiletto',rarity:'common',baseStats:{atk:[3,6],spd:[0.03,0.07]}},
+  {emoji:'⚔️',slot:'weapon',name:"Guard's Sword",rarity:'common',baseStats:{atk:[4,7],def:[1,3]}},
+  {emoji:'🗡️',slot:'weapon',name:'Carving Knife',rarity:'common',baseStats:{atk:[3,5]}},
+  {emoji:'⚔️',slot:'weapon',name:'Bent Longsword',rarity:'common',baseStats:{atk:[5,8]}},
+  {emoji:'🏹',slot:'weapon',name:'Yew Longbow',rarity:'rare',baseStats:{atk:[9,14],spd:[0.1,0.18]}},
+  {emoji:'⚔️',slot:'weapon',name:'Tempered Blade',rarity:'rare',baseStats:{atk:[10,16]}},
+  {emoji:'🪓',slot:'weapon',name:'War Axe',rarity:'rare',baseStats:{atk:[11,17]}},
+  {emoji:'🔱',slot:'weapon',name:'Storm Trident',rarity:'rare',baseStats:{atk:[10,15],spd:[0.08,0.15]}},
+  {emoji:'🗡️',slot:'weapon',name:'Assassin Blade',rarity:'rare',baseStats:{atk:[8,13],spd:[0.12,0.2]}},
+  {emoji:'🔥',slot:'weapon',name:'Blazing Axe',rarity:'epic',baseStats:{atk:[18,26]}},
+  {emoji:'❄️',slot:'weapon',name:'Frostbite Blade',rarity:'epic',baseStats:{atk:[16,23],def:[5,9]}},
+  {emoji:'⚡',slot:'weapon',name:'Volt Lance',rarity:'epic',baseStats:{atk:[17,25],spd:[0.12,0.2]}},
+  {emoji:'🌊',slot:'weapon',name:'Tidecutter',rarity:'epic',baseStats:{atk:[18,24],spd:[0.1,0.18]}},
+  {emoji:'🌪️',slot:'weapon',name:'Gale Blade',rarity:'epic',baseStats:{atk:[19,26],spd:[0.15,0.22]}},
+  {emoji:'🌑',slot:'weapon',name:'Void Reaper',rarity:'legendary',baseStats:{atk:[30,42],hp:[20,35]}},
+  {emoji:'⚡',slot:'weapon',name:"Heaven's Thunder",rarity:'legendary',baseStats:{atk:[28,40],spd:[0.22,0.35]}},
+  {emoji:'🌊',slot:'weapon',name:'Tsunami Blade',rarity:'legendary',baseStats:{atk:[32,44]}},
+  {emoji:'🌙',slot:'weapon',name:'Lunar Saber',rarity:'legendary',baseStats:{atk:[29,41],spd:[0.2,0.3]}},
+  {emoji:'🐉',slot:'weapon',name:"Dragon's Claw",rarity:'legendary',baseStats:{atk:[35,48],def:[10,16]}},
+
+  // ── OFFHAND (extra to reach 50) ────────────────────────────────────────────
+  {emoji:'🛡️',slot:'offhand',name:'Battered Plank',rarity:'common',baseStats:{def:[2,5]}},
+  {emoji:'📚',slot:'offhand',name:'Field Manual',rarity:'common',baseStats:{def:[1,4],hp:[8,15]}},
+  {emoji:'🧿',slot:'offhand',name:'Cloudy Orb',rarity:'common',baseStats:{def:[2,4]}},
+  {emoji:'🌿',slot:'offhand',name:'Herb Bundle',rarity:'common',baseStats:{hp:[10,18]}},
+  {emoji:'🪬',slot:'offhand',name:'Crude Charm',rarity:'common',baseStats:{def:[1,4],hp:[6,12]}},
+  {emoji:'📿',slot:'offhand',name:'Carved Beads',rarity:'common',baseStats:{hp:[8,16]}},
+  {emoji:'🫙',slot:'offhand',name:'Potion Flask',rarity:'common',baseStats:{hp:[12,20]}},
+  {emoji:'🔵',slot:'offhand',name:'Blue Pebble',rarity:'common',baseStats:{def:[2,5]}},
+  {emoji:'📚',slot:'offhand',name:'Spell Tome',rarity:'rare',baseStats:{def:[5,10],hp:[15,25]}},
+  {emoji:'🌙',slot:'offhand',name:'Lunar Ward',rarity:'rare',baseStats:{def:[7,12],hp:[18,28]}},
+  {emoji:'🔮',slot:'offhand',name:'Crystal Focus',rarity:'rare',baseStats:{def:[6,11],hp:[12,22]}},
+  {emoji:'🐉',slot:'offhand',name:'Drake Scale',rarity:'rare',baseStats:{def:[9,15]}},
+  {emoji:'🌊',slot:'offhand',name:'Tidal Crest',rarity:'rare',baseStats:{def:[7,12],spd:[0.05,0.1]}},
+  {emoji:'🌀',slot:'offhand',name:'Void Focus',rarity:'epic',baseStats:{def:[12,18],hp:[25,38]}},
+  {emoji:'🔥',slot:'offhand',name:'Ember Ward',rarity:'epic',baseStats:{def:[13,20],atk:[5,9]}},
+  {emoji:'⚡',slot:'offhand',name:'Thunder Buckler',rarity:'epic',baseStats:{def:[11,17],spd:[0.1,0.18]}},
+  {emoji:'⚜️',slot:'offhand',name:'Sanctified Shield',rarity:'epic',baseStats:{def:[14,22],hp:[30,45]}},
+  {emoji:'💎',slot:'offhand',name:'Diamond Focus',rarity:'epic',baseStats:{def:[13,20],hp:[28,42]}},
+  {emoji:'🌑',slot:'offhand',name:'Void Mirror',rarity:'legendary',baseStats:{def:[24,36],hp:[50,70]}},
+  {emoji:'🌊',slot:'offhand',name:'Maelstrom Orb',rarity:'legendary',baseStats:{def:[26,38],spd:[0.18,0.28]}},
+  {emoji:'💎',slot:'offhand',name:'Diamond Ward',rarity:'legendary',baseStats:{def:[28,40],hp:[60,85]}},
+  {emoji:'🌙',slot:'offhand',name:'Eclipse Shield',rarity:'legendary',baseStats:{def:[25,37],atk:[12,18]}},
+  {emoji:'🔥',slot:'offhand',name:'Magma Core',rarity:'legendary',baseStats:{def:[22,34],atk:[14,20],hp:[30,45]}},
+  {emoji:'📖',slot:'offhand',name:'Grimoire of Ancients',rarity:'legendary',baseStats:{def:[20,30],hp:[70,95]}},
+  {emoji:'🏆',slot:'offhand',name:"Champion's Crest",rarity:'legendary',baseStats:{def:[30,42],hp:[55,75]}},
+  {emoji:'🪬',slot:'offhand',name:'Spirit Talisman',rarity:'rare',baseStats:{def:[6,10],hp:[20,30]}},
+
+  // ── HELM (extra to reach 50) ───────────────────────────────────────────────
+  {emoji:'⛑️',slot:'helm',name:'Cloth Cap',rarity:'common',baseStats:{hp:[8,16]}},
+  {emoji:'🎩',slot:'helm',name:'Battered Hat',rarity:'common',baseStats:{hp:[6,14]}},
+  {emoji:'🧢',slot:'helm',name:'Makeshift Hood',rarity:'common',baseStats:{hp:[8,15]}},
+  {emoji:'🪖',slot:'helm',name:'Copper Helm',rarity:'common',baseStats:{def:[2,4],hp:[8,15]}},
+  {emoji:'🎓',slot:'helm',name:'Apprentice Hood',rarity:'common',baseStats:{hp:[10,18]}},
+  {emoji:'🎭',slot:'helm',name:'Traveller Mask',rarity:'common',baseStats:{def:[1,3],hp:[6,12]}},
+  {emoji:'👒',slot:'helm',name:'Feathered Cap',rarity:'common',baseStats:{hp:[8,14],spd:[0.03,0.07]}},
+  {emoji:'🪖',slot:'helm',name:'Bronze Helm',rarity:'rare',baseStats:{def:[5,9],hp:[18,28]}},
+  {emoji:'🎓',slot:'helm',name:'Sage Hood',rarity:'rare',baseStats:{def:[4,7],hp:[20,32]}},
+  {emoji:'🌙',slot:'helm',name:'Night Cowl',rarity:'rare',baseStats:{def:[5,9],spd:[0.06,0.12]}},
+  {emoji:'🎭',slot:'helm',name:'Shadow Mask',rarity:'rare',baseStats:{def:[4,8],spd:[0.08,0.14]}},
+  {emoji:'🐉',slot:'helm',name:'Drake Scale Helm',rarity:'rare',baseStats:{def:[7,12],hp:[20,30]}},
+  {emoji:'🌀',slot:'helm',name:'Void Crown',rarity:'epic',baseStats:{def:[10,16],hp:[35,52]}},
+  {emoji:'🌟',slot:'helm',name:'Star Helm',rarity:'epic',baseStats:{def:[9,15],hp:[38,55],spd:[0.06,0.12]}},
+  {emoji:'💀',slot:'helm',name:'Lich Crown',rarity:'epic',baseStats:{def:[8,14],atk:[8,13],hp:[22,35]}},
+  {emoji:'⚜️',slot:'helm',name:'Holy Diadem',rarity:'epic',baseStats:{def:[11,18],hp:[40,58]}},
+  {emoji:'🌈',slot:'helm',name:'Prismatic Helm',rarity:'epic',baseStats:{def:[12,19],hp:[36,52]}},
+  {emoji:'💫',slot:'helm',name:'Nebula Crown',rarity:'legendary',baseStats:{def:[24,36],hp:[65,90]}},
+  {emoji:'🌊',slot:'helm',name:'Typhoon Helm',rarity:'legendary',baseStats:{def:[22,34],hp:[60,85],spd:[0.12,0.2]}},
+  {emoji:'🔮',slot:'helm',name:'Archmage Hat',rarity:'legendary',baseStats:{def:[18,28],atk:[14,22],hp:[50,70]}},
+  {emoji:'⭐',slot:'helm',name:'Celestial Crown',rarity:'legendary',baseStats:{def:[26,38],hp:[70,95]}},
+  {emoji:'🌙',slot:'helm',name:'Eclipse Crown',rarity:'legendary',baseStats:{def:[24,35],hp:[65,88],spd:[0.15,0.25]}},
+
+  // ── CHEST (extra to reach 50) ─────────────────────────────────────────────
+  {emoji:'🧥',slot:'chest',name:'Torn Cloak',rarity:'common',baseStats:{def:[1,3],hp:[8,16]}},
+  {emoji:'👘',slot:'chest',name:'Novice Robe',rarity:'common',baseStats:{def:[1,4],hp:[10,18]}},
+  {emoji:'🥋',slot:'chest',name:'Rough Vest',rarity:'common',baseStats:{def:[2,5]}},
+  {emoji:'🧣',slot:'chest',name:'Padded Wrap',rarity:'common',baseStats:{def:[1,4],hp:[8,14]}},
+  {emoji:'👕',slot:'chest',name:'Roughspun Shirt',rarity:'common',baseStats:{def:[1,3],hp:[10,16]}},
+  {emoji:'🥼',slot:'chest',name:'Canvas Coat',rarity:'common',baseStats:{def:[2,4],hp:[8,15]}},
+  {emoji:'🧥',slot:'chest',name:'Studded Cloak',rarity:'common',baseStats:{def:[3,6],hp:[10,18]}},
+  {emoji:'🛡️',slot:'chest',name:'Scale Shirt',rarity:'rare',baseStats:{def:[8,14],hp:[22,35]}},
+  {emoji:'🔮',slot:'chest',name:'Arcane Mantle',rarity:'rare',baseStats:{def:[6,10],hp:[25,38]}},
+  {emoji:'🌙',slot:'chest',name:'Mooncloak',rarity:'rare',baseStats:{def:[7,12],hp:[22,34],spd:[0.05,0.1]}},
+  {emoji:'🌿',slot:'chest',name:'Nature Armour',rarity:'rare',baseStats:{def:[8,13],hp:[24,36]}},
+  {emoji:'❄️',slot:'chest',name:'Frost Plate',rarity:'rare',baseStats:{def:[10,16],hp:[20,30]}},
+  {emoji:'🌀',slot:'chest',name:'Void Armour',rarity:'epic',baseStats:{def:[14,22],hp:[38,55]}},
+  {emoji:'👑',slot:'chest',name:'Royal Plate',rarity:'epic',baseStats:{def:[16,24],hp:[40,58]}},
+  {emoji:'💀',slot:'chest',name:'Death Mail',rarity:'epic',baseStats:{def:[12,18],atk:[8,13],hp:[28,42]}},
+  {emoji:'🌟',slot:'chest',name:'Starweave Robe',rarity:'epic',baseStats:{def:[10,16],hp:[45,65]}},
+  {emoji:'🌊',slot:'chest',name:'Tidal Cuirass',rarity:'epic',baseStats:{def:[13,20],hp:[36,52]}},
+  {emoji:'🌑',slot:'chest',name:'Void Robe',rarity:'legendary',baseStats:{def:[22,34],hp:[75,100]}},
+  {emoji:'🔮',slot:'chest',name:'Archmage Robe',rarity:'legendary',baseStats:{def:[18,28],atk:[15,24],hp:[60,82]}},
+  {emoji:'⭐',slot:'chest',name:'Astral Armour',rarity:'legendary',baseStats:{def:[26,38],hp:[80,108]}},
+  {emoji:'🌙',slot:'chest',name:'Eclipse Robe',rarity:'legendary',baseStats:{def:[24,36],hp:[78,105],spd:[0.1,0.2]}},
+  {emoji:'🐉',slot:'chest',name:'Dragon God Plate',rarity:'legendary',baseStats:{def:[30,44],hp:[70,95]}},
+
+  // ── LEGS (extra to reach 50) ──────────────────────────────────────────────
+  {emoji:'👖',slot:'legs',name:'Rough Trousers',rarity:'common',baseStats:{def:[1,3],hp:[6,12]}},
+  {emoji:'🩲',slot:'legs',name:'Cotton Shorts',rarity:'common',baseStats:{hp:[8,15]}},
+  {emoji:'👗',slot:'legs',name:'Simple Skirt',rarity:'common',baseStats:{def:[1,3]}},
+  {emoji:'🩱',slot:'legs',name:'Linen Tights',rarity:'common',baseStats:{def:[1,3],hp:[6,12]}},
+  {emoji:'👖',slot:'legs',name:'Herder Pants',rarity:'common',baseStats:{def:[1,3],spd:[0.02,0.06]}},
+  {emoji:'🥻',slot:'legs',name:'Grass Wrap',rarity:'common',baseStats:{hp:[8,14]}},
+  {emoji:'👖',slot:'legs',name:'Work Pants',rarity:'common',baseStats:{def:[2,4],hp:[6,12]}},
+  {emoji:'🩱',slot:'legs',name:'Scale Skirt',rarity:'rare',baseStats:{def:[6,10],hp:[18,28]}},
+  {emoji:'🌙',slot:'legs',name:'Moonpants',rarity:'rare',baseStats:{def:[5,9],hp:[16,26],spd:[0.06,0.12]}},
+  {emoji:'🌿',slot:'legs',name:'Forest Greaves',rarity:'rare',baseStats:{def:[6,10],hp:[18,28]}},
+  {emoji:'🔮',slot:'legs',name:'Arcane Leggings',rarity:'rare',baseStats:{def:[5,9],hp:[20,30]}},
+  {emoji:'❄️',slot:'legs',name:'Frost Greaves',rarity:'rare',baseStats:{def:[7,12],hp:[16,26]}},
+  {emoji:'🔥',slot:'legs',name:'Ember Greaves',rarity:'epic',baseStats:{def:[10,16],hp:[30,44]}},
+  {emoji:'🌀',slot:'legs',name:'Void Leggings',rarity:'epic',baseStats:{def:[11,17],hp:[32,48]}},
+  {emoji:'🌟',slot:'legs',name:'Star Greaves',rarity:'epic',baseStats:{def:[9,15],hp:[35,50],spd:[0.08,0.14]}},
+  {emoji:'⚜️',slot:'legs',name:'Holy Tassets',rarity:'epic',baseStats:{def:[12,18],hp:[32,46]}},
+  {emoji:'💎',slot:'legs',name:'Crystal Greaves',rarity:'epic',baseStats:{def:[11,17],hp:[34,48]}},
+  {emoji:'🌑',slot:'legs',name:'Void Greaves',rarity:'legendary',baseStats:{def:[22,34],hp:[65,88]}},
+  {emoji:'🔥',slot:'legs',name:'Infernal Greaves',rarity:'legendary',baseStats:{def:[24,36],hp:[62,84]}},
+  {emoji:'⭐',slot:'legs',name:'Celestial Leggings',rarity:'legendary',baseStats:{def:[26,38],hp:[70,95]}},
+  {emoji:'🐉',slot:'legs',name:'Dragon God Greaves',rarity:'legendary',baseStats:{def:[28,40],hp:[68,92]}},
+  {emoji:'💫',slot:'legs',name:'Nebula Pants',rarity:'legendary',baseStats:{def:[22,34],hp:[72,96],spd:[0.12,0.22]}},
+
+  // ── BOOTS (extra to reach 50) ─────────────────────────────────────────────
+  {emoji:'👞',slot:'boots',name:'Sandals',rarity:'common',baseStats:{spd:[0.03,0.07]}},
+  {emoji:'🥾',slot:'boots',name:'Old Boots',rarity:'common',baseStats:{spd:[0.02,0.06],hp:[5,10]}},
+  {emoji:'👟',slot:'boots',name:'Running Shoes',rarity:'common',baseStats:{spd:[0.04,0.08]}},
+  {emoji:'🩴',slot:'boots',name:'Open Sandals',rarity:'common',baseStats:{spd:[0.03,0.07]}},
+  {emoji:'👢',slot:'boots',name:'River Boots',rarity:'common',baseStats:{def:[1,3],spd:[0.02,0.06]}},
+  {emoji:'🥿',slot:'boots',name:'Soft Moccasins',rarity:'common',baseStats:{spd:[0.03,0.08]}},
+  {emoji:'👟',slot:'boots',name:'Trail Runners',rarity:'common',baseStats:{spd:[0.04,0.09]}},
+  {emoji:'🌿',slot:'boots',name:'Herb Treads',rarity:'rare',baseStats:{spd:[0.1,0.16],hp:[12,20]}},
+  {emoji:'❄️',slot:'boots',name:'Frost Sabatons',rarity:'rare',baseStats:{spd:[0.08,0.14],def:[4,8]}},
+  {emoji:'⚡',slot:'boots',name:'Swift Treads',rarity:'rare',baseStats:{spd:[0.12,0.2]}},
+  {emoji:'💀',slot:'boots',name:'Bone Sabatons',rarity:'rare',baseStats:{spd:[0.08,0.14],def:[5,9]}},
+  {emoji:'🐉',slot:'boots',name:'Dragonhide Boots',rarity:'rare',baseStats:{spd:[0.09,0.15],def:[4,8]}},
+  {emoji:'🌀',slot:'boots',name:'Void Sabatons',rarity:'epic',baseStats:{spd:[0.18,0.26],def:[5,9]}},
+  {emoji:'👑',slot:'boots',name:'Royal Sabatons',rarity:'epic',baseStats:{spd:[0.16,0.24],hp:[28,40]}},
+  {emoji:'💎',slot:'boots',name:'Crystal Boots',rarity:'epic',baseStats:{spd:[0.18,0.26],def:[6,10]}},
+  {emoji:'🌈',slot:'boots',name:'Prismatic Boots',rarity:'epic',baseStats:{spd:[0.2,0.28],hp:[22,34]}},
+  {emoji:'☄️',slot:'boots',name:'Comet Treads',rarity:'epic',baseStats:{spd:[0.22,0.3],atk:[6,10]}},
+  {emoji:'🌑',slot:'boots',name:'Void Steps',rarity:'legendary',baseStats:{spd:[0.28,0.4],def:[12,18]}},
+  {emoji:'🔥',slot:'boots',name:'Infernal Boots',rarity:'legendary',baseStats:{spd:[0.26,0.38],atk:[14,22]}},
+  {emoji:'⭐',slot:'boots',name:'Celestial Boots',rarity:'legendary',baseStats:{spd:[0.3,0.42],hp:[50,70]}},
+  {emoji:'🐉',slot:'boots',name:'Dragon God Treads',rarity:'legendary',baseStats:{spd:[0.32,0.44],def:[16,24]}},
+  {emoji:'💫',slot:'boots',name:'Nebula Boots',rarity:'legendary',baseStats:{spd:[0.28,0.4],hp:[55,75]}},
+
+  // ── RINGS (extra to reach 50+50) ─────────────────────────────────────────
+  {emoji:'💍',slot:'ring',name:'Fortitude Ring',rarity:'common',baseStats:{hp:[10,18]}},
+  {emoji:'📿',slot:'ring',name:'Carved Beads',rarity:'common',baseStats:{hp:[8,16]}},
+  {emoji:'🌿',slot:'ring',name:'Vine Loop',rarity:'common',baseStats:{hp:[8,15],def:[1,3]}},
+  {emoji:'💍',slot:'ring',name:'Silver Band',rarity:'common',baseStats:{atk:[2,5],hp:[6,12]}},
+  {emoji:'🔵',slot:'ring',name:'Blue Bead',rarity:'common',baseStats:{def:[2,5]}},
+  {emoji:'💍',slot:'ring',name:'Iron Ring',rarity:'common',baseStats:{def:[2,4],hp:[6,12]}},
+  {emoji:'📿',slot:'ring',name:'Seed Charm',rarity:'common',baseStats:{hp:[10,18]}},
+  {emoji:'💍',slot:'ring',name:'Amethyst Ring',rarity:'rare',baseStats:{atk:[6,11],hp:[15,24]}},
+  {emoji:'🌙',slot:'ring',name:'Moon Ring',rarity:'rare',baseStats:{atk:[5,10],hp:[18,28]}},
+  {emoji:'🔥',slot:'ring',name:'Ember Ring',rarity:'rare',baseStats:{atk:[7,12],spd:[0.06,0.12]}},
+  {emoji:'❄️',slot:'ring',name:'Frost Ring',rarity:'rare',baseStats:{def:[6,10],hp:[16,26]}},
+  {emoji:'⚡',slot:'ring',name:'Spark Ring',rarity:'rare',baseStats:{atk:[7,12],spd:[0.08,0.14]}},
+  {emoji:'💀',slot:'ring',name:'Skull Ring',rarity:'rare',baseStats:{atk:[8,13],hp:[14,22]}},
+  {emoji:'🌿',slot:'ring',name:'Nature Ring',rarity:'rare',baseStats:{def:[5,9],hp:[20,30]}},
+  {emoji:'🌊',slot:'ring',name:'Tidal Ring',rarity:'rare',baseStats:{def:[5,9],hp:[18,28]}},
+  {emoji:'🔮',slot:'ring',name:'Arcane Ring',rarity:'epic',baseStats:{atk:[14,20],hp:[22,34]}},
+  {emoji:'💎',slot:'ring',name:'Diamond Ring',rarity:'epic',baseStats:{def:[10,15],hp:[32,48]}},
+  {emoji:'🌟',slot:'ring',name:'Star Ring',rarity:'epic',baseStats:{atk:[12,18],hp:[28,42]}},
+  {emoji:'⚜️',slot:'ring',name:'Holy Ring',rarity:'epic',baseStats:{def:[8,13],hp:[35,52]}},
+  {emoji:'🌈',slot:'ring',name:'Prismatic Ring',rarity:'epic',baseStats:{atk:[10,16],def:[8,13]}},
+  {emoji:'🌙',slot:'ring',name:'Eclipse Band',rarity:'epic',baseStats:{atk:[11,17],spd:[0.1,0.18]}},
+  {emoji:'🐲',slot:'ring',name:'Dragon Ring',rarity:'epic',baseStats:{atk:[13,19],def:[8,13]}},
+  {emoji:'☄️',slot:'ring',name:'Comet Band',rarity:'epic',baseStats:{atk:[14,20],spd:[0.12,0.2]}},
+  {emoji:'💜',slot:'ring',name:'Soul Ring',rarity:'epic',baseStats:{atk:[10,16],hp:[30,46]}},
+  {emoji:'🏆',slot:'ring',name:"Champion's Ring",rarity:'legendary',baseStats:{atk:[20,28],def:[12,18],hp:[40,55]}},
+  {emoji:'💫',slot:'ring',name:'Nebula Ring',rarity:'legendary',baseStats:{atk:[22,32],spd:[0.16,0.26]}},
+  {emoji:'⭐',slot:'ring',name:'Celestial Band',rarity:'legendary',baseStats:{atk:[18,28],def:[14,20],hp:[50,68]}},
+  {emoji:'🌑',slot:'ring',name:'Shadow Ring',rarity:'legendary',baseStats:{atk:[24,34],spd:[0.2,0.32]}},
+  {emoji:'🔥',slot:'ring',name:'Hellfire Ring',rarity:'legendary',baseStats:{atk:[26,36],hp:[35,50]}},
+  {emoji:'❄️',slot:'ring',name:'Frozen Sigil',rarity:'legendary',baseStats:{def:[20,30],hp:[60,82]}},
+  {emoji:'🌊',slot:'ring',name:'Maelstrom Ring',rarity:'legendary',baseStats:{atk:[22,32],hp:[45,62]}},
+  {emoji:'🌙',slot:'ring',name:'Moonlord Band',rarity:'legendary',baseStats:{atk:[20,30],def:[15,22],spd:[0.14,0.24]}},
+  {emoji:'⚡',slot:'ring',name:'Stormcaller Ring',rarity:'legendary',baseStats:{atk:[24,34],spd:[0.22,0.34]}},
+  {emoji:'🌿',slot:'ring',name:'World Root Ring',rarity:'legendary',baseStats:{def:[22,32],hp:[68,90]}},
+  {emoji:'🔴',slot:'ring',name:'Blood Ring',rarity:'legendary',baseStats:{atk:[28,38],hp:[40,58]}},
+  {emoji:'💚',slot:'ring',name:'Emerald Band',rarity:'rare',baseStats:{def:[6,10],hp:[20,30]}},
+  {emoji:'🎯',slot:'ring',name:'Marksman Band',rarity:'rare',baseStats:{atk:[7,12],spd:[0.07,0.13]}},
+  {emoji:'🐉',slot:'ring',name:'Primordial Ring',rarity:'legendary',baseStats:{atk:[25,36],def:[16,24]}},
+  {emoji:'🌈',slot:'ring',name:'Spectrum Band',rarity:'legendary',baseStats:{atk:[20,30],def:[14,20],hp:[44,60]}},
+  {emoji:'💍',slot:'ring',name:'God Ring',rarity:'legendary',baseStats:{atk:[22,32],def:[18,26],hp:[50,70],spd:[0.12,0.22]}},
+
+  // ── HELM top-up ───────────────────────────────────────────────────────────
+  {emoji:'🪖',slot:'helm',name:'Field Helm',rarity:'common',baseStats:{def:[2,4],hp:[8,14]}},
+  {emoji:'🎓',slot:'helm',name:'Journeyman Cap',rarity:'common',baseStats:{hp:[10,18]}},
+  {emoji:'🧢',slot:'helm',name:'Scout Cap',rarity:'common',baseStats:{def:[1,3],spd:[0.02,0.05]}},
+  {emoji:'🪖',slot:'helm',name:'Sentinel Helm',rarity:'rare',baseStats:{def:[6,10],hp:[22,34]}},
+  {emoji:'🔮',slot:'helm',name:'Mystic Circlet',rarity:'rare',baseStats:{def:[4,8],hp:[24,36]}},
+  {emoji:'🌟',slot:'helm',name:'Warlord Crown',rarity:'epic',baseStats:{def:[10,16],hp:[38,55]}},
+  {emoji:'⚡',slot:'helm',name:'Thundering Helm',rarity:'epic',baseStats:{def:[9,14],spd:[0.1,0.18]}},
+  {emoji:'🐉',slot:'helm',name:'Dragonlord Crown',rarity:'legendary',baseStats:{def:[28,40],hp:[78,104]}},
+  {emoji:'🌈',slot:'helm',name:'Prismatic Crown',rarity:'legendary',baseStats:{def:[24,36],hp:[72,96]}},
+  {emoji:'⚔️',slot:'helm',name:'Warchief Helm',rarity:'rare',baseStats:{def:[7,12],atk:[4,7]}},
+  {emoji:'🌿',slot:'helm',name:'Druid Wreath',rarity:'rare',baseStats:{def:[5,9],hp:[24,36]}},
+  {emoji:'🌊',slot:'helm',name:'Tide Crown',rarity:'legendary',baseStats:{def:[22,34],hp:[70,94],spd:[0.14,0.22]}},
+  {emoji:'💀',slot:'helm',name:'Deathwarden Crown',rarity:'legendary',baseStats:{def:[26,38],atk:[12,18],hp:[60,82]}},
+  {emoji:'🔥',slot:'helm',name:'Blaze Crown',rarity:'epic',baseStats:{def:[10,16],atk:[7,11]}},
+  {emoji:'🌙',slot:'helm',name:'Moonguard Helm',rarity:'epic',baseStats:{def:[9,15],hp:[36,52]}},
+  {emoji:'💜',slot:'helm',name:'Violet Crown',rarity:'rare',baseStats:{def:[5,9],hp:[20,30]}},
+  {emoji:'⭐',slot:'helm',name:'Starborn Crown',rarity:'legendary',baseStats:{def:[28,42],hp:[76,102]}},
+
+  // ── CHEST top-up ──────────────────────────────────────────────────────────
+  {emoji:'🧥',slot:'chest',name:'Hide Armour',rarity:'common',baseStats:{def:[2,5],hp:[8,15]}},
+  {emoji:'🥋',slot:'chest',name:'Hemp Vest',rarity:'common',baseStats:{def:[1,4]}},
+  {emoji:'🛡️',slot:'chest',name:'Ringmail',rarity:'rare',baseStats:{def:[8,13],hp:[20,32]}},
+  {emoji:'🌙',slot:'chest',name:'Shadowcloak',rarity:'rare',baseStats:{def:[6,11],spd:[0.06,0.12]}},
+  {emoji:'💀',slot:'chest',name:'Boneplated Vest',rarity:'rare',baseStats:{def:[9,14],hp:[18,28]}},
+  {emoji:'🌊',slot:'chest',name:'Sea Armour',rarity:'rare',baseStats:{def:[7,12],hp:[22,34]}},
+  {emoji:'🌿',slot:'chest',name:'Ancient Bark Armour',rarity:'epic',baseStats:{def:[12,19],hp:[42,60]}},
+  {emoji:'⚡',slot:'chest',name:"Zeus's Plate",rarity:'legendary',baseStats:{def:[28,40],atk:[16,24],hp:[65,88]}},
+  {emoji:'💜',slot:'chest',name:'Amethyst Coat',rarity:'epic',baseStats:{def:[11,17],hp:[40,58]}},
+  {emoji:'🔥',slot:'chest',name:'Infernal Plate',rarity:'legendary',baseStats:{def:[30,44],atk:[12,18],hp:[70,95]}},
+  {emoji:'❄️',slot:'chest',name:'Absolute Plate',rarity:'legendary',baseStats:{def:[32,46],hp:[75,100]}},
+  {emoji:'⚜️',slot:'chest',name:'Celestial Armour',rarity:'legendary',baseStats:{def:[28,42],hp:[80,108]}},
+  {emoji:'💎',slot:'chest',name:'Diamond Armour',rarity:'legendary',baseStats:{def:[34,48],hp:[72,96]}},
+  {emoji:'⭐',slot:'chest',name:'Nova Plate',rarity:'legendary',baseStats:{def:[26,38],atk:[14,20],hp:[68,92]}},
+  {emoji:'🌑',slot:'chest',name:'Abyssal Robe',rarity:'legendary',baseStats:{def:[20,32],atk:[18,26],hp:[62,84]}},
+  {emoji:'🎭',slot:'chest',name:'Stage Coat',rarity:'common',baseStats:{def:[1,3],spd:[0.03,0.07]}},
+
+  // ── LEGS top-up ───────────────────────────────────────────────────────────
+  {emoji:'👖',slot:'legs',name:'Cargo Pants',rarity:'common',baseStats:{def:[1,4],hp:[8,15]}},
+  {emoji:'🩲',slot:'legs',name:'Fighter Shorts',rarity:'common',baseStats:{hp:[8,16],spd:[0.02,0.05]}},
+  {emoji:'🌊',slot:'legs',name:'Sea Greaves',rarity:'rare',baseStats:{def:[5,9],hp:[18,28]}},
+  {emoji:'💀',slot:'legs',name:'Bone Tassets',rarity:'rare',baseStats:{def:[7,12],hp:[16,26]}},
+  {emoji:'⚡',slot:'legs',name:'Thunder Leggings',rarity:'rare',baseStats:{def:[6,10],spd:[0.08,0.15]}},
+  {emoji:'🌙',slot:'legs',name:'Crescent Tassets',rarity:'epic',baseStats:{def:[10,16],hp:[30,44],spd:[0.06,0.12]}},
+  {emoji:'🌿',slot:'legs',name:'Vine Leggings',rarity:'epic',baseStats:{def:[9,15],hp:[34,50]}},
+  {emoji:'🔥',slot:'legs',name:'Magma Greaves',rarity:'epic',baseStats:{def:[11,17],atk:[5,9]}},
+  {emoji:'⚡',slot:'legs',name:'Storm Greaves',rarity:'legendary',baseStats:{def:[24,36],spd:[0.2,0.3],hp:[58,80]}},
+  {emoji:'🌿',slot:'legs',name:'Ancient Treads',rarity:'legendary',baseStats:{def:[26,38],hp:[72,96]}},
+  {emoji:'💀',slot:'legs',name:'Reaper Greaves',rarity:'legendary',baseStats:{def:[22,34],atk:[12,18]}},
+  {emoji:'💎',slot:'legs',name:'Diamond Tassets',rarity:'legendary',baseStats:{def:[28,40],hp:[66,88]}},
+  {emoji:'🌈',slot:'legs',name:'Rainbow Leggings',rarity:'legendary',baseStats:{def:[22,34],hp:[70,94],spd:[0.14,0.22]}},
+  {emoji:'🎭',slot:'legs',name:'Dancer Pants',rarity:'common',baseStats:{spd:[0.04,0.08]}},
+  {emoji:'👗',slot:'legs',name:'Battle Skirt',rarity:'rare',baseStats:{def:[5,9],hp:[20,30]}},
+  {emoji:'🌙',slot:'legs',name:'Moonsilk Pants',rarity:'rare',baseStats:{def:[4,8],hp:[22,33],spd:[0.06,0.12]}},
+  {emoji:'🌀',slot:'legs',name:'Rift Leggings',rarity:'legendary',baseStats:{def:[24,36],atk:[10,16],hp:[60,82]}},
+  {emoji:'⚜️',slot:'legs',name:'Sacred Tassets',rarity:'epic',baseStats:{def:[12,18],hp:[35,52]}},
+
+  // ── BOOTS top-up ──────────────────────────────────────────────────────────
+  {emoji:'👢',slot:'boots',name:'Battle Boots',rarity:'common',baseStats:{spd:[0.02,0.06],def:[1,3]}},
+  {emoji:'🎭',slot:'boots',name:'Dancer Slippers',rarity:'common',baseStats:{spd:[0.05,0.09]}},
+  {emoji:'👞',slot:'boots',name:'Rogue Shoes',rarity:'common',baseStats:{spd:[0.04,0.08]}},
+  {emoji:'🏃',slot:'boots',name:'Sprint Shoes',rarity:'rare',baseStats:{spd:[0.12,0.18],hp:[10,18]}},
+  {emoji:'🌿',slot:'boots',name:'Vine Sabatons',rarity:'epic',baseStats:{spd:[0.16,0.24],def:[5,9]}},
+  {emoji:'🔮',slot:'boots',name:'Mage Boots',rarity:'epic',baseStats:{spd:[0.14,0.22],hp:[24,36]}},
+  {emoji:'🌈',slot:'boots',name:'Prism Boots',rarity:'legendary',baseStats:{spd:[0.3,0.42],hp:[48,66]}},
+  {emoji:'💀',slot:'boots',name:'Deathwalk Boots',rarity:'legendary',baseStats:{spd:[0.28,0.4],atk:[14,22]}},
+  {emoji:'💜',slot:'boots',name:'Amethyst Boots',rarity:'epic',baseStats:{spd:[0.18,0.26],hp:[26,38]}},
+  {emoji:'🌊',slot:'boots',name:'Typhoon Boots',rarity:'legendary',baseStats:{spd:[0.32,0.44],hp:[50,70]}},
+  {emoji:'🌙',slot:'boots',name:'Lunar Boots',rarity:'legendary',baseStats:{spd:[0.3,0.42],def:[12,18]}},
+  {emoji:'🐉',slot:'boots',name:'Wyrm Sabatons',rarity:'legendary',baseStats:{spd:[0.28,0.4],def:[16,24],hp:[40,58]}},
+  {emoji:'🌿',slot:'boots',name:'Ancient Bark Boots',rarity:'legendary',baseStats:{spd:[0.26,0.38],def:[14,20]}},
+  {emoji:'⚜️',slot:'boots',name:'Holy Sabatons',rarity:'epic',baseStats:{spd:[0.16,0.24],def:[6,10],hp:[22,34]}},
+  {emoji:'⚡',slot:'boots',name:"Zeus's Sabatons",rarity:'legendary',baseStats:{spd:[0.34,0.46],atk:[16,24]}},
+  {emoji:'🎯',slot:'boots',name:'Precision Boots',rarity:'rare',baseStats:{spd:[0.1,0.16],atk:[5,9]}},
+  {emoji:'💎',slot:'boots',name:'Diamond Boots',rarity:'legendary',baseStats:{spd:[0.28,0.4],def:[18,26]}},
+  {emoji:'⭐',slot:'boots',name:'Aurora Boots',rarity:'legendary',baseStats:{spd:[0.32,0.44],hp:[52,72]}},
+
+  // ── OFFHAND top-up ────────────────────────────────────────────────────────
+  {emoji:'🫙',slot:'offhand',name:'Vial of Power',rarity:'common',baseStats:{hp:[10,18]}},
+  {emoji:'🧲',slot:'offhand',name:'Iron Lodestone',rarity:'common',baseStats:{def:[2,5]}},
+  {emoji:'🪨',slot:'offhand',name:'River Stone',rarity:'common',baseStats:{def:[1,4],hp:[6,12]}},
+  {emoji:'📖',slot:'offhand',name:'Old Spellbook',rarity:'common',baseStats:{def:[1,4],hp:[8,14]}},
+  {emoji:'🌊',slot:'offhand',name:'Wavecrest Ward',rarity:'rare',baseStats:{def:[6,11],hp:[18,28]}},
+  {emoji:'🔥',slot:'offhand',name:'Flamecrest',rarity:'rare',baseStats:{def:[5,10],atk:[4,8]}},
+  {emoji:'⚡',slot:'offhand',name:'Storm Sigil',rarity:'rare',baseStats:{def:[5,9],spd:[0.07,0.13]}},
+  {emoji:'🌿',slot:'offhand',name:'Nature Totem',rarity:'rare',baseStats:{def:[6,10],hp:[20,30]}},
+  {emoji:'💀',slot:'offhand',name:'Death Tome',rarity:'epic',baseStats:{def:[11,17],atk:[7,12]}},
+  {emoji:'⭐',slot:'offhand',name:'Astral Focus',rarity:'epic',baseStats:{def:[10,16],hp:[32,48]}},
+  {emoji:'🌙',slot:'offhand',name:'Moonguard',rarity:'epic',baseStats:{def:[12,18],spd:[0.08,0.16]}},
+  {emoji:'⚡',slot:'offhand',name:'Thundershield',rarity:'legendary',baseStats:{def:[24,36],spd:[0.16,0.26]}},
+  {emoji:'🌿',slot:'offhand',name:'Ancient Torc',rarity:'legendary',baseStats:{def:[22,34],hp:[68,92]}},
 ];
+
+// Generate randomized stats for a dropped item
+function rollItemStats(template){
+  const item = {...template, stats:{}, id: Date.now()+Math.random(), equipped: false};
+  delete item.baseStats;
+  const desc_parts = [];
+  for(const [stat, [min,max]] of Object.entries(template.baseStats)){
+    const val = stat==='spd'
+      ? parseFloat((min + Math.random()*(max-min)).toFixed(2))
+      : Math.floor(min + Math.random()*(max-min+1));
+    item.stats[stat] = val;
+    desc_parts.push(`+${val} ${stat.toUpperCase()}`);
+  }
+  item.desc = desc_parts.join(' · ');
+  return item;
+}
+
+function generateLootItem(slotKey, rarity) {
+  // Pick a random template from LOOT_TABLE matching slot and rarity
+  const pool = LOOT_TABLE.filter(t => {
+    const tSlot = t.slot === 'ring' ? ['ring1','ring2'] : [t.slot];
+    const slotMatch = slotKey
+      ? (t.slot === slotKey || (slotKey === 'ring1' || slotKey === 'ring2') && t.slot === 'ring')
+      : true;
+    return slotMatch && t.rarity === rarity;
+  });
+  const fallback = LOOT_TABLE.filter(t => t.rarity === rarity);
+  const chosen = (pool.length ? pool : (fallback.length ? fallback : LOOT_TABLE))[
+    Math.floor(Math.random() * (pool.length || fallback.length || LOOT_TABLE.length))
+  ];
+  return rollItemStats(chosen);
+}
+
+
+
 
 const GEAR_SLOTS = ['weapon','offhand','helm','chest','legs','boots','ring1','ring2'];
 const GEAR_SLOT_NAMES = {weapon:'⚔️ Weapon',offhand:'🛡️ Off-Hand',helm:'🪖 Helm',chest:'🧥 Chest',legs:'👖 Legs',boots:'👢 Boots',ring1:'💍 Ring 1',ring2:'💍 Ring 2'};
@@ -978,7 +2297,6 @@ const ENEMY_TYPES = [
      ctx.fillRect(9,10+bob,14,12);
      ctx.fillStyle='#c04040';ctx.fillRect(4,20+bob,4,10);ctx.fillRect(24,20+bob,4,10);
      ctx.fillRect(8,36+bob,8,8);ctx.fillRect(18,36+bob,8,8);
-     // eyes
      ctx.fillStyle='#ffff00';ctx.fillRect(11,13+bob,3,3);ctx.fillRect(18,13+bob,3,3);
      ctx.restore();
    }
@@ -1032,20 +2350,14 @@ const ENEMY_TYPES = [
    draw(ctx,x,y,anim){
      ctx.save();ctx.translate(x,y);
      const bob=Math.sin(anim*2.5)*2;
-     // tail
      ctx.fillStyle='#901010';
      ctx.beginPath();ctx.moveTo(6,36+bob);ctx.quadraticCurveTo(-10,40+bob,-6,50+bob);ctx.lineTo(-2,50+bob);ctx.quadraticCurveTo(-6,40+bob,10,36+bob);ctx.closePath();ctx.fill();
-     // body
      ctx.fillStyle='#b02010';ctx.fillRect(6,14+bob,28,26);
-     // wings
      ctx.fillStyle='#801010';
      ctx.beginPath();ctx.moveTo(8,16+bob);ctx.lineTo(-6,6+bob);ctx.lineTo(4,24+bob);ctx.closePath();ctx.fill();
      ctx.beginPath();ctx.moveTo(28,16+bob);ctx.lineTo(42,6+bob);ctx.lineTo(32,24+bob);ctx.closePath();ctx.fill();
-     // head
      ctx.fillStyle='#d04020';ctx.fillRect(8,2+bob,22,16);
-     // snout
      ctx.fillRect(28,6+bob,8,8);
-     // eyes
      ctx.fillStyle='#ffe000';ctx.fillRect(12,6+bob,4,4);ctx.fillRect(22,6+bob,4,4);
      ctx.restore();
    }
@@ -1065,29 +2377,21 @@ function createBossEnemy(level){
     draw(ctx,x,y,anim){
       ctx.save();ctx.translate(x,y);
       const bob=Math.sin(anim*1.5)*3;
-      // glow
       ctx.save();ctx.shadowColor='#ff4020';ctx.shadowBlur=20;
-      // massive body
       ctx.fillStyle='#1a0008';ctx.fillRect(0,4+bob,50,40);
       ctx.fillStyle='#600010';ctx.fillRect(3,6+bob,44,36);
-      // arms
       ctx.fillStyle='#1a0008';ctx.fillRect(-8,10+bob,12,22);ctx.fillRect(46,10+bob,12,22);
       ctx.fillStyle='#c02020';ctx.fillRect(-6,12+bob,4,8);ctx.fillRect(52,12+bob,4,8);
-      // head
       ctx.fillStyle='#300008';ctx.fillRect(8,0+bob,34,18);
-      // horns
       ctx.fillStyle='#c04020';
       ctx.beginPath();ctx.moveTo(12,2+bob);ctx.lineTo(8,-10+bob);ctx.lineTo(18,2+bob);ctx.closePath();ctx.fill();
       ctx.beginPath();ctx.moveTo(38,2+bob);ctx.lineTo(42,-10+bob);ctx.lineTo(32,2+bob);ctx.closePath();ctx.fill();
-      // crown
       ctx.fillStyle='#d4a017';ctx.fillRect(8,-2+bob,34,5);
       ctx.fillRect(12,-8+bob,4,6);ctx.fillRect(23,-8+bob,4,6);ctx.fillRect(34,-8+bob,4,6);
-      // eyes
       ctx.restore();
       ctx.save();ctx.shadowColor='#ff6020';ctx.shadowBlur=8;
       ctx.fillStyle='#ff6020';ctx.fillRect(14,4+bob,6,6);ctx.fillRect(30,4+bob,6,6);
       ctx.restore();
-      // legs
       ctx.fillStyle='#1a0008';ctx.fillRect(8,44+bob,16,14);ctx.fillRect(26,44+bob,16,14);
       ctx.fillStyle='#600010';ctx.fillRect(5,54+bob,20,5);ctx.fillRect(25,54+bob,20,5);
       ctx.restore();
@@ -1101,12 +2405,12 @@ function createBossEnemy(level){
 let game = {
   classId: null,
   level: 1,
-  stageInCampaign: 0, // 0-9, 10 stages per campaign
+  stageInCampaign: 0,
   campaignNumber: 1,
-  party: [],       // array of hero objects
+  party: [],
   selectedHeroIdx: 0,
-  inventory: [],   // global inventory
-  skillPool: [],   // earned skills
+  inventory: [],
+  skillPool: [],
   enemies: [],
   particles: [],
   floatingTexts: [],
@@ -1117,7 +2421,13 @@ let game = {
   logEntries: [],
   currentStageEnemies: [],
   stagesCleared: 0,
-  campaignStages: [],  // pre-generated 10 stages
+  campaignStages: [],
+  gold: 0,
+  campUsed: false,
+  gameSpeed: 1,
+  // FIX 1: Track which stage camp was last reset on to allow once-per-stage usage
+  _campResetKey: -1,
+  timeScale: 0.5,
 };
 
 function makeHero(classId){
@@ -1127,6 +2437,7 @@ function makeHero(classId){
     hp:cls.hp, maxHp:cls.hp,
     atk:cls.atk, def:cls.def, spd:cls.spd,
     baseAtk:cls.atk, baseDef:cls.def, baseSpd:cls.spd, baseMaxHp:cls.hp,
+    heroLevel:1, xp:0, xpToNext:100,
     x:0, y:0, vx:0, vy:0, targetX:0, targetY:0,
     attackCooldown:1, stunTimer:0,
     defending:false, dodging:false, buffTimer:0, poisonTimer:0,
@@ -1149,6 +2460,7 @@ function goToClassSelect(){
   if(game.animId){ cancelAnimationFrame(game.animId); game.animId=null; }
   game.battleRunning=false;
   drawClassIcons();
+  buildLoadSavesPanel();
   showScreen('classSelect');
 }
 
@@ -1172,18 +2484,22 @@ function selectClass(classId){
   game.stageInCampaign = 0;
   game.skillPool = [];
   game.inventory = [];
+  game.campUsed = false;
+  game._campResetKey = -1;
 
   const hero = makeHero(classId);
+  // Assign base skills from CLASS_DEFS (these now all have cls field — FIX 2)
   hero.equippedSkills[0] = CLASS_DEFS[classId].baseSkills[0];
   hero.equippedSkills[1] = CLASS_DEFS[classId].baseSkills[1];
+  hero.equippedSkills[2] = CLASS_DEFS[classId].baseSkills[2];
   game.party = [hero];
 
   // starter loot
   for(let i=0;i<3;i++){
-    const item = {...LOOT_TABLE[Math.floor(Math.random()*8)], equipped:false, id:Date.now()+i};
+    const item = rollItemStats(LOOT_TABLE[Math.floor(Math.random()*8)]);
     game.inventory.push(item);
   }
-  // starter skills
+  // starter skills — use base skills directly (they have cls now)
   for(const sk of CLASS_DEFS[classId].baseSkills){
     if(!game.skillPool.find(s=>s.id===sk.id)) game.skillPool.push({...sk});
   }
@@ -1210,12 +2526,34 @@ function buildManagementScreen(){
   if(!hero) return;
   recalcHeroStats(hero);
 
-  // PARTY SLOTS
+  // ── FIX 1: Reset campUsed once per unique stage ──────────────────────────
+  // Key = campaignNumber * 1000 + stageInCampaign — unique per stage
+  const campKey = game.campaignNumber * 1000 + game.stageInCampaign;
+  if(game._campResetKey !== campKey){
+    game.campUsed = false;
+    game._campResetKey = campKey;
+  }
+  // ─────────────────────────────────────────────────────────────────────────
+
+  // Update gold display
+  const mgmtGoldEl = document.getElementById('mgmtGold');
+  if(mgmtGoldEl) mgmtGoldEl.textContent = game.gold;
+
+  // Update camp button state
+  const campBtn = document.getElementById('btnCamp');
+  if(campBtn){
+    campBtn.textContent = game.campUsed ? '🏕️ Camp Used ✓' : '🏕️ Make Camp';
+    campBtn.disabled = !!game.campUsed;
+    campBtn.style.opacity = game.campUsed ? '0.45' : '1';
+  }
+
+  // PARTY SLOTS — only show real heroes, not minions
+  const realParty = game.party.filter(h=>!h.isMinion);
   const psl = document.getElementById('partySlotsList');
   psl.innerHTML='';
   const maxParty = 1 + Math.floor(game.level/10);
   for(let i=0;i<Math.min(10,maxParty);i++){
-    const h=game.party[i];
+    const h=realParty[i];
     const div=document.createElement('div');
     div.className='party-slot'+(h?' active':'');
     if(i===game.selectedHeroIdx && h) div.style.borderColor='var(--gold)';
@@ -1230,6 +2568,8 @@ function buildManagementScreen(){
   // STATS PANEL
   const h=hero;
   document.getElementById('mgmtStats').innerHTML=`
+    <div class="stat-line"><span>🌟 Lv</span><span class="sv">${h.heroLevel||1}</span></div>
+    <div class="stat-line"><span>✨ XP</span><span class="sv">${h.xp||0}/${h.xpToNext||100}</span></div>
     <div class="stat-line"><span>⚔️ ATK</span><span class="sv">${h.atk}</span></div>
     <div class="stat-line"><span>🛡️ DEF</span><span class="sv">${h.def}</span></div>
     <div class="stat-line"><span>💨 SPD</span><span class="sv">${h.spd.toFixed(2)}</span></div>
@@ -1238,15 +2578,7 @@ function buildManagementScreen(){
   document.getElementById('mgmtHpText').textContent=`HP ${h.hp}/${h.maxHp}`;
 
   // SAVE SLOTS
-  const ssd=document.getElementById('saveSlotsDiv');
-  ssd.innerHTML='';
-  for(let i=0;i<3;i++){
-    const saved=getSave(i);
-    const div=document.createElement('div');
-    div.className='save-slot';
-    div.innerHTML=`<div><div class="save-slot-name">Slot ${i+1}</div><div class="save-slot-info">${saved?`Lv${saved.level} · ${saved.date}`:'— Empty —'}</div></div><div style="display:flex;gap:5px">${saved?'<button class="btn-secondary-cozy" style="padding:3px 7px;font-size:0.6rem" onclick="loadGame('+i+')">Load</button>':''}<button class="btn-secondary-cozy" style="padding:3px 7px;font-size:0.6rem" onclick="saveGame('+i+')">Save</button></div>`;
-    ssd.appendChild(div);
-  }
+  refreshSaveSlots();
 
   // TABS
   if(activeTab==='skills') buildSkillsTab(h);
@@ -1259,7 +2591,7 @@ function buildManagementScreen(){
   mb.innerHTML=`<div class="mission-title">${isBossLevel?'⚠️ BOSS ENCOUNTER':'🌿 Adventure Stage'}</div>
     <div class="mission-detail">Campaign ${game.campaignNumber} · Stage ${game.stageInCampaign+1}/10<br>
     Level ${game.level} · ${isBossLevel?'<b style="color:var(--rose)">Boss awaits!</b>':'Varied enemies ahead'}<br>
-    Threat: <b>${game.level<5?'Cozy':'game.level<10'?'Tense':game.level<20?'Fierce':'Legendary'}</b></div>`;
+    Threat: <b>${game.level<5?'Cozy':game.level<10?'Tense':game.level<20?'Fierce':'Legendary'}</b></div>`;
 
   // ENEMY PREVIEW
   const epl=document.getElementById('enemyPreviewList');
@@ -1289,7 +2621,7 @@ function buildSkillsTab(hero){
     const sk=hero.equippedSkills[i];
     const div=document.createElement('div');
     div.className='skill-slot'+(sk?' filled':'');
-    div.innerHTML=sk?`<div class="sk-name">${sk.name}</div><div class="sk-desc">${sk.desc} · CD:${sk.cd}s</div>`:`<div class="empty-slot">[ Basic Slot ${i+1} — Click skill below ]</div>`;
+    div.innerHTML=sk?`<div class="sk-name">${sk.name||'?'}</div><div class="sk-desc">${sk.desc||sk.effect||''} · CD:${sk.cd||'?'}</div>`:`<div class="empty-slot">[ Basic Slot ${i+1} — Click skill below ]</div>`;
     if(sk){ div.onclick=()=>{ hero.equippedSkills[i]=null; buildManagementScreen(); }; }
     grid.appendChild(div);
   }
@@ -1297,7 +2629,7 @@ function buildSkillsTab(hero){
   const lsk=hero.legendarySkill;
   const ldiv=document.createElement('div');
   ldiv.className='skill-slot'+(lsk?' filled legendary':'  legendary');
-  ldiv.innerHTML=lsk?`<div class="sk-name">⭐ ${lsk.name}</div><div class="sk-desc">${lsk.desc} · CD:${lsk.cd}s</div>`:`<div class="empty-slot">⭐ [ Legendary Slot — Drop from battles ]</div>`;
+  ldiv.innerHTML=lsk?`<div class="sk-name">⭐ ${lsk.name||'?'}</div><div class="sk-desc">${lsk.desc||lsk.effect||''} · CD:${lsk.cd||'?'}</div>`:`<div class="empty-slot">⭐ [ Legendary Slot — Drop from battles ]</div>`;
   if(lsk){ ldiv.onclick=()=>{ hero.legendarySkill=null; buildManagementScreen(); }; }
   grid.appendChild(ldiv);
 
@@ -1312,13 +2644,22 @@ function buildSkillsTab(hero){
   game.skillPool.forEach(sk=>{
     const div=document.createElement('div');
     div.className='skill-pool-item'+(sk.legendary?' legendary-pool':'');
-    div.innerHTML=`<div class="sp-name">${sk.legendary?'⭐ ':''}<b>${sk.name}</b> ${sk.legendary?'<span class="sp-leg">LEGENDARY</span>':''}</div><div class="sp-cls">${sk.effect.toUpperCase()} · CD:${sk.cd}s · Mult:${sk.dmgMult.toFixed(1)}x</div>`;
+    const _clsLabel={tank:'Guardian',mage:'Spellweaver',buster:'Ironbreaker',cleric:'Cleric',necromancer:'Necromancer',dragonknight:'Dragon Knight',wanderer:'Wanderer'};
+    // FIX 2: Guard sk.cls — if undefined (shouldn't happen now), never show class label
+    const _diff = sk.cls && sk.cls !== hero.classId;
+    const _clsTag = _diff ? ` <span style="font-size:0.55rem;color:var(--rose);font-weight:700">[${_clsLabel[sk.cls]||sk.cls}]</span>` : '';
+    const _mult=(typeof sk.dmgMult==='number')?sk.dmgMult.toFixed(1):'—';
+    const _eff=(sk.effect||'unknown').replace(/_/g,' ').toUpperCase();
+    div.innerHTML=`<div class="sp-name">${sk.legendary?'⭐ ':''}<b>${sk.name||'?'}</b>${sk.legendary?' <span class="sp-leg">LEGENDARY</span>':''}${_clsTag}</div><div class="sp-cls">${_eff} · CD:${sk.cd||'?'}s · ×${_mult}</div>`;
     div.onclick=()=>{
       if(sk.legendary){
         hero.legendarySkill=sk;
       } else {
         const slot=hero.equippedSkills.findIndex(s=>!s);
-        if(slot!==-1) hero.equippedSkills[slot]=sk;
+        // Prevent equipping a skill already equipped by this hero
+      const alreadyEquipped = hero.equippedSkills.some(s=>s&&s.id===sk.id) || (hero.legendarySkill&&hero.legendarySkill.id===sk.id);
+      if(slot!==-1 && !alreadyEquipped) hero.equippedSkills[slot]=sk;
+      else if(alreadyEquipped){ alert('This skill is already equipped!'); return; }
         else hero.equippedSkills[2]=sk;
       }
       buildManagementScreen();
@@ -1326,6 +2667,110 @@ function buildSkillsTab(hero){
     pool.appendChild(div);
   });
 }
+
+const ITEM_SLOT_MAP = {
+  weapon:  ['weapon'],
+  offhand: ['offhand'],
+  helm:    ['helm'],
+  chest:   ['chest'],
+  legs:    ['legs'],
+  boots:   ['boots'],
+  ring:    ['ring1','ring2'],
+  amulet:  ['ring1','ring2'],
+  any:     GEAR_SLOTS,
+};
+
+function getItemValidSlots(item){
+  if(item.slotType) return [item.slotType]; // new typed items
+  // Use explicit slot field if present
+  if(item.slot==='weapon') return ['weapon'];
+  if(item.slot==='offhand') return ['offhand'];
+  if(item.slot==='helm') return ['helm'];
+  if(item.slot==='chest') return ['chest'];
+  if(item.slot==='legs') return ['legs'];
+  if(item.slot==='boots') return ['boots'];
+  if(item.slot==='ring') return ['ring1','ring2'];
+  const n=item.name.toLowerCase(), e=item.emoji;
+  if(['⚔️','🗡️','🪃','🏹'].includes(e)||n.includes('blade')||n.includes('sword')||n.includes('bow')||n.includes('rod')||n.includes('staff')||n.includes('edge')||n.includes('dagger')) return ['weapon'];
+  if(['🛡️'].includes(e)||n.includes('shield')||n.includes('buckler')||n.includes('aegis')) return ['offhand'];
+  if(['🪖','🎩','🧢'].includes(e)||n.includes('helm')||n.includes('hood')||n.includes('cap')||n.includes('crown')) return ['helm'];
+  if(['🧥','🎽'].includes(e)||n.includes('chest')||n.includes('armor')||n.includes('robe')||n.includes('scale')||n.includes('mail')) return ['chest'];
+  if(['👖'].includes(e)||n.includes('leg')||n.includes('pant')||n.includes('greave')) return ['legs'];
+  if(['👞','👢'].includes(e)||n.includes('boot')||n.includes('shoe')||n.includes('step')) return ['boots'];
+  if(['💍'].includes(e)||n.includes('ring')||n.includes('band')) return ['ring1','ring2'];
+  if(['📿','🔮','🌀','💎','💜','🌙','🌿','⚜️','🌈'].includes(e)||n.includes('pendant')||n.includes('amulet')||n.includes('torc')||n.includes('bead')||n.includes('shard')||n.includes('orb')||n.includes('heart')) return ['ring1','ring2'];
+  if(item.stats.atk && !item.stats.def) return ['weapon'];
+  if(item.stats.def && !item.stats.atk) return ['chest','offhand'];
+  return ['ring1','ring2'];
+}
+
+// ── Item Select Modal ─────────────────────────────────────────────────────
+let _itemModalHero=null, _itemModalSlot=null;
+
+function openItemModal(hero, slot){
+  _itemModalHero=hero; _itemModalSlot=slot;
+  const modal=document.getElementById('itemSelectModal');
+  const title=document.getElementById('itemModalTitle');
+  const grid=document.getElementById('itemModalGrid');
+  const empty=document.getElementById('itemModalEmpty');
+  title.textContent=`${GEAR_SLOT_NAMES[slot]} — Choose Item`;
+  grid.innerHTML='';
+  // Filter items valid for this slot, not equipped by someone else in a different slot
+  const validItems=game.inventory.filter(item=>{
+    const validSlots=getItemValidSlots(item);
+    if(!validSlots.includes(slot)) return false;
+    // Allow if unequipped, equipped in this slot by this hero, or equipped elsewhere by this hero (swap)
+    const equippedByOther=game.party.filter(h=>!h.isMinion).some(h=>h!==hero&&GEAR_SLOTS.some(s=>h.gearSlots[s]===item));
+    return !equippedByOther;
+  });
+  // Add "unequip" option if slot is occupied
+  if(hero.gearSlots[slot]){
+    const unequipBtn=document.createElement('div');
+    unequipBtn.style.cssText='width:70px;height:70px;border-radius:10px;border:2px dashed #804020;display:flex;align-items:center;justify-content:center;flex-direction:column;cursor:pointer;color:#c8a87a;font-size:0.7rem;text-align:center;background:rgba(60,30,10,0.5);gap:4px';
+    unequipBtn.innerHTML='❌<span>Unequip</span>';
+    unequipBtn.onclick=()=>{ unequipGear(hero,slot); closeItemModal(); buildManagementScreen(); };
+    grid.appendChild(unequipBtn);
+  }
+  if(validItems.length===0 && !hero.gearSlots[slot]){
+    empty.style.display='block'; grid.style.display='none';
+  } else {
+    empty.style.display='none'; grid.style.display='flex';
+    validItems.forEach(item=>{
+      const isEquipped=hero.gearSlots[slot]===item;
+      const div=document.createElement('div');
+      div.style.cssText=`width:70px;min-height:70px;border-radius:10px;border:2px solid ${isEquipped?'#d4a017':item.rarity==='legendary'?'#c080ff':item.rarity==='epic'?'#6060c0':item.rarity==='rare'?'#406080':'#403020'};display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;background:${isEquipped?'rgba(212,160,23,0.2)':'rgba(30,18,8,0.7)'};padding:5px;gap:2px;position:relative;transition:all 0.12s`;
+      const statStr=Object.entries(item.stats).map(([k,v])=>`+${v} ${k.toUpperCase()}`).join(' | ');
+      div.title=`${item.name} [${item.rarity.toUpperCase()}] ${statStr}`;
+      div.innerHTML=`<div style="font-size:1.5rem">${item.emoji}</div><div style="font-size:0.58rem;color:#d4c4a4;text-align:center;line-height:1.2;max-width:62px;overflow:hidden">${item.name}</div><div style="font-size:0.55rem;color:${item.rarity==='legendary'?'#c080ff':item.rarity==='epic'?'#9080d0':item.rarity==='rare'?'#60a0d0':'#80a060'}">${item.rarity.toUpperCase()}</div><div style="font-size:0.55rem;color:#a0c080;text-align:center">${Object.entries(item.stats).map(([k,v])=>'+'+v+' '+k).join(' ')}</div>${isEquipped?'<div style="position:absolute;top:2px;right:4px;font-size:0.6rem;color:#d4a017">✓</div>':''}`;
+      div.onmouseover=()=>{if(!isEquipped)div.style.background='rgba(100,60,20,0.5)'};
+      div.onmouseout=()=>{if(!isEquipped)div.style.background='rgba(30,18,8,0.7)'};
+      div.onclick=()=>{
+        if(isEquipped){ unequipGear(hero,slot); }
+        else {
+          // Unequip from this hero's slot if occupied
+          if(hero.gearSlots[slot]) unequipGear(hero,slot);
+          // Unequip from other slot of this hero if same item
+          const otherSlot=GEAR_SLOTS.find(s=>s!==slot&&hero.gearSlots[s]===item);
+          if(otherSlot) unequipGear(hero,otherSlot);
+          equipGear(hero,slot,item);
+        }
+        closeItemModal();
+        buildManagementScreen();
+      };
+      grid.appendChild(div);
+    });
+  }
+  modal.style.display='flex';
+}
+
+function closeItemModal(){
+  document.getElementById('itemSelectModal').style.display='none';
+}
+// Close on backdrop click
+document.getElementById('itemSelectModal').addEventListener('click',function(e){
+  if(e.target===this) closeItemModal();
+});
+// ─────────────────────────────────────────────────────────────────────────────
 
 function buildEquipTab(hero){
   document.getElementById('gearHeroName').textContent=hero.name;
@@ -1337,9 +2782,12 @@ function buildEquipTab(hero){
     div.className='equip-slot'+(item?' has-item':'');
     if(item){
       div.innerHTML=`<div class="es-icon">${item.emoji}</div><div class="es-name">${item.name}</div><div class="es-stat">${Object.entries(item.stats).map(([k,v])=>'+'+v+' '+k.toUpperCase()).join(' ')}</div>`;
-      div.onclick=()=>{ unequipGear(hero,slot); buildManagementScreen(); };
+      div.title=`${GEAR_SLOT_NAMES[slot]} — Click to change`;
+      div.onclick=()=>openItemModal(hero,slot);
     } else {
-      div.innerHTML=`<div style="color:var(--dusk);font-size:0.7rem">${GEAR_SLOT_NAMES[slot]}<br><span style="font-size:0.58rem;font-style:italic">empty</span></div>`;
+      div.innerHTML=`<div style="color:var(--dusk);font-size:0.7rem">${GEAR_SLOT_NAMES[slot]}<br><span style="font-size:0.58rem;font-style:italic;color:#a07850">tap to equip</span></div>`;
+      div.style.cursor='pointer';
+      div.onclick=()=>openItemModal(hero,slot);
     }
     gs.appendChild(div);
   }
@@ -1347,22 +2795,24 @@ function buildEquipTab(hero){
   const invGrid=document.getElementById('fullInvGrid');
   invGrid.innerHTML='';
   document.getElementById('invCountBadge').textContent=`(${game.inventory.length} items)`;
-  game.inventory.forEach((item,idx)=>{
-    const isEquipped=Object.values(hero.gearSlots).includes(item)||
-      game.party.some(h=>Object.values(h.gearSlots).includes(item));
+  game.inventory.forEach((item)=>{
+    const equippedSlot=GEAR_SLOTS.find(s=>hero.gearSlots[s]===item);
+    const equippedByOther=!equippedSlot && game.party.filter(h=>!h.isMinion).some(h=>h!==hero&&GEAR_SLOTS.some(s=>h.gearSlots[s]===item));
+    const isEquipped=!!equippedSlot;
+    const validSlots=getItemValidSlots(item);
     const div=document.createElement('div');
-    div.className=`inv-item ${item.rarity}${isEquipped?' equipped-inv':''}`;
-    div.innerHTML=`${item.emoji}<div class="item-tip">${item.name}<br>${item.rarity.toUpperCase()}<br>${Object.entries(item.stats).map(([k,v])=>'+'+v+' '+k).join(' | ')}<br><i>${item.desc}</i><br>${isEquipped?'[Equipped - click to unequip]':'[Click to equip]'}</div>`;
+    div.className=`inv-item ${item.rarity}${isEquipped?' equipped-inv':''}${equippedByOther?' equipped-inv':''}`;
+    div.innerHTML=`${item.emoji}<div class="item-tip">${item.name}<br>${item.rarity.toUpperCase()}<br>${Object.entries(item.stats).map(([k,v])=>'+'+v+' '+k).join(' | ')}<br><i>${item.desc}</i><br>Slot: ${validSlots.map(s=>GEAR_SLOT_NAMES[s]).join(' / ')}<br>${isEquipped?`✅ Equipped (${GEAR_SLOT_NAMES[equippedSlot]}) — click to unequip`:equippedByOther?'On another hero':'Click to equip'}</div>`;
     div.onclick=()=>{
+      if(equippedByOther) return;
       if(isEquipped){
-        for(const slot of GEAR_SLOTS){
-          if(hero.gearSlots[slot]===item){ unequipGear(hero,slot); break; }
-        }
+        unequipGear(hero,equippedSlot);
       } else {
-        // find best slot
-        for(const slot of GEAR_SLOTS){
-          if(!hero.gearSlots[slot]){ equipGear(hero,slot,item,idx); break; }
+        let placed=false;
+        for(const slot of validSlots){
+          if(!hero.gearSlots[slot]){ equipGear(hero,slot,item); placed=true; break; }
         }
+        if(!placed) equipGear(hero,validSlots[0],item);
       }
       buildManagementScreen();
     };
@@ -1380,18 +2830,44 @@ function unequipGear(hero,slot){
   recalcHeroStats(hero);
 }
 
+function gainXP(hero, amount){
+  if(hero.isMinion) return;
+  hero.xp += amount;
+  while(hero.xp >= hero.xpToNext){
+    hero.xp -= hero.xpToNext;
+    hero.heroLevel++;
+    hero.xpToNext = Math.floor(hero.xpToNext * 1.4);
+    const cls = CLASS_DEFS[hero.classId];
+    if(!cls) return;
+    hero.baseMaxHp  += cls.behavior==='tank' ? 18 : cls.behavior==='mage' ? 8 : 12;
+    hero.baseAtk    += cls.behavior==='mage' ? 5  : cls.behavior==='tank' ? 3 : 4;
+    hero.baseDef    += cls.behavior==='tank' ? 3  : 1;
+    recalcHeroStats(hero);
+    hero.hp = hero.maxHp;
+    addLog(`🌟 ${hero.emoji} ${hero.name} reached Level ${hero.heroLevel}!`, 'skill');
+    spawnParticles(hero.x+18, hero.y+10, 16, '#d4a017');
+  }
+}
+
+function dropGold(baseAmount){
+  const earned = baseAmount + Math.floor(Math.random() * baseAmount * 0.5);
+  game.gold += earned;
+  return earned;
+}
+
 function recalcHeroStats(hero){
-  const cls=CLASS_DEFS[hero.classId];
-  hero.atk=cls.atk; hero.def=cls.def; hero.spd=cls.spd;
-  const hpBonus=Object.values(hero.gearSlots).filter(Boolean)
+  hero.atk = hero.baseAtk;
+  hero.def = hero.baseDef;
+  hero.spd = hero.baseSpd;
+  const hpBonus = Object.values(hero.gearSlots).filter(Boolean)
     .reduce((s,it)=>{
-      if(it.stats.atk) hero.atk+=it.stats.atk;
-      if(it.stats.def) hero.def+=it.stats.def;
-      if(it.stats.spd) hero.spd+=it.stats.spd;
-      return s+(it.stats.hp||0);
+      if(it.stats.atk) hero.atk += it.stats.atk;
+      if(it.stats.def) hero.def += it.stats.def;
+      if(it.stats.spd) hero.spd += it.stats.spd;
+      return s + (it.stats.hp||0);
     },0);
-  hero.maxHp=cls.hp+hpBonus;
-  hero.hp=Math.min(hero.hp,hero.maxHp);
+  hero.maxHp = hero.baseMaxHp + hpBonus;
+  hero.hp = Math.min(hero.hp, hero.maxHp);
 }
 
 function buildCodexTab(){
@@ -1399,11 +2875,11 @@ function buildCodexTab(){
   let html='<b>Classes Unlocked:</b><br>';
   const unlockLevels={tank:'Start',mage:'Start',buster:'Start'};
   for(const [k,cls] of Object.entries(CLASS_DEFS)){
-    html+=`${cls.emoji} <b>${cls.name}</b> — ${unlockLevels[k]}<br>`;
+    html+=`${cls.emoji} <b>${cls.name}</b> — ${unlockLevels[k]||'Start'}<br>`;
   }
   html+=`<br><b>Campaign Progress:</b><br>`;
   html+=`Campaign ${game.campaignNumber} · Level ${game.level}<br>`;
-  html+=`Next party slot: Lv ${Math.ceil(game.party.length/1)*10}<br>`;
+  html+=`Next party slot: Lv ${Math.ceil(game.party.filter(h=>!h.isMinion).length/1)*10}<br>`;
   html+=`<br><b>Skills Collected:</b> ${game.skillPool.length}<br>`;
   html+=`<b>Inventory Items:</b> ${game.inventory.length}<br>`;
   el.innerHTML=html;
@@ -1412,38 +2888,125 @@ function buildCodexTab(){
 // ═══════════════════════════════════════════════════════
 // SAVE SYSTEM
 // ═══════════════════════════════════════════════════════
-function saveGame(slot){
-  const data={
-    level:game.level, campaignNumber:game.campaignNumber,
-    stageInCampaign:game.stageInCampaign,
-    party:game.party, inventory:game.inventory, skillPool:game.skillPool,
-    selectedHeroIdx:game.selectedHeroIdx,
-    date:new Date().toLocaleDateString()
+function serializeHero(h){
+  return {
+    classId:h.classId, name:h.name, emoji:h.emoji,
+    hp:h.hp, maxHp:h.maxHp,
+    atk:h.atk, def:h.def, spd:h.spd,
+    baseAtk:h.baseAtk, baseDef:h.baseDef, baseSpd:h.baseSpd, baseMaxHp:h.baseMaxHp,
+    heroLevel:h.heroLevel||1, xp:h.xp||0, xpToNext:h.xpToNext||100,
+    equippedSkills:h.equippedSkills.map(s=>s?serializeSkill(s):null),
+    legendarySkill:h.legendarySkill?serializeSkill(h.legendarySkill):null,
+    gearSlots:Object.fromEntries(GEAR_SLOTS.map(sl=>[sl,h.gearSlots[sl]?serializeItem(h.gearSlots[sl]):null])),
   };
-  localStorage.setItem('hbh_save_'+slot, JSON.stringify(data));
-  buildManagementScreen();
-  showToast('💾 Game saved to slot '+(slot+1)+'!');
+}
+
+function serializeSkill(sk){
+  const s={id:sk.id,name:sk.name,desc:sk.desc||'',cd:sk.cd,dmgMult:sk.dmgMult,effect:sk.effect,legendary:sk.legendary,cls:sk.cls};
+  if(sk.minionType) s.minionType=sk.minionType;
+  return s;
+}
+
+function serializeItem(it){
+  return {emoji:it.emoji,name:it.name,rarity:it.rarity,stats:it.stats,desc:it.desc,id:it.id,equipped:it.equipped};
+}
+
+function deserializeHero(d){
+  const h=makeHero(d.classId);
+  h.hp=d.hp; h.maxHp=d.maxHp;
+  h.atk=d.atk; h.def=d.def; h.spd=d.spd;
+  h.baseAtk=d.baseAtk||d.atk; h.baseDef=d.baseDef||d.def;
+  h.baseSpd=d.baseSpd||d.spd; h.baseMaxHp=d.baseMaxHp||d.maxHp;
+  h.heroLevel=d.heroLevel||1; h.xp=d.xp||0; h.xpToNext=d.xpToNext||100;
+  h.equippedSkills=d.equippedSkills.map(s=>s||null);
+  h.legendarySkill=d.legendarySkill||null;
+  for(const sl of GEAR_SLOTS){
+    h.gearSlots[sl]=d.gearSlots[sl]||null;
+  }
+  return h;
+}
+
+function saveGame(slot){
+  try{
+    // Only serialize real heroes, not minions
+    const data={
+      level:game.level, campaignNumber:game.campaignNumber,
+      stageInCampaign:game.stageInCampaign,
+      classId:game.classId,
+      selectedHeroIdx:game.selectedHeroIdx,
+      gold:game.gold,
+      party:game.party.filter(h=>!h.isMinion).map(serializeHero),
+      inventory:game.inventory.map(serializeItem),
+      skillPool:game.skillPool.map(serializeSkill),
+      date:new Date().toLocaleDateString()
+    };
+    localStorage.setItem('hbh_save_'+slot, JSON.stringify(data));
+    refreshSaveSlots();
+    showToast('💾 Saved to slot '+(slot+1)+'!');
+  } catch(e){
+    showToast('❌ Save failed: '+e.message);
+  }
+}
+
+function refreshSaveSlots(){
+  const ssd=document.getElementById('saveSlotsDiv');
+  if(!ssd) return;
+  ssd.innerHTML='';
+  for(let i=0;i<3;i++){
+    const saved=getSave(i);
+    const div=document.createElement('div');
+    div.className='save-slot';
+    div.style.cssText='display:flex;align-items:center;justify-content:space-between;padding:6px 8px;background:var(--parchment);border:2px solid var(--warm);border-radius:7px;margin-bottom:4px;';
+    div.innerHTML=`
+      <div>
+        <div class="save-slot-name">Slot ${i+1}</div>
+        <div class="save-slot-info">${saved?`Lv${saved.level} · Camp.${saved.campaignNumber||1} · ${saved.date}`:'— Empty —'}</div>
+      </div>
+      <div style="display:flex;gap:4px">
+        <button class="btn-secondary-cozy" style="padding:3px 8px;font-size:0.62rem" onclick="saveGame(${i})">💾 Save</button>
+        <button class="btn-secondary-cozy" style="padding:3px 8px;font-size:0.62rem;${saved?'':'opacity:0.4;cursor:not-allowed'}" onclick="${saved?'loadGame('+i+')':'void(0)'}">📂 Load</button>
+      </div>`;
+    ssd.appendChild(div);
+  }
 }
 
 function loadGame(slot){
-  const raw=localStorage.getItem('hbh_save_'+slot);
-  if(!raw) return;
-  const data=JSON.parse(raw);
-  game.level=data.level;
-  game.campaignNumber=data.campaignNumber;
-  game.stageInCampaign=data.stageInCampaign||0;
-  game.party=data.party;
-  game.inventory=data.inventory;
-  game.skillPool=data.skillPool;
-  game.selectedHeroIdx=data.selectedHeroIdx||0;
-  game.classId=game.party[0]?.classId;
-  buildManagementScreen();
-  showToast('📂 Loaded slot '+(slot+1)+'!');
+  try{
+    const raw=localStorage.getItem('hbh_save_'+slot);
+    if(!raw){ showToast('No save in slot '+(slot+1)); return; }
+    const data=JSON.parse(raw);
+    game.level=data.level||1;
+    game.campaignNumber=data.campaignNumber||1;
+    game.stageInCampaign=data.stageInCampaign||0;
+    game.classId=data.classId;
+    game.selectedHeroIdx=data.selectedHeroIdx||0;
+    game.gold=data.gold||0;
+    game.campUsed=false;
+    game._campResetKey=-1;
+    game.party=data.party.map(deserializeHero);
+    game.inventory=data.inventory.map(it=>({...it}));
+    game.skillPool=data.skillPool.map(sk=>({...sk}));
+    game.party.forEach(h=>{
+      for(const sl of GEAR_SLOTS){
+        if(h.gearSlots[sl]){
+          const saved=h.gearSlots[sl];
+          const found=game.inventory.find(it=>it.id===saved.id);
+          h.gearSlots[sl]=found||saved;
+        }
+      }
+    });
+    buildManagementScreen();
+    showToast('📂 Loaded slot '+(slot+1)+'!');
+  } catch(e){
+    showToast('❌ Load failed: '+e.message);
+  }
 }
 
 function getSave(slot){
-  const raw=localStorage.getItem('hbh_save_'+slot);
-  return raw?JSON.parse(raw):null;
+  try{
+    const raw=localStorage.getItem('hbh_save_'+slot);
+    return raw?JSON.parse(raw):null;
+  } catch(e){ return null; }
 }
 
 function showToast(msg){
@@ -1484,47 +3047,91 @@ function generateStageEnemies(stage,level){
 // LAUNCH CAMPAIGN
 // ═══════════════════════════════════════════════════════
 function launchCampaign(){
-  // Restore HP partially
-  game.party.forEach(h=>{ if(!h.dead) h.hp=Math.min(h.maxHp, h.hp+Math.floor(h.maxHp*0.4)); h.dead=false; });
+  game.party.forEach(h=>{
+    if(!h.dead&&!h.isMinion){
+      const healAmt = Math.floor(h.maxHp * (h.hp/h.maxHp < 0.3 ? 0.5 : 0.25));
+      h.hp = Math.min(h.maxHp, h.hp + healAmt);
+    }
+    if(!h.isMinion) h.dead = false;
+  });
   startNextStage();
 }
 
 function startNextStage(){
+  // FIX 4: Always clear minions at the start of every new battle stage
+  game.party = game.party.filter(h => !h.isMinion);
+
   game.enemies=generateStageEnemies(game.stageInCampaign, game.level);
   game.particles=[];
   game.floatingTexts=[];
   game.projectiles=[];
   game.logEntries=[];
 
-  // Reset hero battle state
-  game.party.forEach(h=>{
-    h.attackCooldown=1+Math.random();
-    h.stunTimer=0; h.defending=false; h.dodging=false; h.buffTimer=0; h.poisonTimer=0;
-    h.skillCooldowns={};
-    h.animT=0; h.jumpAnim=0;
-    // Set start positions based on behavior
-    const canvas=document.getElementById('battleCanvas');
-    const W=canvas.width||600; const H=canvas.height||300;
-    const GROUND=H*0.72;
-    if(CLASS_DEFS[h.classId].behavior==='mage'){
-      h.x=60; h.y=GROUND-52; h.targetX=60;
-    } else if(CLASS_DEFS[h.classId].behavior==='tank'){
-      h.x=100; h.y=GROUND-52; h.targetX=100;
-    } else {
-      h.x=130; h.y=GROUND-52; h.targetX=130;
-    }
-  });
-
   buildBattleHUD();
   showScreen('battleScreen');
   setupCanvas();
   initParallax();
+
+  const canvas=document.getElementById('battleCanvas');
+  const W=canvas.width||800; const H=canvas.height||400;
+  const GROUND=H*0.72;
+
+  game.party.forEach((h,hi)=>{
+    h.attackCooldown=1+Math.random();
+    h.stunTimer=0; h.defending=false; h.dodging=false; h.buffTimer=0; h.poisonTimer=0;
+    h.skillCooldowns={};
+    h.animT=0; h.jumpAnim=0;
+    h.dead=false;
+    if(CLASS_DEFS[h.classId]&&CLASS_DEFS[h.classId].behavior==='mage'){
+      h.x=50+hi*30; h.targetX=50+hi*30;
+    } else if(CLASS_DEFS[h.classId]&&CLASS_DEFS[h.classId].behavior==='tank'){
+      h.x=120+hi*30; h.targetX=120+hi*30;
+    } else {
+      h.x=80+hi*30; h.targetX=80+hi*30;
+    }
+    h.y=GROUND-52;
+  });
+
+  game.enemies.forEach((e,ei)=>{
+    const spacing=e.isBoss?90:60;
+    e.x=W-80-ei*spacing;
+    e.targetX=e.x;
+    e.y=GROUND-52;
+  });
+
   showStageBanner();
 
   game.battleRunning=true;
+
+  // Speed buttons — unified via game.gameSpeed
+  document.querySelectorAll('.spd-btn').forEach(btn=>{
+    btn.onclick=()=>{
+      const v = parseFloat(btn.dataset.v);
+      if(!isNaN(v)){
+        game.gameSpeed = v;
+        document.querySelectorAll('.spd-btn').forEach(b=>b.classList.remove('active-spd'));
+        btn.classList.add('active-spd');
+      }
+    };
+  });
+
+  // ── Pre-fire all SUMMON skills at battle start ───────────────────────────
+  // Placed here (after battleRunning=true) so spawnMinion is in scope.
+  game.party.forEach(h=>{
+    if(h.isMinion) return;
+    const allSkills=[...h.equippedSkills.filter(Boolean),h.legendarySkill].filter(Boolean);
+    allSkills.forEach(sk=>{
+      if(sk.effect==='summon'){
+        spawnMinion(h, sk.minionType||'skeleton', 1);
+        h.skillCooldowns[sk.id]=sk.cd;
+      }
+    });
+  });
+  // ─────────────────────────────────────────────────────────────────────────
+
   let last=performance.now();
   function loop(now){
-    const dt=Math.min((now-last)/1000,0.05);
+    const dt=Math.min((now-last)/1000,0.05) * (game.gameSpeed||1);
     last=now;
     update(dt);
     render();
@@ -1568,7 +3175,8 @@ function buildBattleHUD(){
   hudUnits.innerHTML='';
   hudUnits.style.display='flex';
   hudUnits.style.gap='12px';
-  game.party.forEach((h,i)=>{
+  // Only show real heroes in HUD, not minions
+  game.party.filter(h=>!h.isMinion).forEach((h,i)=>{
     const div=document.createElement('div');
     div.className='hud-unit';
     div.id='hud_unit_'+i;
@@ -1584,19 +3192,19 @@ function buildBattleHUD(){
 
   const hudSkills=document.getElementById('hudSkills');
   hudSkills.innerHTML='';
-  const hero=game.party[0];
+  const hero=game.party.find(h=>!h.isMinion);
   if(!hero) return;
   [...hero.equippedSkills.filter(Boolean),hero.legendarySkill].filter(Boolean).forEach(sk=>{
     const div=document.createElement('div');
     div.className='hud-skill-btn'+(sk.legendary?' leg':'');
     div.id='hudsk_'+sk.id;
-    div.textContent=sk.name;
+    div.textContent=sk.name||'Skill';
     hudSkills.appendChild(div);
   });
 }
 
 function updateHudHP(){
-  game.party.forEach((h,i)=>{
+  game.party.filter(h=>!h.isMinion).forEach((h,i)=>{
     const bar=document.getElementById('hud_hp_'+i);
     const txt=document.getElementById('hud_hptxt_'+i);
     if(!bar||!txt) return;
@@ -1626,7 +3234,6 @@ function update(dt){
   const aliveHeroes=game.party.filter(h=>!h.dead);
   const aliveEnemies=game.enemies.filter(e=>!e.dead);
 
-  // HERO BEHAVIOR & MOVEMENT
   game.party.forEach(h=>{
     if(h.dead) return;
     h.animT+=dt;
@@ -1638,21 +3245,17 @@ function update(dt){
       else { h.hp-=dt*3; h.hp=Math.max(1,h.hp); }
     }
 
-    const behavior=CLASS_DEFS[h.classId].behavior;
+    const behavior = h.isMinion ? 'buster' : ((CLASS_DEFS[h.classId]||{}).behavior||'tank');
     if(aliveEnemies.length>0){
       if(behavior==='tank'){
-        // Move towards frontmost enemy, stop at melee range
         const frontEnemy=aliveEnemies.reduce((a,b)=>a.x<b.x?a:b);
-        h.targetX=frontEnemy.x-50;
-        h.targetX=Math.max(60,Math.min(W*0.35,h.targetX));
+        h.targetX=frontEnemy.x-55;
+        h.targetX=Math.max(40,h.targetX);
       } else if(behavior==='mage'){
-        // Always run to back
         h.targetX=Math.min(80,W*0.1);
-        // if enemy too close, flee
         const nearest=aliveEnemies.reduce((a,b)=>Math.abs(a.x-h.x)<Math.abs(b.x-h.x)?a:b);
         if(nearest.x<h.x+80) h.targetX=Math.max(20,h.x-60);
       } else if(behavior==='buster'){
-        // Jump towards enemy if cooldown ready, then back
         const target=aliveEnemies[0];
         if(h.attackCooldown<=0){
           h.targetX=target.x-40;
@@ -1661,31 +3264,41 @@ function update(dt){
         }
       }
     }
-    // Lerp position
-    const spd=120+h.spd*20;
     const dx=h.targetX-h.x;
     if(Math.abs(dx)>2) h.x+=dx*dt*3;
     h.y=GROUND-52;
 
-    // HERO ATTACKS
+    // ── Summon skills fire independently of attack cooldown ──────────────────
+    if(!h.isMinion && aliveEnemies.length>0){
+      const _allSk=[...h.equippedSkills.filter(Boolean),h.legendarySkill].filter(Boolean);
+      _allSk.forEach(sk=>{
+        if(sk.effect==='summon' && (h.skillCooldowns[sk.id]||0)<=0){
+          h.skillCooldowns[sk.id]=sk.cd;
+          spawnMinion(h, sk.minionType||'skeleton', 1);
+        }
+      });
+    }
+    // ─────────────────────────────────────────────────────────────────────────
+
     if(h.attackCooldown>0){h.attackCooldown-=dt;return;}
     if(aliveEnemies.length===0) return;
 
     let target=aliveEnemies[0];
     if(behavior==='mage'){
-      // target lowest hp
       target=aliveEnemies.reduce((a,b)=>a.hp<b.hp?a:b);
     }
 
-    // Try skills
     let usedSkill=false;
-    const allSkills=[...h.equippedSkills.filter(Boolean),h.legendarySkill].filter(Boolean);
-    for(const sk of allSkills){
-      if((h.skillCooldowns[sk.id]||0)<=0){
-        h.skillCooldowns[sk.id]=sk.cd;
-        useSkill(h,sk,target,aliveEnemies);
-        usedSkill=true;
-        break;
+    if(!h.isMinion){
+      const allSkills=[...h.equippedSkills.filter(Boolean),h.legendarySkill].filter(Boolean);
+      for(const sk of allSkills){
+        if(sk.effect==='summon') continue; // handled above independently
+        if((h.skillCooldowns[sk.id]||0)<=0){
+          h.skillCooldowns[sk.id]=sk.cd;
+          useSkill(h,sk,target,aliveEnemies);
+          usedSkill=true;
+          break;
+        }
       }
     }
     if(!usedSkill){
@@ -1695,17 +3308,32 @@ function update(dt){
       addLog(`${h.emoji} hits ${target.name} for ${dmg}`,'hit');
       spawnDmgText(target.x+18,target.y,dmg,'#c04040');
       spawnParticles(target.x+18,target.y+20,3,'#d4606a');
-      if(target.hp<=0){target.dead=true;addLog(`${target.name} defeated!`,'skill');spawnParticles(target.x+18,target.y+20,10,'#d4a017');}
+      if(target.hp<=0){
+        target.dead=true;
+        const g=dropGold(target.isBoss?80:8+Math.floor(game.level*2));
+        spawnDmgText(target.x+18,target.y-20,'+'+g+'g','#d4a017');
+        game.party.filter(h=>!h.dead&&!h.isMinion).forEach(hero=>gainXP(hero,target.isBoss?120:15+game.level*3));
+        addLog(`${target.name} defeated! +${g}g`,'skill');
+        spawnParticles(target.x+18,target.y+20,10,'#d4a017');
+      }
     }
     h.attackCooldown=1/h.spd;
-    // update skill CDs
-    for(const sk of allSkills){
-      if(h.skillCooldowns[sk.id]>0) h.skillCooldowns[sk.id]-=0; // already ticked above
+    if(!h.isMinion){
+      const allSkills=[...h.equippedSkills.filter(Boolean),h.legendarySkill].filter(Boolean);
+      allSkills.forEach(sk=>{ if(h.skillCooldowns[sk.id]>0) h.skillCooldowns[sk.id]-=0; });
     }
   });
 
+  // Expire minions
+  game.party=game.party.filter(h=>{
+    if(!h.isMinion) return true;
+    h.minionTimer=(h.minionTimer||0)-dt;
+    if(h.minionTimer<=0||h.dead){spawnParticles(h.x+18,h.y+10,8,'#602080');return false;}
+    return true;
+  });
+
   // Tick skill cooldowns
-  game.party.forEach(h=>{
+  game.party.filter(h=>!h.isMinion).forEach(h=>{
     const allSkills=[...h.equippedSkills.filter(Boolean),h.legendarySkill].filter(Boolean);
     allSkills.forEach(sk=>{
       if((h.skillCooldowns[sk.id]||0)>0) h.skillCooldowns[sk.id]-=dt;
@@ -1718,14 +3346,13 @@ function update(dt){
     });
   });
 
-  // ENEMY BEHAVIOR & MOVEMENT
+  // ENEMY BEHAVIOR
   game.enemies.forEach(e=>{
     if(e.dead) return;
     e.animT+=dt;
     if(e.stunTimer>0){e.stunTimer-=dt;return;}
 
     if(aliveHeroes.length===0) return;
-    // find closest hero
     const heroTarget=aliveHeroes.reduce((a,b)=>Math.abs(a.x-e.x)<Math.abs(b.x-e.x)?a:b);
     e.targetX=heroTarget.x+50;
     const ex=e.targetX-e.x;
@@ -1733,7 +3360,6 @@ function update(dt){
     e.y=GROUND-52;
 
     if(e.attackCooldown>0){e.attackCooldown-=dt;return;}
-    // attack nearest hero
     const dmg=Math.max(1,e.atk-heroTarget.def+Math.floor(Math.random()*5));
     if(heroTarget.dodging){
       addLog(`${heroTarget.emoji} dodged!`,'skill');
@@ -1758,22 +3384,210 @@ function update(dt){
       p.target.hp-=p.dmg;
       spawnParticles(p.target.x+18,p.target.y+10,8,p.color);
       spawnDmgText(p.target.x+18,p.target.y,p.dmg,'#9b7ec8');
-      if(p.target.hp<=0){p.target.dead=true;spawnParticles(p.target.x+18,p.target.y+20,12,'#d4a017');}
+      if(p.target.hp<=0){p.target.dead=true;const _gp=dropGold(8+Math.floor(game.level*2));spawnDmgText(p.target.x+18,p.target.y-20,'+'+_gp+'g','#d4a017');game.party.filter(h=>!h.dead&&!h.isMinion).forEach(h=>gainXP(h,15+game.level*3));spawnParticles(p.target.x+18,p.target.y+20,12,'#d4a017');}
     }
   });
   game.projectiles=game.projectiles.filter(p=>p.life>0);
 
-  // Particles & floats
   game.particles.forEach(p=>{ p.x+=p.vx*dt*60; p.y+=p.vy*dt*60; p.vy+=0.5*dt*60; p.life-=dt; p.alpha=p.life/p.maxLife; });
   game.particles=game.particles.filter(p=>p.life>0);
   game.floatingTexts.forEach(t=>{ t.y-=dt*45; t.life-=dt; t.alpha=t.life/t.maxLife; });
   game.floatingTexts=game.floatingTexts.filter(t=>t.life>0);
 
-  // Win/Lose check
   const allEnemiesDead=game.enemies.every(e=>e.dead);
   if(allEnemiesDead){ endStage(true); return; }
-  const allHeroesDead=game.party.every(h=>h.dead);
+  const allHeroesDead=game.party.filter(h=>!h.isMinion).every(h=>h.dead);
   if(allHeroesDead){ endStage(false); return; }
+}
+
+// ═══════════════════════════════════════════════════════
+// MINION SYSTEM
+// FIX 3: All minion stat multipliers bumped to 0.7x Necromancer stats
+//         Duration extended, attack speed improved
+// ═══════════════════════════════════════════════════════
+const MINION_TYPES = {
+  skeleton:{name:'Skeleton',emoji:'💀',hpMult:0.70,atkMult:0.70,defMult:0.55,spd:1.9,duration:28,glowColor:'#60ff60',
+    draw(ctx,x,y,anim){
+      const b=Math.sin(anim*3)*2;
+      ctx.fillStyle='#c0c0d0';ctx.fillRect(x+7,y+6+b,18,12);ctx.fillRect(x+9,y+2+b,14,8);
+      ctx.fillStyle='#303050';ctx.fillRect(x+4,y+14+b,5,12);ctx.fillRect(x+23,y+14+b,5,12);
+      ctx.fillRect(x+8,y+26+b,9,10);ctx.fillRect(x+15,y+26+b,9,10);
+      ctx.save();ctx.shadowColor='#60ff60';ctx.shadowBlur=5;
+      ctx.fillStyle='#60ff60';ctx.fillRect(x+11,y+4+b,3,3);ctx.fillRect(x+18,y+4+b,3,3);ctx.restore();
+    }},
+  bat:{name:'Vampire Bat',emoji:'🦇',hpMult:0.40,atkMult:0.85,defMult:0.20,spd:3.2,duration:20,glowColor:'#c040ff',
+    draw(ctx,x,y,anim){
+      const b=Math.sin(anim*6)*4;
+      ctx.fillStyle='#2a1040';ctx.beginPath();ctx.ellipse(x+16,y+14+b,8,6,0,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle='#3a1850';
+      ctx.beginPath();ctx.moveTo(x+8,y+12+b);ctx.quadraticCurveTo(x,y+4+b,x+4,y+18+b);ctx.quadraticCurveTo(x+8,y+20+b,x+10,y+14+b);ctx.fill();
+      ctx.beginPath();ctx.moveTo(x+24,y+12+b);ctx.quadraticCurveTo(x+32,y+4+b,x+28,y+18+b);ctx.quadraticCurveTo(x+24,y+20+b,x+22,y+14+b);ctx.fill();
+      ctx.save();ctx.shadowColor='#c040ff';ctx.shadowBlur=5;
+      ctx.fillStyle='#c040ff';ctx.fillRect(x+13,y+12+b,2,2);ctx.fillRect(x+17,y+12+b,2,2);ctx.restore();
+    }},
+  slime:{name:'Death Slime',emoji:'🫧',hpMult:0.90,atkMult:0.55,defMult:0.75,spd:1.2,duration:35,glowColor:'#40ff80',
+    draw(ctx,x,y,anim){
+      const b=Math.abs(Math.sin(anim*2))*4;
+      ctx.fillStyle='#204830';ctx.beginPath();ctx.ellipse(x+16,y+24-b/2,14+b/2,12-b/2,0,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle='#305840';ctx.beginPath();ctx.ellipse(x+14,y+20-b,10,8,0,0,Math.PI*2);ctx.fill();
+      ctx.save();ctx.shadowColor='#40ff80';ctx.shadowBlur=6;
+      ctx.fillStyle='#40ff80';ctx.fillRect(x+11,y+18-b,3,3);ctx.fillRect(x+18,y+18-b,3,3);ctx.restore();
+    }},
+  death_knight:{name:'Death Knight',emoji:'⚔️',hpMult:1.10,atkMult:0.90,defMult:0.90,spd:1.6,duration:25,glowColor:'#8080ff',
+    draw(ctx,x,y,anim){
+      const b=Math.sin(anim*1.8)*1.5;
+      ctx.fillStyle='#1a1a2a';ctx.fillRect(x+5,y+14+b,22,22);
+      ctx.fillStyle='#2a2a4a';ctx.fillRect(x+3,y+14+b,7,8);ctx.fillRect(x+22,y+14+b,7,8);
+      ctx.fillStyle='#1a1a2a';ctx.fillRect(x+7,y+36+b,9,12);ctx.fillRect(x+16,y+36+b,9,12);
+      ctx.fillStyle='#6060a0';ctx.fillRect(x+27,y+4+b,3,32);
+      ctx.fillStyle='#4040a0';ctx.fillRect(x+23,y+16+b,11,3);
+      ctx.fillStyle='#1a1a2a';ctx.fillRect(x+7,y+2+b,18,14);
+      ctx.fillStyle='#2a2a4a';ctx.fillRect(x+5,y+2+b,22,5);
+      ctx.save();ctx.shadowColor='#8080ff';ctx.shadowBlur=6;
+      ctx.fillStyle='#8080ff';ctx.fillRect(x+10,y+7+b,4,2);ctx.fillRect(x+18,y+7+b,4,2);ctx.restore();
+    }},
+  horse:{name:'Nightmare Steed',emoji:'🐴',hpMult:1.20,atkMult:0.85,defMult:0.60,spd:2.8,duration:22,glowColor:'#ff4020',
+    draw(ctx,x,y,anim){
+      const b=Math.abs(Math.sin(anim*3))*3;
+      const legA=Math.sin(anim*3)*8;
+      ctx.fillStyle='#1a0808';ctx.fillRect(x+2,y+14+b,30,18);
+      ctx.fillRect(x+18,y+4+b,12,14);ctx.fillRect(x+26,y+2+b,10,10);
+      ctx.fillStyle='#3a0010';for(let i=0;i<4;i++)ctx.fillRect(x+18+i*2,y+2+b+i,3,6);
+      ctx.fillStyle='#1a0808';
+      ctx.fillRect(x+4,y+30+b+legA,5,12);ctx.fillRect(x+12,y+30+b-legA,5,12);
+      ctx.fillRect(x+18,y+30+b+legA,5,12);ctx.fillRect(x+26,y+30+b-legA,5,12);
+      ctx.fillStyle='#0a0404';ctx.fillRect(x+3,y+40+b,7,4);ctx.fillRect(x+11,y+40+b,7,4);ctx.fillRect(x+17,y+40+b,7,4);ctx.fillRect(x+25,y+40+b,7,4);
+      ctx.save();ctx.shadowColor='#ff4020';ctx.shadowBlur=6;ctx.fillStyle='#ff4020';ctx.fillRect(x+28,y+5+b,3,2);ctx.restore();
+    }},
+  wolf:{name:'Dire Wolf',emoji:'🐺',hpMult:0.70,atkMult:1.00,defMult:0.40,spd:2.6,duration:22,glowColor:'#ff8000',
+    draw(ctx,x,y,anim){
+      const b=Math.abs(Math.sin(anim*4))*3;
+      const run=Math.sin(anim*4)*6;
+      ctx.fillStyle='#2a2a2a';ctx.fillRect(x+4,y+16+b,24,16);ctx.fillRect(x+20,y+10+b,14,14);
+      ctx.fillStyle='#1a1a1a';ctx.fillRect(x+30,y+16+b,6,6);
+      ctx.fillStyle='#2a2a2a';
+      ctx.beginPath();ctx.moveTo(x+20,y+10+b);ctx.lineTo(x+17,y+3+b);ctx.lineTo(x+24,y+10+b);ctx.fill();
+      ctx.beginPath();ctx.moveTo(x+27,y+10+b);ctx.lineTo(x+25,y+3+b);ctx.lineTo(x+31,y+10+b);ctx.fill();
+      ctx.fillStyle='#2a2a2a';
+      ctx.fillRect(x+5,y+30+b+run,5,10);ctx.fillRect(x+13,y+30+b-run,5,10);
+      ctx.fillRect(x+19,y+30+b+run,5,10);ctx.fillRect(x+25,y+30+b-run,5,10);
+      ctx.save();ctx.shadowColor='#ff8000';ctx.shadowBlur=5;
+      ctx.fillStyle='#ff8000';ctx.fillRect(x+22,y+13+b,3,2);ctx.fillRect(x+28,y+13+b,3,2);ctx.restore();
+    }},
+};
+
+
+function openItemPopup(hero, slotKey) {
+  const overlay = document.getElementById('itemPopupOverlay');
+  const title   = document.getElementById('itemPopupTitle');
+  const list    = document.getElementById('itemPopupList');
+  const slotName = GEAR_SLOT_NAMES[slotKey] || slotKey;
+  title.textContent = slotName + ' — Select Item';
+  list.innerHTML = '';
+
+  // Currently equipped item in this slot
+  const currentItem = hero.gearSlots[slotKey];
+
+  // Items that can go in this slot
+  const candidates = game.inventory.filter(item=>{
+    const valid = getItemValidSlots(item);
+    return valid.includes(slotKey);
+  });
+
+  if(candidates.length === 0) {
+    list.innerHTML = '<div class="popup-no-items">No items available for this slot.<br>Win battles to find gear!</div>';
+  } else {
+    // Show currently equipped first, then rest sorted by rarity
+    const rarityOrder = {legendary:0,epic:1,rare:2,common:3};
+    candidates.sort((a,b)=>(rarityOrder[a.rarity]||3)-(rarityOrder[b.rarity]||3));
+
+    candidates.forEach(item=>{
+      const isEquippedOnSlot = (currentItem === item);
+      const otherSlot = GEAR_SLOTS.find(s=>s!==slotKey&&hero.gearSlots[s]===item);
+      const onOtherHero = !isEquippedOnSlot && !otherSlot &&
+        game.party.filter(h=>!h.isMinion&&h!==hero).some(h=>GEAR_SLOTS.some(s=>h.gearSlots[s]===item));
+
+      const row = document.createElement('div');
+      row.className = 'popup-item-row' +
+        (isEquippedOnSlot?' equipped-on-slot':'') +
+        (onOtherHero?' on-other-hero':'');
+
+      const statsStr = Object.entries(item.stats).map(([k,v])=>'+'+v+' '+k.toUpperCase()).join('  ');
+      const actionLabel = isEquippedOnSlot ? '✅ Equipped — click to unequip'
+        : otherSlot ? `⚠️ In ${GEAR_SLOT_NAMES[otherSlot]}`
+        : onOtherHero ? '🔒 On another hero'
+        : '+ Equip';
+
+      row.innerHTML = `
+        <div class="popup-item-emoji">${item.emoji}</div>
+        <div class="popup-item-info">
+          <div class="popup-item-name">${item.name}</div>
+          <div class="popup-item-stats">${statsStr}</div>
+          <div class="popup-item-rarity ${item.rarity}">${item.rarity}</div>
+        </div>
+        <div class="popup-item-action">${actionLabel}</div>
+      `;
+
+      if(!onOtherHero) {
+        row.onclick = ()=>{
+          if(isEquippedOnSlot){
+            unequipGear(hero, slotKey);
+          } else if(otherSlot) {
+            unequipGear(hero, otherSlot);
+            equipGear(hero, slotKey, item);
+          } else {
+            equipGear(hero, slotKey, item);
+          }
+          closeItemPopup();
+          buildManagementScreen();
+        };
+      }
+      list.appendChild(row);
+    });
+  }
+
+  overlay.classList.add('open');
+}
+
+function closeItemPopup() {
+  document.getElementById('itemPopupOverlay').classList.remove('open');
+}
+
+// Close on overlay click
+document.addEventListener('DOMContentLoaded', ()=>{
+  document.getElementById('itemPopupOverlay').addEventListener('click', e=>{
+    if(e.target.id==='itemPopupOverlay') closeItemPopup();
+  });
+});
+
+function spawnMinion(necro, type, count){
+  const mt = MINION_TYPES[type] || MINION_TYPES.skeleton;
+  for(let i=0;i<count;i++){
+    // FIX 3: Scale minion stats by 0.7x necromancer stats + level scaling
+    const lvlScale = 1 + ((necro.heroLevel||1) - 1) * 0.15;
+    const mHp  = Math.floor(necro.maxHp  * mt.hpMult  * 0.7 * lvlScale);
+    const mAtk = Math.floor(necro.atk    * mt.atkMult  * 0.7 * lvlScale);
+    const mDef = Math.floor(necro.def    * mt.defMult  * 0.7 * lvlScale);
+    const offset = (i+1)*40 + game.party.filter(h=>h.isMinion).length*20;
+    const minion = {
+      name:mt.name, emoji:mt.emoji, classId:'minion', isMinion:true,
+      minionType:type, minionDraw:mt.draw.bind(mt),
+      hp:mHp, maxHp:mHp, atk:mAtk, def:mDef, spd:mt.spd,
+      x:Math.min(necro.x+offset, 300), y:necro.y,
+      targetX:Math.min(necro.x+offset+40, 340), dead:false,
+      attackCooldown:0.5+Math.random()*0.5, stunTimer:0, animT:0, jumpAnim:0,
+      buffTimer:0, poisonTimer:0, defending:false, dodging:false,
+      equippedSkills:[], legendarySkill:null, gearSlots:{}, skillCooldowns:{},
+      baseAtk:mAtk, baseDef:mDef, baseSpd:mt.spd, baseMaxHp:mHp,
+      heroLevel:1, xp:0, xpToNext:9999,
+      minionTimer: mt.duration + game.level * 2,
+      minionGlow: mt.glowColor,
+    };
+    game.party.push(minion);
+  }
+  buildBattleHUD();
+  addLog(`${mt.emoji} ${mt.name} joins the battle! (ATK:${Math.floor(necro.atk*mt.atkMult*0.7)})`, 'skill');
+  spawnParticles(necro.x+40, necro.y+10, 14, mt.glowColor||'#602080');
 }
 
 function useSkill(hero,sk,target,aliveEnemies){
@@ -1786,7 +3600,7 @@ function useSkill(hero,sk,target,aliveEnemies){
     addLog(`✨ ${sk.name}! ${target.name} stunned! (${dmg})`,'skill');
     spawnDmgText(target.x+18,target.y-8,dmg,'#d4a017');
     spawnParticles(target.x+18,target.y+10,8,'#d4a017');
-    if(target.hp<=0){target.dead=true;spawnParticles(target.x+18,target.y+20,12,'#d4a017');}
+    if(target.hp<=0){target.dead=true;const _g=dropGold(8+Math.floor(game.level*2));spawnDmgText(target.x+18,target.y-20,'+'+_g+'g','#d4a017');game.party.filter(h=>!h.dead&&!h.isMinion).forEach(h=>gainXP(h,15+game.level*3));spawnParticles(target.x+18,target.y+20,12,'#d4a017');}
   } else if(sk.effect==='defend'){
     hero.defending=true;
     addLog(`🛡️ ${sk.name}! DMG halved!`,'skill');
@@ -1822,16 +3636,15 @@ function useSkill(hero,sk,target,aliveEnemies){
     target.hp-=dmg;
     addLog(`💨 ${sk.name}! Blink counter! (${dmg})`,'skill');
     spawnDmgText(target.x+18,target.y-8,dmg,'#9b7ec8');
-    if(target.hp<=0){target.dead=true;spawnParticles(target.x+18,target.y+20,10,'#d4a017');}
+    if(target.hp<=0){target.dead=true;const _g2=dropGold(8+Math.floor(game.level*2));spawnDmgText(target.x+18,target.y-20,'+'+_g2+'g','#d4a017');game.party.filter(h=>!h.dead&&!h.isMinion).forEach(h=>gainXP(h,15+game.level*3));spawnParticles(target.x+18,target.y+20,10,'#d4a017');}
   } else if(sk.effect==='cleave'){
     const dmg=Math.max(1,Math.floor(atk*sk.dmgMult)-target.def);
     target.hp-=dmg;
-    // buster jump animation
     hero.jumpAnim=0.5;
     addLog(`⚔️ ${sk.name}! Cleave! (${dmg})`,'skill');
     spawnDmgText(target.x+18,target.y-8,dmg,'#d4606a');
     spawnParticles(target.x+18,target.y+10,10,'#d4606a');
-    if(target.hp<=0){target.dead=true;spawnParticles(target.x+18,target.y+20,12,'#d4a017');}
+    if(target.hp<=0){target.dead=true;const _g=dropGold(8+Math.floor(game.level*2));spawnDmgText(target.x+18,target.y-20,'+'+_g+'g','#d4a017');game.party.filter(h=>!h.dead&&!h.isMinion).forEach(h=>gainXP(h,15+game.level*3));spawnParticles(target.x+18,target.y+20,12,'#d4a017');}
   } else if(sk.effect==='execute'){
     const lowHp=target.hp/target.maxHp<0.3;
     const mult=lowHp?sk.dmgMult:1.2;
@@ -1841,7 +3654,7 @@ function useSkill(hero,sk,target,aliveEnemies){
     addLog(lowHp?`💀 ${sk.name}! EXECUTE! (${dmg})`:`⚔️ ${sk.name}! (${dmg})`,'skill');
     spawnDmgText(target.x+18,target.y-8,dmg,lowHp?'#ff3030':'#d4606a');
     spawnParticles(target.x+18,target.y+10,lowHp?14:5,'#d4606a');
-    if(target.hp<=0){target.dead=true;spawnParticles(target.x+18,target.y+20,14,'#d4a017');}
+    if(target.hp<=0){target.dead=true;const _g3=dropGold(8+Math.floor(game.level*2));spawnDmgText(target.x+18,target.y-20,'+'+_g3+'g','#d4a017');game.party.filter(h=>!h.dead&&!h.isMinion).forEach(h=>gainXP(h,15+game.level*3));spawnParticles(target.x+18,target.y+20,14,'#d4a017');}
   } else if(sk.effect==='buff'){
     hero.buffTimer=4;
     addLog(`🔥 ${sk.name}! ATK +60% for 4s`,'skill');
@@ -1851,6 +3664,34 @@ function useSkill(hero,sk,target,aliveEnemies){
     target.poisonTimer=5; target.poisonDmg=3;
     addLog(`☠️ ${sk.name}! Poisoned!`,'skill');
     spawnParticles(target.x+18,target.y+10,6,'#50a050');
+  } else if(sk.effect==='heal_ally'){
+    const wounded=game.party.filter(h=>!h.dead&&!h.isMinion).reduce((a,b)=>a.hp/a.maxHp<b.hp/b.maxHp?a:b,hero);
+    const heal=Math.floor(wounded.maxHp*0.3);
+    wounded.hp=Math.min(wounded.maxHp,wounded.hp+heal);
+    addLog(`⚕️ ${sk.name}! Healed ${wounded.emoji} for ${heal}`,'heal');
+    spawnDmgText(wounded.x+18,wounded.y-8,heal,'#ffe080');
+    spawnParticles(wounded.x+18,wounded.y+10,8,'#ffe080');
+    updateHudHP();
+  } else if(sk.effect==='smite'){
+    const dmg=Math.max(1,Math.floor(atk*sk.dmgMult));
+    target.hp-=dmg; target.stunTimer=1;
+    addLog(`✨ ${sk.name}! Holy bolt! (${dmg})`,'skill');
+    spawnDmgText(target.x+18,target.y-8,dmg,'#ffe080');
+    spawnParticles(target.x+18,target.y+10,10,'#ffe080');
+    if(target.hp<=0){target.dead=true;const _gs=dropGold(8+Math.floor(game.level*2));spawnDmgText(target.x+18,target.y-20,'+'+_gs+'g','#d4a017');game.party.filter(h=>!h.dead&&!h.isMinion).forEach(h=>gainXP(h,15+game.level*3));spawnParticles(target.x+18,target.y+20,12,'#ffe080');}
+  } else if(sk.effect==='drain'){
+    const dmg=Math.max(1,Math.floor(atk*sk.dmgMult)-target.def);
+    const healed=Math.floor(dmg*0.5);
+    target.hp-=dmg; hero.hp=Math.min(hero.maxHp,hero.hp+healed);
+    addLog(`💜 ${sk.name}! Drained ${dmg}, healed ${healed}`,'skill');
+    spawnDmgText(target.x+18,target.y-8,dmg,'#a040c0');
+    spawnDmgText(hero.x+18,hero.y-8,healed,'#60ff60');
+    spawnParticles(target.x+18,target.y+10,6,'#a040c0');
+    updateHudHP();
+    if(target.hp<=0){target.dead=true;const _gd=dropGold(8+Math.floor(game.level*2));spawnDmgText(target.x+18,target.y-20,'+'+_gd+'g','#d4a017');game.party.filter(h=>!h.dead&&!h.isMinion).forEach(h=>gainXP(h,15+game.level*3));spawnParticles(target.x+18,target.y+20,12,'#a040c0');}
+  } else if(sk.effect==='summon'){
+    const minionCount = sk.id && sk.id.includes('Raise_Legion') ? 3 : 1;
+    spawnMinion(hero, sk.minionType||'skeleton', minionCount);
   }
 }
 
@@ -1864,7 +3705,6 @@ function render(){
   const GROUND=H*0.72;
   ctx.clearRect(0,0,W,H);
 
-  // Sky gradient — cozy warm dusk
   const isBoss=game.stageInCampaign===9;
   const sky=ctx.createLinearGradient(0,0,0,GROUND);
   if(isBoss){
@@ -1879,7 +3719,6 @@ function render(){
   }
   ctx.fillStyle=sky;ctx.fillRect(0,0,W,GROUND);
 
-  // Sun / Moon
   if(isBoss){
     ctx.save();ctx.shadowColor='#ff4020';ctx.shadowBlur=30;
     ctx.fillStyle='#ff4020';
@@ -1890,7 +3729,6 @@ function render(){
     ctx.fillStyle='#ffe080';
     ctx.beginPath();ctx.arc(W*0.78,GROUND*0.18,26,0,Math.PI*2);ctx.fill();
     ctx.restore();
-    // sun rays
     ctx.save();ctx.strokeStyle='#ffe08040';ctx.lineWidth=2;
     for(let i=0;i<8;i++){
       const a=i*Math.PI/4+game.parallax.offset*0.002;
@@ -1898,7 +3736,6 @@ function render(){
       ctx.lineTo(W*0.78+Math.cos(a)*42,GROUND*0.18+Math.sin(a)*42);ctx.stroke();
     }
     ctx.restore();
-    // clouds
     for(let i=0;i<4;i++){
       const cx2=((i*200+game.parallax.offset*5)%(W+200))-100;
       const cy2=GROUND*0.15+i*35;
@@ -1909,16 +3746,13 @@ function render(){
     }
   }
 
-  // Parallax hills / trees
   game.parallax.layers.forEach((layer,li)=>{
     layer.elements.forEach(el=>{
       const ex=((el.x-game.parallax.offset*layer.speed)%(W*2)+W*2)%(W*2)-100;
       if(li===0){
-        // rolling hills
         ctx.fillStyle=isBoss?'#2a1020':el.color;
         ctx.beginPath();ctx.ellipse(ex+el.w/2,el.y+el.h,el.w,el.h*0.6,0,0,Math.PI*2);ctx.fill();
       } else {
-        // trees
         ctx.fillStyle=isBoss?'#3a0818':el.color;
         ctx.fillRect(ex+el.w/2-2,el.y,4,el.h);
         ctx.beginPath();ctx.arc(ex+el.w/2,el.y,el.w/2,0,Math.PI*2);ctx.fill();
@@ -1926,7 +3760,6 @@ function render(){
     });
   });
 
-  // Ground
   const grd=ctx.createLinearGradient(0,GROUND,0,H);
   if(isBoss){
     grd.addColorStop(0,'#3a1020');grd.addColorStop(1,'#1a0810');
@@ -1935,11 +3768,9 @@ function render(){
   }
   ctx.fillStyle=grd;ctx.fillRect(0,GROUND,W,H-GROUND);
 
-  // Ground line
   ctx.fillStyle=isBoss?'#8a2030':'#4a7c59';
   ctx.fillRect(0,GROUND,W,3);
 
-  // Grass tufts
   if(!isBoss){
     for(let i=0;i<16;i++){
       const gx=((i*130+game.parallax.offset*0.6)%(W+80))-40;
@@ -1950,21 +3781,35 @@ function render(){
     }
   }
 
-  // Draw heroes
+  // Draw heroes (including minions)
   game.party.forEach(h=>{
-    if(h.dead){
-      // fallen
-      ctx.save();ctx.globalAlpha=0.3;
-      const cls=CLASS_DEFS[h.classId];
-      cls.draw(ctx,h.x,h.y,false,h.animT);
+    if(h.isMinion){
+      if(h.dead) return;
+      ctx.save();
+      if(h.minionDraw) h.minionDraw(ctx,h.x,h.y,h.animT);
+      else {
+        const mb=Math.sin(h.animT*3)*2;
+        ctx.fillStyle='#404060';ctx.fillRect(h.x+6,h.y+12+mb,20,16);ctx.fillRect(h.x+8,h.y+6+mb,14,10);
+        ctx.fillStyle='#60ff60';ctx.fillRect(h.x+10,h.y+8+mb,3,3);ctx.fillRect(h.x+19,h.y+8+mb,3,3);
+        ctx.fillStyle='#303050';ctx.fillRect(h.x+4,h.y+14+mb,4,10);ctx.fillRect(h.x+24,h.y+14+mb,4,10);
+      }
+      drawHpBar(ctx,h.x,h.y-6,36,4,h.hp/h.maxHp,h.minionGlow||'#60ff60','#30304060');
+      const _mt=MINION_TYPES[h.minionType]||MINION_TYPES.skeleton;
+      const ep=Math.max(0,(h.minionTimer||0)/(_mt.duration+game.level*2));
+      drawHpBar(ctx,h.x,h.y-11,36,3,ep,'#a040c0','#20102060');
       ctx.restore();
       return;
     }
-    // jump offset for buster
+    if(h.dead){
+      ctx.save();ctx.globalAlpha=0.3;
+      const cls=CLASS_DEFS[h.classId];
+      if(cls) cls.draw(ctx,h.x,h.y,false,h.animT);
+      ctx.restore();
+      return;
+    }
     const jumpY=h.jumpAnim>0?Math.sin(h.jumpAnim*Math.PI)*-30:0;
     if(h.jumpAnim>0) h.jumpAnim=Math.max(0,h.jumpAnim-0.04);
 
-    // Auras
     if(h.buffTimer>0){
       ctx.save();ctx.globalAlpha=0.25;ctx.fillStyle='#e07840';
       ctx.beginPath();ctx.ellipse(h.x+18,h.y+46,20,7,0,0,Math.PI*2);ctx.fill();
@@ -1981,25 +3826,21 @@ function render(){
       ctx.restore();
     }
 
-    // draw hero
-    CLASS_DEFS[h.classId].draw(ctx,h.x,h.y+jumpY,false,h.animT);
+    const _cls = CLASS_DEFS[h.classId];
+    if(_cls) _cls.draw(ctx,h.x,h.y+jumpY,false,h.animT);
 
-    // HP bar under hero
     drawHpBar(ctx,h.x,h.y+52,36,5,h.hp/h.maxHp,h.hp/h.maxHp>0.5?'#4a7c59':h.hp/h.maxHp>0.25?'#d4a017':'#d4606a','#00000033');
   });
 
   // Draw enemies
   game.enemies.forEach(e=>{
     if(e.dead) return;
-    const size=e.isBoss?1.4:1;
     ctx.save();
     ctx.translate(e.x,0);
     ctx.scale(-1,1);
-    const drawX=0;
-    e.draw(ctx,drawX,e.y,e.animT);
+    e.draw(ctx,0,e.y,e.animT);
     ctx.restore();
 
-    // HP bar
     const bw=e.isBoss?56:38;
     drawHpBar(ctx,e.x-(bw/2)+9,e.y-12,bw,5,e.hp/e.maxHp,e.hp/e.maxHp>0.5?'#c04040':e.hp/e.maxHp>0.25?'#c08020':'#e02020','#00000033');
     if(e.isBoss){
@@ -2011,7 +3852,6 @@ function render(){
     if(e.poisonTimer>0){ ctx.fillStyle='#50c050';ctx.font='10px serif';ctx.fillText('☠',e.x+22,e.y-16); }
   });
 
-  // Projectiles
   game.projectiles.forEach(p=>{
     ctx.save();ctx.shadowColor=p.color;ctx.shadowBlur=8;
     ctx.fillStyle=p.color;
@@ -2019,21 +3859,18 @@ function render(){
     ctx.restore();
   });
 
-  // Particles
   game.particles.forEach(p=>{
     ctx.save();ctx.globalAlpha=p.alpha;ctx.fillStyle=p.color;
     ctx.beginPath();ctx.arc(p.x,p.y,p.size,0,Math.PI*2);ctx.fill();
     ctx.restore();
   });
 
-  // Floating texts
   ctx.font='bold 14px Nunito';
   game.floatingTexts.forEach(t=>{
     ctx.save();ctx.globalAlpha=t.alpha;ctx.fillStyle=t.color;
     ctx.fillText(t.text,t.x,t.y);ctx.restore();
   });
 
-  // Warm vignette overlay
   const vig=ctx.createRadialGradient(W/2,H/2,H*0.3,W/2,H/2,H*0.9);
   vig.addColorStop(0,'transparent');
   vig.addColorStop(1,'rgba(61,43,13,0.15)');
@@ -2061,6 +3898,9 @@ function endStage(won){
   game.battleRunning=false;
   cancelAnimationFrame(game.animId);
 
+  // FIX 4: Always clear minions when a battle ends — before ANY result logic
+  game.party = game.party.filter(h => !h.isMinion);
+
   const titleEl=document.getElementById('resultTitle');
   const msgEl=document.getElementById('resultMsg');
   const lootDiv=document.getElementById('resultLoot');
@@ -2070,7 +3910,12 @@ function endStage(won){
     const isBoss=game.stageInCampaign===9;
     titleEl.textContent=isBoss?'🎉 Boss Slain!':'✨ Victory!';
     titleEl.style.color=isBoss?'var(--ember)':'var(--forest)';
-    msgEl.textContent=`Campaign ${game.campaignNumber} · Stage ${game.stageInCampaign+1} cleared!`;
+
+    const stageGold = isBoss ? 200 + game.level*20 : 30 + game.level*8;
+    game.gold += stageGold;
+    game.party.filter(h=>!h.dead).forEach(h=>gainXP(h, isBoss?200:50+game.level*10));
+
+    msgEl.textContent=`Campaign ${game.campaignNumber} · Stage ${game.stageInCampaign+1} cleared! +${stageGold}g`;
 
     // Loot drops
     const drops=[];
@@ -2083,39 +3928,69 @@ function endStage(won){
                :rng<0.35?LOOT_TABLE.filter(l=>l.rarity==='rare')
                :LOOT_TABLE.filter(l=>l.rarity==='common');
       if(pool.length===0) pool=LOOT_TABLE.filter(l=>l.rarity==='common');
-      const item={...pool[Math.floor(Math.random()*pool.length)],equipped:false,id:Date.now()+i+Math.random()};
+      const item=rollItemStats(pool[Math.floor(Math.random()*pool.length)]);
       drops.push(item);
       game.inventory.push(item);
     }
     lootDiv.innerHTML=drops.map(d=>`<div class="inv-item ${d.rarity}" style="width:52px;height:52px;font-size:1.4rem;position:relative">${d.emoji}<div class="item-tip">${d.name}<br>${d.rarity.toUpperCase()}<br>${Object.entries(d.stats).map(([k,v])=>'+'+v+' '+k).join(' ')}</div></div>`).join('');
 
-    // Skill drops
-    const skillRng=Math.random();
-    const skillPool_drop=skillRng<0.1?ALL_SKILLS.filter(s=>s.legendary):ALL_SKILLS.filter(s=>!s.legendary&&s.cls===game.classId);
-    const droppedSkill=skillPool_drop[Math.floor(Math.random()*skillPool_drop.length)];
-    if(droppedSkill && !game.skillPool.find(s=>s.id===droppedSkill.id)){
-      game.skillPool.push({...droppedSkill});
-      const sk=document.createElement('div');
-      sk.style.cssText='font-size:0.72rem;color:var(--gold);font-weight:700';
-      sk.textContent=`⚡ New skill: ${droppedSkill.name}${droppedSkill.legendary?' (LEGENDARY)':''}`;
-      lootDiv.appendChild(sk);
-    }
+    // ── SKILL DROPS: one per party member's class, weighted by rarity ────────
+    // Collect the unique set of classes currently in the party
+    const partyClasses = [...new Set(game.party.map(h=>h.classId))];
+    partyClasses.forEach(cls=>{
+      const isLegendaryRoll = Math.random() < 0.08; // 8% chance of legendary per hero
+      const skillPool_drop = isLegendaryRoll
+        ? ALL_SKILLS.filter(s=>s.legendary && s.cls===cls)
+        : ALL_SKILLS.filter(s=>!s.legendary && s.cls===cls);
+      // Fallback to any legendary if no class-specific legendary exists
+      const fallback = isLegendaryRoll ? ALL_SKILLS.filter(s=>s.legendary) : [];
+      const finalPool = skillPool_drop.length>0 ? skillPool_drop : fallback;
+      if(!finalPool.length) return;
+      const droppedSkill = finalPool[Math.floor(Math.random()*finalPool.length)];
+      if(droppedSkill && !game.skillPool.find(s=>s.id===droppedSkill.id)){
+        const _ds={...droppedSkill};
+        if(!_ds.desc) _ds.desc=(_ds.effect||'skill')+(_ds.dmgMult>0?' ·'+_ds.dmgMult+'x':'');
+        game.skillPool.push(_ds);
+        const sk=document.createElement('div');
+        sk.style.cssText='font-size:0.72rem;color:'+(droppedSkill.legendary?'var(--gold)':'var(--forest)')+';font-weight:700;margin-top:2px';
+        const clsName={tank:'Guardian',mage:'Spellweaver',buster:'Ironbreaker',cleric:'Cleric',necromancer:'Necromancer',dragonknight:'Dragon Knight',wanderer:'Wanderer',ranger:'Ranger',brawler:'Brawler',alchemist:'Alchemist'};
+        sk.textContent=`⚡ ${clsName[cls]||cls}: ${droppedSkill.name}${droppedSkill.legendary?' ⭐ LEGENDARY':''}`;
+        lootDiv.appendChild(sk);
+      }
+    });
+    // ─────────────────────────────────────────────────────────────────────────
 
     // Advance stage
     game.stageInCampaign++;
     game.level++;
 
-    // Check for new party member
+    // FIX 4: Check new party member AFTER clearing minions (party is already clean here)
     if(game.level%10===0 && game.party.length<10){
-      const classKeys=Object.keys(CLASS_DEFS);
-      const newClass=classKeys[Math.floor(Math.random()*classKeys.length)];
+      const usedClasses=new Set(game.party.map(h=>h.classId));
+      const availableClasses=Object.keys(CLASS_DEFS).filter(c=>!usedClasses.has(c));
+      const classPool=availableClasses.length>0?availableClasses:Object.keys(CLASS_DEFS);
+      const newClass=classPool[Math.floor(Math.random()*classPool.length)];
       const newHero=makeHero(newClass);
       newHero.equippedSkills[0]=CLASS_DEFS[newClass].baseSkills[0];
+      newHero.equippedSkills[1]=CLASS_DEFS[newClass].baseSkills[1];
+      newHero.equippedSkills[2]=CLASS_DEFS[newClass].baseSkills[2];
       game.party.push(newHero);
       const badge=document.createElement('div');
       badge.style.cssText='font-size:0.8rem;color:var(--forest);font-weight:800;margin-top:4px';
       badge.textContent=`🎊 New hero joined: ${CLASS_DEFS[newClass].name}!`;
       lootDiv.appendChild(badge);
+      // Drop 3 starter skills for the new hero so they have something to equip immediately
+      const newClassSkills=ALL_SKILLS.filter(s=>!s.legendary&&s.cls===newClass&&!game.skillPool.find(p=>p.id===s.id));
+      const shuffled=newClassSkills.sort(()=>Math.random()-0.5).slice(0,3);
+      shuffled.forEach(sk=>{
+        const _sk={...sk}; if(!_sk.desc) _sk.desc=(_sk.effect||'skill')+(_sk.dmgMult>0?' ·'+_sk.dmgMult+'x':'');
+        game.skillPool.push(_sk);
+        const el=document.createElement('div');
+        el.style.cssText='font-size:0.68rem;color:#60c060;font-weight:700;margin-top:2px';
+        const clsName={tank:'Guardian',mage:'Spellweaver',buster:'Ironbreaker',cleric:'Cleric',necromancer:'Necromancer',dragonknight:'Dragon Knight',wanderer:'Wanderer',ranger:'Ranger',brawler:'Brawler',alchemist:'Alchemist'};
+        el.textContent=`✨ ${clsName[newClass]||newClass} skill unlocked: ${sk.name}`;
+        lootDiv.appendChild(el);
+      });
     }
 
     btnsDiv.innerHTML='';
@@ -2154,7 +4029,7 @@ function endStage(won){
     btnRetry.className='btn-cozy';
     btnRetry.textContent='🔄 Retry Stage';
     btnRetry.onclick=()=>{
-      game.party.forEach(h=>{h.hp=h.maxHp;h.dead=false;});
+      game.party.forEach(h=>{if(!h.isMinion){h.hp=h.maxHp;h.dead=false;}});
       buildManagementScreen(); showScreen('managementScreen');
     };
     const btnNew=document.createElement('button');
@@ -2169,15 +4044,223 @@ function endStage(won){
 }
 
 // ═══════════════════════════════════════════════════════
-// INIT
+// MYTHIC LOOT (trader-exclusive)
 // ═══════════════════════════════════════════════════════
+const MYTHIC_LOOT = [
+  {emoji:'🌌',name:'Void Mantle',rarity:'mythic',stats:{def:28,hp:60},desc:'Woven from the fabric of space',price:380},
+  {emoji:'🌠',name:'Comet Shard Blade',rarity:'mythic',stats:{atk:40,spd:0.3},desc:'Still warm from its fall',price:420},
+  {emoji:'🧿',name:'All-Seeing Eye',rarity:'mythic',stats:{atk:22,def:22,hp:40},desc:'Grants foresight in battle',price:450},
+  {emoji:'🦋',name:'Soulweave Cloak',rarity:'mythic',stats:{spd:0.5,hp:80},desc:'Made of crystallised dreams',price:400},
+  {emoji:'🌊',name:'Tidecaller Staff',rarity:'mythic',stats:{atk:38,def:8},desc:'Commands the deep',price:390},
+  {emoji:'⚗️',name:'Elixir Flask',rarity:'mythic',stats:{hp:120},desc:'Permanently enhances vitality',price:350},
+];
+
+const TRADER_PERSONAS = [
+  {icon:'🧙',title:'Mystic Wanderer',desc:'An ancient mage with wares from distant lands...'},
+  {icon:'🦊',title:'Sly Fox Merchant',desc:'A cunning trader with suspicious but dazzling goods...'},
+  {icon:'🐉',title:'Dragon Hoard Seller',desc:'Claims these fell from a dragon\'s lair. Believable.'},
+  {icon:'🧝',title:'Elven Artisan',desc:'Crafted with centuries of elven skill and patience...'},
+  {icon:'👻',title:'Ghost Peddler',desc:'Appears only at night. Their deals are... spirited.'},
+];
+
+// ═══════════════════════════════════════════════════════
+// CAMP SYSTEM
+// ═══════════════════════════════════════════════════════
+let campRestDone = false;
+let traderStock = [];
+
+function openCamp(){
+  campRestDone = false;
+  generateTraderStock();
+  buildCampScreen();
+  showScreen('campScreen');
+}
+
+function generateTraderStock(){
+  traderStock = [];
+  const count = 3 + Math.floor(Math.random()*2);
+  for(let i=0;i<count;i++){
+    const rng = Math.random();
+    let item;
+    if(rng < 0.08){
+      const base = MYTHIC_LOOT[Math.floor(Math.random()*MYTHIC_LOOT.length)];
+      item = {...base, id:Date.now()+i+Math.random(), equipped:false};
+    } else if(rng < 0.22){
+      const pool = [generateLootItem(GEAR_SLOTS[Math.floor(Math.random()*GEAR_SLOTS.length)],'legendary')];
+      const base = pool[Math.floor(Math.random()*pool.length)];
+      item = {...base, id:Date.now()+i+Math.random(), equipped:false, price: 180 + Math.floor(Math.random()*80)};
+    } else if(rng < 0.50){
+      const pool = [generateLootItem(GEAR_SLOTS[Math.floor(Math.random()*GEAR_SLOTS.length)],'epic')];
+      const base = pool[Math.floor(Math.random()*pool.length)];
+      item = {...base, id:Date.now()+i+Math.random(), equipped:false, price: 80 + Math.floor(Math.random()*40)};
+    } else {
+      const pool = [generateLootItem(GEAR_SLOTS[Math.floor(Math.random()*GEAR_SLOTS.length)],'rare')];
+      const base = pool[Math.floor(Math.random()*pool.length)];
+      item = {...base, id:Date.now()+i+Math.random(), equipped:false, price: 30 + Math.floor(Math.random()*20)};
+    }
+    traderStock.push(item);
+  }
+}
+
+function buildCampScreen(){
+  const persona = TRADER_PERSONAS[Math.floor(Math.random()*TRADER_PERSONAS.length)];
+  document.getElementById('campSubtitle').textContent =
+    `Campaign ${game.campaignNumber} · Stage ${game.stageInCampaign+1}/10 — rest up before the next fight`;
+
+  // Show only real heroes in camp
+  const partyDiv = document.getElementById('campPartyStatus');
+  partyDiv.innerHTML = '';
+  game.party.filter(h=>!h.isMinion).forEach(h=>{
+    const pct = h.hp/h.maxHp;
+    const card = document.createElement('div');
+    card.className = 'camp-hero-card';
+    card.innerHTML = `
+      <div style="font-size:1.4rem">${h.emoji}</div>
+      <div class="camp-hero-name">${h.name}</div>
+      <div class="camp-hero-hp">Lv${h.heroLevel||1} · ${h.hp}/${h.maxHp} HP</div>
+      <div class="camp-hp-bg"><div class="camp-hp-fill" style="width:${pct*100}%;background:${pct>0.5?'#4a7c59':pct>0.25?'#d4a017':'#d4606a'}"></div></div>
+    `;
+    partyDiv.appendChild(card);
+  });
+
+  document.getElementById('campRestInfo').textContent =
+    campRestDone ? '✅ Already rested this stage!' : 'Everyone recovers 60% of max HP';
+  document.getElementById('btnCampRest').textContent =
+    campRestDone ? '✅ Rested' : 'Rest by the Fire (60% HP)';
+  document.getElementById('btnCampRest').disabled = campRestDone;
+  if(campRestDone) document.getElementById('btnCampRest').classList.add('used');
+  else document.getElementById('btnCampRest').classList.remove('used');
+
+  const lvDiv = document.getElementById('campLevelInfo');
+  lvDiv.innerHTML = game.party.filter(h=>!h.isMinion).map(h=>`
+    <div><b>${h.emoji} ${h.name}</b> — Lv ${h.heroLevel||1}</div>
+    <div style="background:rgba(255,255,255,0.08);border-radius:3px;height:4px;margin:2px 0 6px">
+      <div style="height:100%;width:${((h.xp||0)/(h.xpToNext||100)*100)}%;background:#d4a017;border-radius:3px"></div>
+    </div>
+  `).join('');
+
+  document.getElementById('campTraderIcon').textContent = persona.icon;
+  document.getElementById('campTraderTitle').textContent = persona.title;
+  document.getElementById('campTraderDesc').textContent = persona.desc;
+  document.getElementById('campGoldDisplay').textContent = game.gold;
+
+  buildTraderItems();
+}
+
+function buildTraderItems(){
+  const container = document.getElementById('traderItems');
+  container.innerHTML = '';
+  document.getElementById('traderNoStock').textContent = '';
+
+  if(traderStock.length === 0){
+    document.getElementById('traderNoStock').textContent = 'Sold out! Come back next camp.';
+    return;
+  }
+
+  traderStock.forEach((item, idx)=>{
+    const price = item.price || 50;
+    const canAfford = game.gold >= price;
+    const rarityClass = 'ti-'+item.rarity;
+    const rarityColors = {common:'#c8b890',rare:'#6090e0',epic:'#a060e0',legendary:'#d4a017',mythic:'#ff80ff'};
+    const div = document.createElement('div');
+    div.className = `trader-item ${rarityClass}`;
+    div.style.opacity = canAfford ? '1' : '0.55';
+    div.innerHTML = `
+      <div class="ti-icon">${item.emoji}</div>
+      <div class="ti-name">${item.name}</div>
+      <div class="ti-rarity" style="color:${rarityColors[item.rarity]||'#888'}">${item.rarity.toUpperCase()}</div>
+      <div class="ti-stats">${Object.entries(item.stats).map(([k,v])=>'+'+v+' '+k).join('<br>')}</div>
+      <div class="ti-price">💰 ${price}g ${canAfford?'':'(need '+(price-game.gold)+'g more)'}</div>
+    `;
+    div.onclick = ()=>{
+      if(!canAfford){ showToast('💰 Not enough gold!'); return; }
+      game.gold -= price;
+      game.inventory.push({...item});
+      traderStock.splice(idx, 1);
+      showToast(`✨ Bought ${item.name}!`);
+      document.getElementById('campGoldDisplay').textContent = game.gold;
+      buildTraderItems();
+      buildCampScreen();
+    };
+    container.appendChild(div);
+  });
+}
+
+function doCampRest(){
+  if(campRestDone) return;
+  campRestDone = true;
+  game.campUsed = true;
+  game.party.filter(h=>!h.isMinion).forEach(h=>{
+    h.dead = false;
+    h.hp = Math.min(h.maxHp, h.hp + Math.floor(h.maxHp * 0.6));
+  });
+  buildCampScreen();
+  showToast('🔥 Party rested and recovered HP!');
+}
+
+function leaveCamp(){
+  buildManagementScreen();
+  showScreen('managementScreen');
+}
+
+function buildLoadSavesPanel(){
+  const panel = document.getElementById('loadSavesPanel');
+  const list  = document.getElementById('loadSavesList');
+  list.innerHTML = '';
+  let hasSave = false;
+
+  for(let i = 0; i < 3; i++){
+    const saved = getSave(i);
+    if(!saved) continue;
+    hasSave = true;
+
+    const card = document.createElement('div');
+    card.style.cssText = `
+      background:var(--parchment);
+      border:3px solid var(--gold);
+      border-radius:12px;
+      padding:12px 18px;
+      text-align:center;
+      cursor:pointer;
+      min-width:130px;
+      transition:transform 0.15s, box-shadow 0.15s;
+      box-shadow:2px 4px 0 var(--shadow);
+    `;
+    card.innerHTML = `
+      <div style="font-size:1.6rem">📖</div>
+      <div style="font-weight:800;color:var(--darkbrown);font-size:0.8rem;margin-top:4px">Slot ${i+1}</div>
+      <div style="color:var(--forest);font-weight:700;font-size:0.72rem">Lv ${saved.level}</div>
+      <div style="color:var(--brown);font-size:0.62rem">Campaign ${saved.campaignNumber||1}</div>
+      <div style="color:var(--brown);font-size:0.6rem;font-style:italic">${saved.date}</div>
+      <div style="margin-top:8px;background:var(--forest);color:var(--cream);border-radius:7px;padding:5px 10px;font-size:0.7rem;font-weight:800">▶ Continue</div>
+    `;
+    card.onmouseenter = () => { card.style.transform='translateY(-3px)'; card.style.boxShadow='2px 8px 0 var(--shadow)'; };
+    card.onmouseleave = () => { card.style.transform=''; card.style.boxShadow='2px 4px 0 var(--shadow)'; };
+    card.onclick = () => { loadGame(i); };
+    list.appendChild(card);
+  }
+
+  panel.style.display = hasSave ? 'flex' : 'none';
+}
+
 window.addEventListener('load',()=>{
   drawClassIcons();
+  buildLoadSavesPanel();
 });
 
 window.addEventListener('resize',()=>{
   if(game.battleRunning) setupCanvas();
 });
 </script>
+
+<!-- Item Equip Popup -->
+<div id="itemPopupOverlay">
+  <div id="itemPopup">
+    <div id="itemPopupTitle">Select Item</div>
+    <div id="itemPopupList"></div>
+    <button id="itemPopupClose" onclick="closeItemPopup()">Close</button>
+  </div>
+</div>
+
 </body>
 </html>
